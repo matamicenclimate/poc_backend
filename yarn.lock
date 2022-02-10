@@ -1435,25 +1435,6 @@
     escape-string-regexp "^2.0.0"
     lodash.deburr "^4.1.0"
 
-"@strapi/provider-email-mailgun@^4.0.7":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@strapi/provider-email-mailgun/-/provider-email-mailgun-4.0.7.tgz#8d95c64b1d40a0943e60f27da51d0c489fb5d338"
-  integrity sha512-ECi/K57pYU6H67+dv2mxzzdvo8A3xRUXqHQMDJ/wbkHIwohzS5UxU9prP8pt7QaZ/YrvLoDtR0OEf403T4HyUw==
-  dependencies:
-    "@strapi/utils" "4.0.7"
-    mailgun-js "0.22.0"
-
-"@strapi/utils@4.0.7":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-4.0.7.tgz#718823fcf23c028a65ce8c317a36cc6d7321eb0c"
-  integrity sha512-coGjVudsnlXvb20mobyeoguCfXKnLjXnKhYiMoS6wqy4ozazu12+5MsCh7Hs9UAkvK4Fzhf7+urvyoj/UpSkaQ==
-  dependencies:
-    "@sindresorhus/slugify" "1.1.0"
-    date-fns "2.24.0"
-    http-errors "1.8.0"
-    lodash "4.17.21"
-    yup "0.32.9"
-
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -1508,7 +1489,7 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
 
-"@types/lodash@^4.14.165", "@types/lodash@^4.14.175":
+"@types/lodash@^4.14.175":
   version "4.14.178"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.178.tgz#341f6d2247db528d4a13ddbb374bcdc80406f4f8"
   integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
@@ -3324,11 +3305,6 @@ data-uri-to-buffer@1:
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-1.2.0.tgz#77163ea9c20d8641b4707e8f18abdf9a78f34835"
   integrity sha512-vKQ9DTQPN1FLYiiEEOQ6IBGFqvjCa5rSK3cWMy/Nespm5d/x3dGFT9UBZnkLxCwua/IXBi2TYnwTEpsOvhC4UQ==
 
-date-fns@2.24.0:
-  version "2.24.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.24.0.tgz#7d86dc0d93c87b76b63d213b4413337cfd1c105d"
-  integrity sha512-6ujwvwgPID6zbI0o7UbURi2vlLDR9uP26+tW6Lg+Ji3w7dd0i3DOcjcClLjLPranT60SSEFBwdSyYwn/ZkPIuw==
-
 date-fns@^2.19.0:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
@@ -4974,17 +4950,6 @@ http-deceiver@^1.2.7:
   resolved "https://registry.yarnpkg.com/http-deceiver/-/http-deceiver-1.2.7.tgz#fa7168944ab9a519d337cb0bec7284dc3e723d87"
   integrity sha1-+nFolEq5pRnTN8sL7HKE3D5yPYc=
 
-http-errors@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.8.0.tgz#75d1bbe497e1044f51e4ee9e704a62f28d336507"
-  integrity sha512-4I8r0C5JDhT5VkvI47QktDW75rNlGVsUf/8hzjCC/wkWI/jdTRmBb9aI7erSG82r1bjKY3F6k28WnsVxB1C73A==
-  dependencies:
-    depd "~1.1.2"
-    inherits "2.0.4"
-    setprototypeof "1.2.0"
-    statuses ">= 1.5.0 < 2"
-    toidentifier "1.0.0"
-
 http-errors@1.8.1, http-errors@^1.3.1, http-errors@^1.6.3, http-errors@^1.7.3, http-errors@^1.8.0, http-errors@~1.8.0:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.8.1.tgz#7c3f28577cbc8a207388455dbd62295ed07bd68c"
@@ -6153,7 +6118,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.15, lodash-es@^4.17.21:
+lodash-es@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
@@ -9780,6 +9745,14 @@ strapi-plugin-users-permissions@3.6.8:
     strapi-utils "3.6.8"
     uuid "^3.1.0"
 
+strapi-provider-email-mailgun@^3.6.8:
+  version "3.6.8"
+  resolved "https://registry.yarnpkg.com/strapi-provider-email-mailgun/-/strapi-provider-email-mailgun-3.6.8.tgz#9c1a34d0f1d33b22a009575680a2a2fdc141067b"
+  integrity sha512-IiqMmPaBv5X0i2VFxeaoh5YlluaMSiURL8iyrSAQYwPuxtg5DGdXuvBbzlR4b4JKoVByg3aGcHsTIOLFIa7xuA==
+  dependencies:
+    mailgun-js "0.22.0"
+    strapi-utils "3.6.8"
+
 strapi-provider-email-sendmail@3.6.8:
   version "3.6.8"
   resolved "https://registry.yarnpkg.com/strapi-provider-email-sendmail/-/strapi-provider-email-sendmail-3.6.8.tgz#6b9f6db31dee6656e4f09fa20479bcb9b6abf87d"
@@ -10272,11 +10245,6 @@ toggle-selection@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/toggle-selection/-/toggle-selection-1.0.6.tgz#6e45b1263f2017fa0acc7d89d78b15b8bf77da32"
   integrity sha1-bkWxJj8gF/oKzH2J14sVuL932jI=
-
-toidentifier@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
-  integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
 toidentifier@1.0.1:
   version "1.0.1"
@@ -11026,19 +10994,6 @@ ylru@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ylru/-/ylru-1.2.1.tgz#f576b63341547989c1de7ba288760923b27fe84f"
   integrity sha512-faQrqNMzcPCHGVC2aaOINk13K+aaBDUPjGWl0teOXywElLjyVAB6Oe2jj62jHYtwsU49jXhScYbvPENK+6zAvQ==
-
-yup@0.32.9:
-  version "0.32.9"
-  resolved "https://registry.yarnpkg.com/yup/-/yup-0.32.9.tgz#9367bec6b1b0e39211ecbca598702e106019d872"
-  integrity sha512-Ci1qN+i2H0XpY7syDQ0k5zKQ/DoxO0LzPg8PAR/X4Mpj6DqaeCoIYEEjDJwhArh3Fa7GWbQQVDZKeXYlSH4JMg==
-  dependencies:
-    "@babel/runtime" "^7.10.5"
-    "@types/lodash" "^4.14.165"
-    lodash "^4.17.20"
-    lodash-es "^4.17.15"
-    nanoclone "^0.2.1"
-    property-expr "^2.0.4"
-    toposort "^2.0.2"
 
 yup@^0.32.9:
   version "0.32.11"

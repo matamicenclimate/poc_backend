@@ -11,7 +11,6 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/provider-email-mailgun": "^4.0.7",
     "strapi": "3.6.8",
     "strapi-admin": "3.6.8",
     "strapi-connector-mongoose": "3.6.8",
@@ -21,6 +20,7 @@
     "strapi-plugin-i18n": "3.6.8",
     "strapi-plugin-upload": "3.6.8",
     "strapi-plugin-users-permissions": "3.6.8",
+    "strapi-provider-email-mailgun": "^3.6.8",
     "strapi-utils": "3.6.8"
   },
   "author": {
