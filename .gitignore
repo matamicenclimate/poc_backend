@@ -2,3 +2,12 @@ node_modules
 build
 .cache
 .env
+
+############################
+# Strapi
+############################
+.strapi-updater.json
+license.txt
+exports
+*.cache
+build
