@@ -1,3 +1,5 @@
+const config = require('config')
+
 module.exports = ({ env }) => ({
   email: {
     provider: 'mailgun',
@@ -11,4 +13,10 @@ module.exports = ({ env }) => ({
       defaultReplyTo: env('MAILGUN_EMAIL'),
     },
   },
+  upload: {
+    provider: 'climate',
+    providerOptions: {
+      sizeLimit: config.fileSize.max * 1024 * 1024,
+    },
+  }
 });

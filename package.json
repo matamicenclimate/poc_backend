@@ -11,6 +11,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "config": "^3.3.6",
     "lodash": "^4.17.21",
     "strapi": "3.6.8",
     "strapi-admin": "3.6.8",
@@ -23,9 +24,8 @@
     "strapi-plugin-upload": "3.6.8",
     "strapi-plugin-users-permissions": "3.6.8",
     "strapi-provider-email-mailgun": "^3.6.8",
-    "strapi-utils": "3.6.8",
     "strapi-provider-upload-climate": "file:providers/strapi-provider-upload-climate",
-    "config": "^3.3.6"
+    "strapi-utils": "3.6.8"
   },
   "author": {
     "name": "Deka"
