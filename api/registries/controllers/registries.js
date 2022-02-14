@@ -7,9 +7,13 @@
 const mailer = require(`${process.cwd()}/utils/mailer`)
 
 async function create(ctx) {
-  // get url from .env & insert with application type (carbon-documents)
-  const mailContent = `${ctx.state.user.email}\n${url}`
+  const collectionName = ctx.originalUrl.substring(1)
+  const applicationUid = strapi.api[collectionName].models[collectionName].uid
+  const createdRegistry = await strapi.services[collectionName].create(ctx.request.body)
+  const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdRegistry.id}`
+  const mailContent = `User ${ctx.state.user.email} sent a new document.\nAvailable here: ${url}`
   await mailer.send('New document', mailContent)
+  return createdRegistry
 }
 
 module.exports = {

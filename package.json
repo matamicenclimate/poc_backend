@@ -23,7 +23,9 @@
     "strapi-plugin-upload": "3.6.8",
     "strapi-plugin-users-permissions": "3.6.8",
     "strapi-provider-email-mailgun": "^3.6.8",
-    "strapi-utils": "3.6.8"
+    "strapi-utils": "3.6.8",
+    "strapi-provider-upload-climate": "file:providers/strapi-provider-upload-climate",
+    "config": "^3.3.6"
   },
   "author": {
     "name": "Deka"

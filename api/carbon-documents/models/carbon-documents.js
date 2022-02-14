@@ -9,7 +9,7 @@ const mailer = require(`${process.cwd()}/utils/mailer`)
 module.exports = {
   lifecycles: {
     afterCreate: async function (data) {
-      await mailer.send()
+      //await mailer.send()
     }
   }
 };
