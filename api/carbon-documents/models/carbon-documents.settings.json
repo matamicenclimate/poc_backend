@@ -49,6 +49,10 @@
       ],
       "default": "pending",
       "required": false
+    },
+    "created_by_user": {
+      "type": "email",
+      "required": true
     }
   }
 }
