@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "carbon_documents",
+  "info": {
+    "name": "carbon-documents",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "credits": {
+      "type": "biginteger",
+      "required": true
+    },
+    "serial_number": {
+      "type": "string",
+      "required": true
+    },
+    "document": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    },
+    "registry": {
+      "model": "registries"
+    },
+    "project_types": {
+      "collection": "project-types"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "rejected",
+        "completed"
+      ],
+      "default": "pending",
+      "required": false
+    },
+    "created_by_user": {
+      "type": "email",
+      "required": true
+    }
+  }
+}

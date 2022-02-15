@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "project_types",
+  "info": {
+    "name": "Project-types"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

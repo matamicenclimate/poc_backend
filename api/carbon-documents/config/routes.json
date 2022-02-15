@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/carbon-documents",
+      "handler": "carbon-documents.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/carbon-documents/count",
+      "handler": "carbon-documents.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/carbon-documents/:id",
+      "handler": "carbon-documents.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/carbon-documents",
+      "handler": "carbon-documents.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/carbon-documents/:id",
+      "handler": "carbon-documents.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/carbon-documents/:id",
+      "handler": "carbon-documents.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

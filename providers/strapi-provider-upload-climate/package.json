@@ -1,0 +1,33 @@
+{
+  "name": "strapi-provider-upload-climate",
+  "version": "0.0.1",
+  "description": "Local provider for Strapi upload",
+  "homepage": "http://strapi.io",
+  "keywords": [
+    "upload",
+    "strapi"
+  ],
+  "directories": {
+    "lib": "./lib"
+  },
+  "main": "./lib",
+  "strapi": {
+    "isProvider": true
+  },
+  "author": {
+    "name": "Dekalabs"
+  },
+  "maintainers": [
+    {
+      "name": "Dekalabs"
+    }
+  ],
+  "peerDependencies": {
+    "strapi-plugin-upload": "3.6.8"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
