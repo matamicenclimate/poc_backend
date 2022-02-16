@@ -5,7 +5,7 @@ node_js:
   - 14
 notifications:
   slack:
-    secure: PseQRlpgzTtKVUO8jyJ09c219TirV2w1AupqrzXlYL4QWlbtol2BoldQ5ZKqIFAsxSovXqrmVrvF5eeXQW3Srr4uIJ2swoNiQVHARLborIytty+3RMMEoyckVnD4uerKDcIGzZKwigvQA1FuecJIfxrSBVQkitAj/d5ybiXIIsaflQfm6vPRnYrJ9fAdyfvqaeAPoePNPAKFj2hG6yvdGulOt5KldI32FlaIzsBIHZjEOkA9adBkZVT2uwRtmxGnTO9CWx3RuHvql2C5+RqNIBVbJ7OW0+7om7yw3qD3mSyL8OOnVFKCvhDStn89Mkcl8IZL8XcHqSBcgkGNCcn/V+P2ivMCUpGU+xN1Adm0OUxSYS10Zi/OljKRGUZ+JKyTiNzVrFcPpBKZLfazDAqv2lwb0njAXm0zuVhwGsLEhdTNbkEyoOpNJLAQG07ylxOllY0U7UOl4NL5lPeyCli8BXKIWgx0TzuVbjqw6EDeDjpXfSd5YYpLPGP2Pq5CGvp6m+AgRADC/GH0pQImFiZ2dOamK7nQcnf7Wp82RnXXIexYU8YG3IyNsCBN6cTzIISJxZKlNe5McUaXP4OKs+PJ/RV8oO9DrP4sr7dNXF2Q2ljBTB/e56RquCXhyr218/rdafauexs7SCq41igfEP5DVeII1hsOBVxDTMUhr4VNsUQ=
+    secure: Wsy1kncdhPkV5LWuMd1FcL8lAAb7c+/qeK+0y0EdX+sbj1S1OxdOUibwbzW7QhkAqEZVSwU83hdvzGA/gGlNsp4JTiS9KSAYyIqBQBbBifhuODwSeikSpDF+3BC55uy89BaKzBxcZzgl7SMicIIJWyLy1PdJZT6IQ9oY2tFOsRIJOljWXAS2nLMpRendOTORC8SjacdvHZTBoGf4pSUhQ35q/V5tB/QJMj1nN8Geo2b69nCQQxB3EiNVh9w7c7s0uzECZZuGQX8ULg8fVnmW0yElie07RKgCluMyi6My34J47cmXp+y2tctgdsiEoL3YjcXN1PSlTdmwvP+tSAYoc+pKSSVh5lax/AvjoTrp6bKzG8VqA9g9ia+aSMRJwLLqvhKLTD+0/OhrqGY58Dt5gJTVkP3Mw4aK5RQLFG2UsRcGI+ZwcPzmGBJY9QneXm4fUGc0AyZB/5/B9isHvbN2OpL6oxSMfzxqnPyIZSMyw9yr3Fjs7jQa8YOHpOaCsUvgmqIJyer5WDY4jM5xWwkfm9idw3bFnl6UtFg0DT2hIXdJwkBFG9zYo4FgyfkI0FIybtBiALBHmf3+S+oNMouGpVi/IjNiDOYu+Bm325ugxL27qapfthZQk1CO692iQ+UwHpjZK8LQ79dYEr6ueihxzMjTQ3lzG11ZSXS6WUCd+T0=
   template:
     - "*Project:* %{repository_name}"
     - "*Build:* <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch}"
@@ -25,10 +25,8 @@ jobs:
       script:
         - VERSION=`node -p "require('./package.json').version"`
         - IMAGE_ID=registry.dekaside.com/$PROJECT_NAME/$REPO_NAME
-        - docker build . -f ./compose/production/node/Dockerfile --tag $IMAGE_ID:latest --tag
-          $IMAGE_ID:$VERSION
-        - echo "$HARBOR_PASSWORD" | docker login registry.dekaside.com --username "$HARBOR_USERNAME"
-          --password-stdin
+        - docker build . -f ./compose/production/node/Dockerfile --tag $IMAGE_ID:latest --tag $IMAGE_ID:$VERSION
+        - echo "$HARBOR_PASSWORD" | docker login registry.dekaside.com --username "$HARBOR_USERNAME" --password-stdin
         - docker push $IMAGE_ID:$VERSION
         - docker push $IMAGE_ID:latest
     - stage: deploy
