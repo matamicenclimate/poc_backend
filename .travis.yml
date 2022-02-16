@@ -1,0 +1,24 @@
+os: linux
+dist: bionic
+language: node_js
+node_js:
+  - lts/*
+env:
+  global:
+    - PROJECT_NAME=climatecoin
+    - REPO_NAME=climatecoin-backend
+jobs:
+  include:
+    - stage: build and push latest
+      if: branch = develop
+      services:
+        - docker
+      script:
+        - VERSION=`node -p "require('./package.json').version"`
+        - IMAGE_ID=registry.dekaside.com/$PROJECT_NAME/$REPO_NAME
+        - docker build . -f ./compose/production/Dockerfile --tag $IMAGE_ID:latest --tag
+          $IMAGE_ID:$VERSION
+        - echo "$HARBOR_PASSWORD" | docker login registry.dekaside.com --username "$HARBOR_USERNAME"
+          --password-stdin
+        - docker push $IMAGE_ID:$VERSION
+        - docker push $IMAGE_ID:latest
