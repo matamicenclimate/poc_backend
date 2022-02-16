@@ -3,6 +3,15 @@ dist: bionic
 language: node_js
 node_js:
   - 14
+notifications:
+  slack:
+    secure: PseQRlpgzTtKVUO8jyJ09c219TirV2w1AupqrzXlYL4QWlbtol2BoldQ5ZKqIFAsxSovXqrmVrvF5eeXQW3Srr4uIJ2swoNiQVHARLborIytty+3RMMEoyckVnD4uerKDcIGzZKwigvQA1FuecJIfxrSBVQkitAj/d5ybiXIIsaflQfm6vPRnYrJ9fAdyfvqaeAPoePNPAKFj2hG6yvdGulOt5KldI32FlaIzsBIHZjEOkA9adBkZVT2uwRtmxGnTO9CWx3RuHvql2C5+RqNIBVbJ7OW0+7om7yw3qD3mSyL8OOnVFKCvhDStn89Mkcl8IZL8XcHqSBcgkGNCcn/V+P2ivMCUpGU+xN1Adm0OUxSYS10Zi/OljKRGUZ+JKyTiNzVrFcPpBKZLfazDAqv2lwb0njAXm0zuVhwGsLEhdTNbkEyoOpNJLAQG07ylxOllY0U7UOl4NL5lPeyCli8BXKIWgx0TzuVbjqw6EDeDjpXfSd5YYpLPGP2Pq5CGvp6m+AgRADC/GH0pQImFiZ2dOamK7nQcnf7Wp82RnXXIexYU8YG3IyNsCBN6cTzIISJxZKlNe5McUaXP4OKs+PJ/RV8oO9DrP4sr7dNXF2Q2ljBTB/e56RquCXhyr218/rdafauexs7SCq41igfEP5DVeII1hsOBVxDTMUhr4VNsUQ=
+  template:
+    - "*Project:* %{repository_name}"
+    - "*Build:* <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch}"
+    - "*Duration:* %{duration}"
+    - "*Result:* %{result}"
+    - "*Message:* %{message}"
 env:
   global:
     - PROJECT_NAME=climatecoin
@@ -22,3 +31,7 @@ jobs:
           --password-stdin
         - docker push $IMAGE_ID:$VERSION
         - docker push $IMAGE_ID:latest
+    - stage: deploy
+      if: branch = develop
+      script:
+        - curl -X POST "${SERVICE_WEBHOOK_STAGING}"
