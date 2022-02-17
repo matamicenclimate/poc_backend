@@ -36,4 +36,11 @@ async function grantPrivilegesToAllRoutes(strapi) {
   )
 }
 
-module.exports = { setupStrapi };
+async function deleteDbUploadFiles() {
+ await strapi.query('file', 'upload').model.deleteMany({});
+}
+
+module.exports = { 
+  setupStrapi,
+  deleteDbUploadFiles 
+};
