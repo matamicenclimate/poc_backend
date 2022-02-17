@@ -13,6 +13,10 @@ async function create(ctx) {
   }
 
   const createdDocument = await strapi.services[collectionName].create(ctx.request.body)
+  if (process.env.NODE_ENV === 'test') {
+    return createdDocument  
+  }
+
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
   const mailContent = `User ${ctx.state.user.email} sent a new document.\nAvailable here: ${url}`
   await mailer.send('New document', mailContent)

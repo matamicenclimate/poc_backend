@@ -7,9 +7,13 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "test": "jest --forceExit"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  },
   "dependencies": {
     "config": "^3.3.6",
     "lodash": "^4.17.21",
@@ -32,6 +36,14 @@
   },
   "strapi": {
     "uuid": "2bf200db-a22d-4901-b8b6-a9d77528d1c4"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      ".tmp",
+      ".cache"
+    ],
+    "testEnvironment": "node"
   },
   "engines": {
     "node": ">=10.16.0 <=14.x.x",
