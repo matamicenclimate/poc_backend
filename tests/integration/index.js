@@ -1,2 +1,3 @@
 require('./registries')
-require('./projectTypes')
+require('./project-types')
+require('./carbon-documents')
