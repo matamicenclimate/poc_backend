@@ -43,8 +43,7 @@
       ".tmp",
       ".cache"
     ],
-    "testEnvironment": "node",
-    "testTimeout": 15000
+    "testEnvironment": "node"
   },
   "engines": {
     "node": ">=10.16.0 <=14.x.x",
