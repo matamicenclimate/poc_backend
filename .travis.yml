@@ -31,7 +31,7 @@ jobs:
       services: mongodb
       before_script:
         - sleep 15
-        - mongo admin --eval 'db.createUser({user:"guest",pwd:"guest",roles:[{role:"userAdmin",db:"admin"}]});' --authenticationDatabase "admin"
+        - mongo $AUTHENTICATION_DATABASE --eval 'db.createUser({user:"$DATABASE_USERNAME",pwd:"$DATABASE_PASSWORD",roles:[{role:"userAdmin",db:"$AUTHENTICATION_DATABASE"}]});' --authenticationDatabase "$AUTHENTICATION_DATABASE"
       script:
         - yarn test
     - stage: build and push latest
