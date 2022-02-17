@@ -16,10 +16,26 @@ env:
   global:
     - PROJECT_NAME=climatecoin
     - REPO_NAME=climatecoin-backend
+    - DATABASE_HOST=127.0.0.1
+    - DATABASE_PORT=27017
+    - DATABASE_USERNAME=guest
+    - DATABASE_PASSWORD=guest
+    - AUTHENTICATION_DATABASE=admin
+    - MONGO_INITDB_ROOT_USERNAME=guest
+    - MONGO_INITDB_ROOT_PASSWORD=guest
+    - TEST_DATABASE_NAME=climatecoin_test
 jobs:
   include:
+    - stage: test
+      if: branch = develop AND type = pull_request
+      services: mongodb
+      before_script:
+        - sleep 15
+        - mongo $AUTHENTICATION_DATABASE --eval 'db.createUser({user:"'"${DATABASE_USERNAME}"'",pwd:"'"${DATABASE_PASSWORD}"'",roles:[{role:"userAdmin",db:"'"${AUTHENTICATION_DATABASE}"'"}]});' --authenticationDatabase "$AUTHENTICATION_DATABASE"
+      script:
+        - yarn test
     - stage: build and push latest
-      if: branch = develop
+      if: branch = develop AND type = push
       services:
         - docker
       script:
@@ -30,6 +46,6 @@ jobs:
         - docker push $IMAGE_ID:$VERSION
         - docker push $IMAGE_ID:latest
     - stage: deploy
-      if: branch = develop
+      if: branch = develop AND type = push
       script:
         - curl -X POST "${SERVICE_WEBHOOK_STAGING}"
