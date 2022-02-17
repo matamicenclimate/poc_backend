@@ -35,7 +35,7 @@ jobs:
       script:
         - yarn test
     - stage: build and push latest
-      if: branch = develop
+      if: branch = develop AND type = push
       services:
         - docker
       script:
@@ -46,6 +46,6 @@ jobs:
         - docker push $IMAGE_ID:$VERSION
         - docker push $IMAGE_ID:latest
     - stage: deploy
-      if: branch = develop
+      if: branch = develop AND type = push
       script:
         - curl -X POST "${SERVICE_WEBHOOK_STAGING}"
