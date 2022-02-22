@@ -6,10 +6,9 @@ async function find(ctx) {
   const { contentType, id } = ctx.params
   const content = await strapi.services[contentType].findOne({ id })
 
-  const file = fs.createReadStream(content.document.url)
-  const filename = file.path.split('/').pop()
+  const path = content.document.url.split(process.env.BASE_URL)[1]
+  const file = fs.createReadStream(`./public${path}`)
   ctx.set('Content-Type', 'application/pdf')
-  ctx.set('Content-disposition', `attachment;filename=${filename}`)
   ctx.body = file
 
   return ctx
