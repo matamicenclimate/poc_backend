@@ -6,12 +6,12 @@ node_js:
 notifications:
   slack:
     secure: Wsy1kncdhPkV5LWuMd1FcL8lAAb7c+/qeK+0y0EdX+sbj1S1OxdOUibwbzW7QhkAqEZVSwU83hdvzGA/gGlNsp4JTiS9KSAYyIqBQBbBifhuODwSeikSpDF+3BC55uy89BaKzBxcZzgl7SMicIIJWyLy1PdJZT6IQ9oY2tFOsRIJOljWXAS2nLMpRendOTORC8SjacdvHZTBoGf4pSUhQ35q/V5tB/QJMj1nN8Geo2b69nCQQxB3EiNVh9w7c7s0uzECZZuGQX8ULg8fVnmW0yElie07RKgCluMyi6My34J47cmXp+y2tctgdsiEoL3YjcXN1PSlTdmwvP+tSAYoc+pKSSVh5lax/AvjoTrp6bKzG8VqA9g9ia+aSMRJwLLqvhKLTD+0/OhrqGY58Dt5gJTVkP3Mw4aK5RQLFG2UsRcGI+ZwcPzmGBJY9QneXm4fUGc0AyZB/5/B9isHvbN2OpL6oxSMfzxqnPyIZSMyw9yr3Fjs7jQa8YOHpOaCsUvgmqIJyer5WDY4jM5xWwkfm9idw3bFnl6UtFg0DT2hIXdJwkBFG9zYo4FgyfkI0FIybtBiALBHmf3+S+oNMouGpVi/IjNiDOYu+Bm325ugxL27qapfthZQk1CO692iQ+UwHpjZK8LQ79dYEr6ueihxzMjTQ3lzG11ZSXS6WUCd+T0=
-  template:
-    - "*Project:* %{repository_name}"
-    - "*Build:* <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch}"
-    - "*Duration:* %{duration}"
-    - "*Result:* %{result}"
-    - "*Message:* %{message}"
+    template:
+      - "*Project:* %{repository_name}"
+      - "*Build:* <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch}"
+      - "*Duration:* %{duration}"
+      - "*Result:* %{result}"
+      - "*Message:* %{message}"
 env:
   global:
     - PROJECT_NAME=climatecoin

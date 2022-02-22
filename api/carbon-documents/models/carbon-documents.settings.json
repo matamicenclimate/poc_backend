@@ -10,7 +10,11 @@
     "timestamps": true,
     "draftAndPublish": false
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "preview-content": {
+      "previewable": true
+    }
+  },
   "attributes": {
     "title": {
       "type": "string",
