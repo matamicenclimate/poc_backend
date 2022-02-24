@@ -18,7 +18,7 @@ async function create(ctx) {
   }
 
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
-  const mailContent = `User ${ctx.state.user.email} sent a new document.\nAvailable here: ${url}`
+  const mailContent = `User ${ctx.state.user.email} sent a new document.<br>Available here: ${url}`
   await mailer.send('New document', mailContent)
   return createdDocument
 }

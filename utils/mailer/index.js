@@ -1,7 +1,7 @@
-async function sendMail(subject, content) {
+async function sendMail(subject, content, mailTo) {
   try {
     await strapi.plugins['email'].services.email.send({
-      to: process.env.MAILGUN_EMAIL_TO,
+      to: mailTo ?? process.env.MAILGUN_EMAIL_TO,
       from: process.env.MAILGUN_EMAIL,
       replyTo: process.env.MAILGUN_EMAIL,
       subject,
