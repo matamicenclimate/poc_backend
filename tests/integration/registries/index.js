@@ -2,7 +2,8 @@ const request = require('supertest')
 
 describe('Registries', () => {
   let dataStub = {
-    name: "test1"
+    name: "test1",
+    instructions: "instructions1",
   }
 
   let createdRegistry

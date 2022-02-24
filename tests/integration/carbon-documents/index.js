@@ -7,6 +7,7 @@ describe('Carbon-documents', () => {
     credits: 454545454,
     serial_number: "serialNumber",
     created_by_user: "test@test.com",
+    status: "pending",
   }
 
   let createdDocument
@@ -18,6 +19,7 @@ describe('Carbon-documents', () => {
       .field('credits', dataStub.credits)
       .field('serial_number', dataStub.serial_number)
       .field('created_by_user', dataStub.created_by_user)
+      .field('status', dataStub.status)
       .attach('document', path.resolve(__dirname, '../../helpers/test-file.txt'))
       .expect(200)
       .expect('Content-Type', /json/)
@@ -53,7 +55,7 @@ describe('Carbon-documents', () => {
   it('PUT /carbon-documents/{id}', async () => {
     await request(strapi.server)
       .put(`/carbon-documents/${createdDocument.id}`)
-      .send({title: 'updated title'})
+      .send({title: 'updated title', status: 'pending'})
       .expect(200)
       .expect('Content-Type', /json/)
       .then((response) => {
