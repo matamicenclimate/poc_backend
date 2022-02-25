@@ -1,7 +1,14 @@
-async function sendMail(subject, content) {
+'use strict'
+
+const MAIL_ACTIONS = {
+  SENT: 'sent',
+  SENDING: 'sending'
+}
+
+async function sendMail(subject, content, mailTo) {
   try {
     await strapi.plugins['email'].services.email.send({
-      to: process.env.MAILGUN_EMAIL_TO,
+      to: mailTo ?? process.env.MAILGUN_EMAIL_TO,
       from: process.env.MAILGUN_EMAIL,
       replyTo: process.env.MAILGUN_EMAIL,
       subject,
@@ -15,6 +22,12 @@ async function sendMail(subject, content) {
   }
 }
 
+function logMailAction(collection, status, action, user) {
+  strapi.log.info(`[ ${collection} status ${status} ] mail ${action} to ${user}`)
+}
+
 module.exports = {
   send: sendMail,
+  MAIL_ACTIONS,
+  logMailAction,
 }
