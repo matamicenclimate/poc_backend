@@ -2,7 +2,8 @@
 
 const mailer = require(`${process.cwd()}/utils/mailer`)
 const fileUploader = require(`${process.cwd()}/utils/upload`)
-const { default: algosdk } = require('algosdk')
+
+const algosdk = require('algosdk')
 
 async function create(ctx) {
   const collectionName = ctx.originalUrl.substring(1)
@@ -22,6 +23,9 @@ async function create(ctx) {
   const mailContent = `User ${ctx.state.user.email} sent a new document.<br>Available here: ${url}`
   await mailer.send('New document', mailContent)
   return createdDocument
+}
+async function mint(ctx) {
+  ctx.send(ctx.state.user)
 }
 
 async function mint() {
