@@ -48,8 +48,10 @@
       "type": "enumeration",
       "enum": [
         "pending",
-        "rejected",
-        "completed"
+        "accepted",
+        "waiting_for_credits",
+        "completed",
+        "rejected"
       ],
       "default": "pending",
       "required": false

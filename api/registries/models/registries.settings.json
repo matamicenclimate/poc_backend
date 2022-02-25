@@ -18,6 +18,10 @@
     "description": {
       "type": "text",
       "required": false
+    },
+    "instructions": {
+      "type": "text",
+      "required": true
     }
   }
 }
