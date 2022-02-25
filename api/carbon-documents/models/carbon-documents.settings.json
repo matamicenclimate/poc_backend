@@ -10,11 +10,7 @@
     "timestamps": true,
     "draftAndPublish": false
   },
-  "pluginOptions": {
-    "preview-content": {
-      "previewable": true
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "title": {
       "type": "string",
@@ -29,7 +25,7 @@
       "required": true
     },
     "document": {
-      "model": "file",
+      "collection": "file",
       "via": "related",
       "allowedTypes": [
         "files"
