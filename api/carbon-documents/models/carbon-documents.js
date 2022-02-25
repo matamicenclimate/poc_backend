@@ -1,6 +1,6 @@
 'use strict'
 
-const mailer = require(`${process.cwd()}/utils/mailer`)
+const { mailer, MAIL_ACTIONS, logMailAction } = require(`${process.cwd()}/utils/mailer`)
 
 function makeEnum(statuses) {
   const enumObject = {}
@@ -43,14 +43,14 @@ module.exports = {
       if (data.oldStatus !== data.status) {
         if (data.status === statuses.ACCEPTED) {
           const registryInstructions = data.registry.instructions
-          strapi.log.info(`[status ${statuses.ACCEPTED}] sending mail to ${data.created_by_user}`)
+          logMailAction('carbon-documents', statuses.ACCEPTED, MAIL_ACTIONS.SENDING, data.created_by_user)
           await mailer.send('Document status changed to accepted', registryInstructions, data.created_by_user)
-          strapi.log.info(`[status ${statuses.ACCEPTED}] mail sent to ${data.created_by_user}`)
-          await strapi.services['carbon-documents'].update({ id: data.id }, { status: statuses.WAITING_FOR_CREDITS })
+          logMailAction('carbon-documents', statuses.ACCEPTED, MAIL_ACTIONS.SENT, data.created_by_user)
+          await strapi.services['carbon-documents'].update({ id: data._id }, { status: statuses.WAITING_FOR_CREDITS })
         } else if (data.status === statuses.COMPLETED) {
-          strapi.log.info(`[status ${statuses.COMPLETED}] sending mail to ${data.created_by_user}`)
+          logMailAction('carbon-documents', statuses.COMPLETED, MAIL_ACTIONS.SENDING, data.created_by_user)
           await mailer.send('Credits received', `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`, data.created_by_user)
-          strapi.log.info(`[status ${statuses.COMPLETED}] mail sent to ${data.created_by_user}`)
+          logMailAction('carbon-documents', statuses.COMPLETED, MAIL_ACTIONS.SENT, data.created_by_user)
         }
       }
     },
