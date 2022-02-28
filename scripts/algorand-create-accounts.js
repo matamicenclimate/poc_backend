@@ -3,19 +3,6 @@
 const algosdk = require('algosdk')
 const { algoKmd, algoIndexer, algoClient } = require(`${process.cwd()}/config/algorand`)
 
-// def find_sandbox_faucet(kmd_client, indexer_client):
-//     default_wallet_name = kmd_client.list_wallets()[0]["name"]
-//     wallet = Wallet(
-//         default_wallet_name, "", kmd_client
-//     )  # Sandbox's wallet has no password
-
-//     for account_ in wallet.list_keys():
-//         info = indexer_client.account_info(account_).get("account")
-//         if info.get("status") == "Online" and info.get("created-at-round") == 0:
-//             return Account(address=account_, private_key=wallet.export_key(account_))
-
-//     raise KeyError("Could not find sandbox faucet")
-
 const findSandboxFaucet = async (kmdClient, indexerClient) => {
   const defaultWalletId = (await kmdClient.listWallets()).wallets[0].id
   const initWallet = (await kmdClient.initWalletHandle(defaultWalletId, '')).wallet_handle_token
@@ -26,45 +13,33 @@ const findSandboxFaucet = async (kmdClient, indexerClient) => {
   return algosdk.mnemonicToSecretKey(mn)
 }
 
-// def fund(
-//   algod_client,
-//   faucet: Account,
-//   receiver: Account,
-//   amount=util.algos_to_microalgos(FUND_ACCOUNT_ALGOS),
-// ):
-//   params = get_params(algod_client)
-//   txn = transaction.PaymentTxn(faucet.address, params, receiver.address, amount)
-//   return sign_send_wait(algod_client, faucet, txn)
-
-const fund = async (algodClient, receiver, faucet) => {
-  const suggestedParams = await algodClient.getTransactionParams().do()
+const createAndFund = async (algodClient, faucet) => {
   const amountInMicroAlgos = algosdk.algosToMicroalgos(2) // 2 Algos
+
+  const newAccount = algosdk.generateAccount()
+
+  await sendPaymentTxn(algodClient, amountInMicroAlgos, faucet, newAccount)
+}
+
+const sendPaymentTxn = async (algodClient, amount, sender, receiver) => {
+  const suggestedParams = await algodClient.getTransactionParams().do()
   const unsignedTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-    from: faucet.addr,
+    from: sender.addr,
     to: receiver.addr,
-    amount: amountInMicroAlgos,
+    amount: amount,
     suggestedParams: suggestedParams,
   })
   // Sign the transaction
-  let signedTxn = unsignedTxn.signTxn(faucet.sk)
-  let txId = unsignedTxn.txID().toString()
-  console.log('Signed transaction with txID: %s', txId)
+  const signedTxn = unsignedTxn.signTxn(faucet.sk)
+  const txId = unsignedTxn.txID().toString()
 
   // Submit the transaction
   await algodClient.sendRawTransaction(signedTxn).do()
 
   // Wait for confirmation
-  let confirmedTxn = await algosdk.waitForConfirmation(algodClient, txId, 4)
+  const confirmedTxn = await algosdk.waitForConfirmation(algodClient, txId, 4)
   //Get the completed Transaction
   console.log('Transaction ' + txId + ' confirmed in round ' + confirmedTxn['confirmed-round'])
-  // let mytxinfo = JSON.stringify(confirmedTxn.txn.txn, undefined, 2);
-  // console.log("Transaction information: %o", mytxinfo);
-  const string = new TextDecoder().decode(confirmedTxn.txn.txn.note)
-  console.log('Note field: ', string)
-  const accountInfo = await algodClient.accountInformation(receiver.addr).do()
-  console.log('Transaction Amount: %d microAlgos', confirmedTxn.txn.txn.amt)
-  console.log('Transaction Fee: %d microAlgos', confirmedTxn.txn.txn.fee)
-  console.log('Account balance: %d microAlgos', accountInfo.amount)
 }
 
 const createAccounts = async () => {
@@ -73,15 +48,16 @@ const createAccounts = async () => {
     const kmdClient = algoKmd()
     const indexerClient = algoIndexer()
     const faucet = await findSandboxFaucet(kmdClient, indexerClient)
-    const acct = algosdk.generateAccount()
-    await fund(algodClient, acct, faucet)
+
+    // Create first account
+    const acct = createAndFund(algodClient, faucet)
     console.log('Account 1 = ' + acct.addr)
     const account1_mnemonic = algosdk.secretKeyToMnemonic(acct.sk)
     console.log('Account Mnemonic 1 = ' + account1_mnemonic)
 
-    const acct2 = algosdk.generateAccount()
-    const account2 = acct2.addr
-    console.log('Account 2 = ' + account2)
+    // Create second account
+    const acct2 = createAndFund(algodClient, faucet)
+    console.log('Account 2 = ' + acct2.addr)
     const account2_mnemonic = algosdk.secretKeyToMnemonic(acct2.sk)
     console.log('Account Mnemonic 2 = ' + account2_mnemonic)
   } catch (e) {
