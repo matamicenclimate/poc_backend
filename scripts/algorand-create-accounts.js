@@ -23,9 +23,7 @@ const findSandboxFaucet = async (kmdClient, indexerClient) => {
   const masterWallet = keys.addresses[0]
   const exportKey = await kmdClient.exportKey(initWallet, '', masterWallet)
   const mn = algosdk.secretKeyToMnemonic(exportKey.private_key)
-  console.log(mn)
   return algosdk.mnemonicToSecretKey(mn)
-  // return keys
 }
 
 // def fund(
@@ -68,6 +66,7 @@ const fund = async (algodClient, receiver, faucet) => {
   console.log('Transaction Fee: %d microAlgos', confirmedTxn.txn.txn.fee)
   console.log('Account balance: %d microAlgos', accountInfo.amount)
 }
+
 const createAccounts = async () => {
   try {
     const algodClient = algoClient()

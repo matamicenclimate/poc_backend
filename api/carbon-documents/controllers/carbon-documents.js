@@ -25,9 +25,6 @@ async function create(ctx) {
   await mailer.send('New document', mailContent)
   return createdDocument
 }
-async function mint(ctx) {
-  ctx.send(ctx.state.user)
-}
 
 // Function used to wait for a tx confirmation
 async function waitForConfirmation(algodclient, txId) {
