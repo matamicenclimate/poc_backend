@@ -1,7 +1,7 @@
 'use strict'
 
 const algosdk = require('algosdk')
-const { algoKmd, algoIndexer } = require(`${process.cwd()}/config/algorand`)
+const { algoKmd, algoIndexer, algoClient } = require(`${process.cwd()}/config/algorand`)
 
 // def find_sandbox_faucet(kmd_client, indexer_client):
 //     default_wallet_name = kmd_client.list_wallets()[0]["name"]
@@ -20,22 +20,63 @@ const findSandboxFaucet = async (kmdClient, indexerClient) => {
   const defaultWalletId = (await kmdClient.listWallets()).wallets[0].id
   const initWallet = (await kmdClient.initWalletHandle(defaultWalletId, '')).wallet_handle_token
   const keys = await kmdClient.listKeys(initWallet)
-  keys.addresses.forEach(async (addr) => {
-    const exportKey = await kmdClient.exportKey(initWallet, '', addr)
-    const mn = algosdk.secretKeyToMnemonic(exportKey.private_key)
-    console.log(mn)
-  })
-  return keys
+  const masterWallet = keys.addresses[0]
+  const exportKey = await kmdClient.exportKey(initWallet, '', masterWallet)
+  const mn = algosdk.secretKeyToMnemonic(exportKey.private_key)
+  console.log(mn)
+  return algosdk.mnemonicToSecretKey(mn)
+  // return keys
 }
 
+// def fund(
+//   algod_client,
+//   faucet: Account,
+//   receiver: Account,
+//   amount=util.algos_to_microalgos(FUND_ACCOUNT_ALGOS),
+// ):
+//   params = get_params(algod_client)
+//   txn = transaction.PaymentTxn(faucet.address, params, receiver.address, amount)
+//   return sign_send_wait(algod_client, faucet, txn)
+
+const fund = async (algodClient, receiver, faucet) => {
+  const suggestedParams = await algodClient.getTransactionParams().do()
+  const amountInMicroAlgos = algosdk.algosToMicroalgos(2) // 2 Algos
+  const unsignedTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    from: faucet.addr,
+    to: receiver.addr,
+    amount: amountInMicroAlgos,
+    suggestedParams: suggestedParams,
+  })
+  // Sign the transaction
+  let signedTxn = unsignedTxn.signTxn(faucet.sk)
+  let txId = unsignedTxn.txID().toString()
+  console.log('Signed transaction with txID: %s', txId)
+
+  // Submit the transaction
+  await algodClient.sendRawTransaction(signedTxn).do()
+
+  // Wait for confirmation
+  let confirmedTxn = await algosdk.waitForConfirmation(algodClient, txId, 4)
+  //Get the completed Transaction
+  console.log('Transaction ' + txId + ' confirmed in round ' + confirmedTxn['confirmed-round'])
+  // let mytxinfo = JSON.stringify(confirmedTxn.txn.txn, undefined, 2);
+  // console.log("Transaction information: %o", mytxinfo);
+  const string = new TextDecoder().decode(confirmedTxn.txn.txn.note)
+  console.log('Note field: ', string)
+  const accountInfo = await algodClient.accountInformation(receiver.addr).do()
+  console.log('Transaction Amount: %d microAlgos', confirmedTxn.txn.txn.amt)
+  console.log('Transaction Fee: %d microAlgos', confirmedTxn.txn.txn.fee)
+  console.log('Account balance: %d microAlgos', accountInfo.amount)
+}
 const createAccounts = async () => {
   try {
+    const algodClient = algoClient()
     const kmdClient = algoKmd()
     const indexerClient = algoIndexer()
-    const wallets = await findSandboxFaucet(kmdClient, indexerClient)
+    const faucet = await findSandboxFaucet(kmdClient, indexerClient)
     const acct = algosdk.generateAccount()
-    const account1 = acct.addr
-    console.log('Account 1 = ' + account1)
+    await fund(algodClient, acct, faucet)
+    console.log('Account 1 = ' + acct.addr)
     const account1_mnemonic = algosdk.secretKeyToMnemonic(acct.sk)
     console.log('Account Mnemonic 1 = ' + account1_mnemonic)
 

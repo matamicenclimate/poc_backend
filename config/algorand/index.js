@@ -3,7 +3,7 @@
 const algosdk = require('algosdk')
 require('dotenv').config()
 
-function algoclient() {
+function algoClient() {
   return new algosdk.Algodv2(process.env.ALGO_API_TOKEN, process.env.ALGO_HOST_URL, process.env.ALGO_HOST_PORT)
 }
 
@@ -24,7 +24,7 @@ function algoIndexer() {
 }
 
 module.exports = {
-  algoclient,
+  algoClient,
   algoKmd,
   algoIndexer,
 }
