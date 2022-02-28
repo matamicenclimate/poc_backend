@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/preview/:contentType/:id",
+      "handler": "preview.find",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
