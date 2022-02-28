@@ -29,10 +29,27 @@ async function mint(ctx) {
   ctx.send(ctx.state.user)
 }
 
+// Function used to wait for a tx confirmation
+async function waitForConfirmation(algodclient, txId) {
+  let response = await algodclient.status().do()
+  let lastround = response["last-round"]
+  while (true) {
+    const pendingInfo = await algodclient.pendingTransactionInformation(txId).do()
+    if (pendingInfo["confirmed-round"] !== null && pendingInfo["confirmed-round"] > 0) {
+      // Got the completed Transaction
+      console.log("Transaction " + txId + " confirmed in round " + pendingInfo["confirmed-round"])
+      break
+    }
+    lastround++
+    await algodclient.statusAfterBlock(lastround).do()
+  }
+}
+
 async function mint() {
-  console.log(await algoclient.status().do())
-  const params = await algoclient.getTransactionParams().do()
-  const creator = ''
+  const algodclient = algoclient()
+  console.log(await algodclient.status().do())
+  const params = await algodclient.getTransactionParams().do()
+  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const defaultFrozen = false
   const unitName = 'ALICEART'
   const assetName = "Alice's Artwork@arc3"
@@ -46,7 +63,7 @@ async function mint() {
   const total = 1 // NFTs have totalIssuance of exactly 1
   const decimals = 0 // NFTs have decimals of exactly 0
   const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-    from: creator,
+    from: creator.addr,
     total,
     decimals,
     assetName,
@@ -60,15 +77,17 @@ async function mint() {
     reserve: reserveAddr,
     suggestedParams: params,
   })
-  let rawSignedTxn = txn.signTxn(recoveredAccount1.sk)
-  let tx = await algoclient.sendRawTransaction(rawSignedTxn).do()
+  let rawSignedTxn = txn.signTxn(creator.sk)
+  let tx = await algodclient.sendRawTransaction(rawSignedTxn).do()
   console.log('Transaction : ' + tx.txId)
   let assetID = null
   // wait for transaction to be confirmed
-  await waitForConfirmation(algoclient, tx.txId)
+  await waitForConfirmation(algodclient, tx.txId)
   // Get the new asset's information from the creator account
-  let ptx = await algoclient.pendingTransactionInformation(tx.txId).do()
+  let ptx = await algodclient.pendingTransactionInformation(tx.txId).do()
   assetID = ptx['asset-index']
+
+  return assetID
 }
 
 module.exports = {
