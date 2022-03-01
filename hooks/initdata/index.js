@@ -41,8 +41,44 @@ async function createAdminUser(strapi) {
   }
 }
 
+async function createEditorUser(strapi) {
+  if (process.env.DEFAULT_EDITOR_USER) {
+    let user = await strapi.query('user', 'admin').find({ email: process.env.DEFAULT_EDITOR_EMAIL })
+
+    if (user.length === 0) {
+      try {
+        const editorRole = await strapi.admin.services.role.findOne({ code: 'strapi-editor' })
+        const params = {
+          username: process.env.DEFAULT_EDITOR_USER,
+          password: process.env.DEFAULT_EDITOR_PASS,
+          firstname: process.env.DEFAULT_EDITOR_FIRSTNAME,
+          lastname: process.env.DEFAULT_EDITOR_LASTNAME,
+          email: process.env.DEFAULT_EDITOR_EMAIL,
+          roles: [editorRole.id],
+          blocked: false,
+          isActive: true,
+        }
+
+        params.password = await strapi.admin.services.auth.hashPassword(params.password)
+        user = await strapi.query('user', 'admin').create({
+          ...params,
+        })
+        strapi.log.info(
+          `[initData] ${process.env.DEFAULT_EDITOR_EMAIL} account was successfully created with email ${user.email}`,
+        )
+      } catch (error) {
+        strapi.log.error(
+          `[initData] Couldn't create ${process.env.DEFAULT_EDITOR_EMAIL} account during bootstrap: `,
+          error,
+        )
+      }
+    }
+  }
+}
+
 function initData(strapi) {
   createAdminUser(strapi)
+  createEditorUser(strapi)
 }
 
 module.exports = (strapi) => {

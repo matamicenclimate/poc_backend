@@ -21,8 +21,8 @@ const HTTP_METHODS = {
 const ROLE_TYPES = {
   PUBLIC: 'public',
   AUTH: 'authenticated',
-  INTERNAL: 'internal-process',
-  MAKER: 'maker',
+  ADMIN: 'admin',
+  EDITOR: 'editor',
 }
 
 module.exports.HTTP_STATUS = HTTP_STATUS
