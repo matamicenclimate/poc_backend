@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sdgs",
+  "info": {
+    "name": "sdgs",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}
