@@ -46,6 +46,25 @@ async function waitForConfirmation(algodclient, txId) {
 const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const params = await algodclient.getTransactionParams().do()
 
+  // TODO:
+  const unitName = 'ALICEART'
+  const assetName = "Alice's Artwork@arc3"
+
+  // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
+  const url = 'https://path/to/my/nft/asset/metadata.json'
+  const mediaTypeSpecifier = '#p'
+  const metadataUrl = `${url}${mediaTypeSpecifier}`
+
+  // asset config
+  const managerAddr = undefined
+  const reserveAddr = undefined
+  const freezeAddr = undefined
+  const clawbackAddr = undefined
+  const defaultFrozen = false
+  const total = 1 // NFTs have totalIssuance of exactly 1
+  const decimals = 0 // NFTs have decimals of exactly 0
+
+  // metadata
   const metadata = {
     standard: 'arc69',
     description: `Carbon Emission Credit #123123123`,
@@ -58,24 +77,11 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
       Provider: carbonDocument.registry ? carbonDocument.registry._id : '',
     },
   }
-  const defaultFrozen = false
-  const unitName = 'ALICEART'
-  const assetName = "Alice's Artwork@arc3"
-  // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
-  const url = 'https://path/to/my/nft/asset/metadata.json'
-  const metadataUrl = `${url}#p`
-  // Optional hash commitment of some sort relating to the asset. 96 character length.
-  // SHA-256 of the
+  // the SHA-256 digest of the full resolution media file as a 32-byte string
   const hash = crypto.createHash('sha256').update(JSON.stringify(metadata))
   const assetMetadataHash = new Uint8Array(hash.digest())
-  // const assetMetadataHash = crypto.createHash('sha256').update(JSON.stringify(metadata)).digest('utf-8')
-  const managerAddr = undefined
-  const reserveAddr = undefined
-  const freezeAddr = undefined
-  const clawbackAddr = undefined
-  const total = 1 // NFTs have totalIssuance of exactly 1
-  const decimals = 0 // NFTs have decimals of exactly 0
-  const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+
+  const unsignedTxn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
     from: creator.addr,
     total,
     decimals,
@@ -89,14 +95,18 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     clawback: clawbackAddr,
     reserve: reserveAddr,
     suggestedParams: params,
+    note: new TextEncoder().encode(metadata),
   })
-  let rawSignedTxn = txn.signTxn(creator.sk)
-  let tx = await algodclient.sendRawTransaction(rawSignedTxn).do()
-  console.log('Transaction : ' + tx.txId)
+
+  // create and send the configurationTxn
+  const signedTxn = unsignedTxn.signTxn(creator.sk)
+  const txn = await algodclient.sendRawTransaction(signedTxn).do()
+  console.log('Transaction : ' + txn.txId)
+
   // wait for transaction to be confirmed
-  await waitForConfirmation(algodclient, tx.txId)
+  await waitForConfirmation(algodclient, txn.txId)
   // Get the new asset's information from the creator account
-  const ptx = await algodclient.pendingTransactionInformation(tx.txId).do()
+  const ptx = await algodclient.pendingTransactionInformation(txn.txId).do()
   const assetID = ptx['asset-index']
   return assetID
 }
