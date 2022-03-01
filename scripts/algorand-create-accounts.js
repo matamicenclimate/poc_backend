@@ -19,6 +19,8 @@ const createAndFund = async (algodClient, faucet) => {
   const newAccount = algosdk.generateAccount()
 
   await sendPaymentTxn(algodClient, amountInMicroAlgos, faucet, newAccount)
+
+  return newAccount
 }
 
 const sendPaymentTxn = async (algodClient, amount, sender, receiver) => {
@@ -30,7 +32,7 @@ const sendPaymentTxn = async (algodClient, amount, sender, receiver) => {
     suggestedParams: suggestedParams,
   })
   // Sign the transaction
-  const signedTxn = unsignedTxn.signTxn(faucet.sk)
+  const signedTxn = unsignedTxn.signTxn(sender.sk)
   const txId = unsignedTxn.txID().toString()
 
   // Submit the transaction
@@ -38,6 +40,7 @@ const sendPaymentTxn = async (algodClient, amount, sender, receiver) => {
 
   // Wait for confirmation
   const confirmedTxn = await algosdk.waitForConfirmation(algodClient, txId, 4)
+
   //Get the completed Transaction
   console.log('Transaction ' + txId + ' confirmed in round ' + confirmedTxn['confirmed-round'])
 }
@@ -50,13 +53,13 @@ const createAccounts = async () => {
     const faucet = await findSandboxFaucet(kmdClient, indexerClient)
 
     // Create first account
-    const acct = createAndFund(algodClient, faucet)
+    const acct = await createAndFund(algodClient, faucet)
     console.log('Account 1 = ' + acct.addr)
     const account1_mnemonic = algosdk.secretKeyToMnemonic(acct.sk)
     console.log('Account Mnemonic 1 = ' + account1_mnemonic)
 
     // Create second account
-    const acct2 = createAndFund(algodClient, faucet)
+    const acct2 = await createAndFund(algodClient, faucet)
     console.log('Account 2 = ' + acct2.addr)
     const account2_mnemonic = algosdk.secretKeyToMnemonic(acct2.sk)
     console.log('Account Mnemonic 2 = ' + account2_mnemonic)
