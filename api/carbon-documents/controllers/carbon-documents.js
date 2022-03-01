@@ -4,7 +4,8 @@ const mailer = require(`${process.cwd()}/utils/mailer`)
 const fileUploader = require(`${process.cwd()}/utils/upload`)
 
 const algosdk = require('algosdk')
-const { algoclient } = require(`${process.cwd()}/config/algorand`)
+const crypto = require('crypto')
+const { algoClient } = require(`${process.cwd()}/config/algorand`)
 
 async function create(ctx) {
   const collectionName = ctx.originalUrl.substring(1)
@@ -42,17 +43,32 @@ async function waitForConfirmation(algodclient, txId) {
   }
 }
 
-async function mint() {
-  const algodclient = algoclient()
-  console.log(await algodclient.status().do())
+const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const params = await algodclient.getTransactionParams().do()
-  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
+
+  const metadata = {
+    standard: 'arc69',
+    description: `Carbon Emission Credit #123123123`,
+    // supongo que un hosting centralizado
+    external_url: 'https://www.climatetrade.com/assets/....yoquese.pdf',
+    mime_type: 'file/pdf',
+    properties: {
+      Amount: carbonDocument.credits,
+      Serial_Number: carbonDocument.serial_number,
+      Provider: carbonDocument.registry ? carbonDocument.registry._id : '',
+    },
+  }
   const defaultFrozen = false
   const unitName = 'ALICEART'
   const assetName = "Alice's Artwork@arc3"
+  // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
   const url = 'https://path/to/my/nft/asset/metadata.json'
+  const metadataUrl = `${url}#p`
   // Optional hash commitment of some sort relating to the asset. 96 character length.
-  const assetMetadataHash = '16efaa3924a6fd9d3a4824799a4ac65d'
+  // SHA-256 of the
+  const hash = crypto.createHash('sha256').update(JSON.stringify(metadata))
+  const assetMetadataHash = new Uint8Array(hash.digest())
+  // const assetMetadataHash = crypto.createHash('sha256').update(JSON.stringify(metadata)).digest('utf-8')
   const managerAddr = undefined
   const reserveAddr = undefined
   const freezeAddr = undefined
@@ -65,7 +81,7 @@ async function mint() {
     decimals,
     assetName,
     unitName,
-    assetURL: url,
+    assetURL: metadataUrl,
     assetMetadataHash,
     defaultFrozen,
     freeze: freezeAddr,
@@ -77,14 +93,31 @@ async function mint() {
   let rawSignedTxn = txn.signTxn(creator.sk)
   let tx = await algodclient.sendRawTransaction(rawSignedTxn).do()
   console.log('Transaction : ' + tx.txId)
-  let assetID = null
   // wait for transaction to be confirmed
   await waitForConfirmation(algodclient, tx.txId)
   // Get the new asset's information from the creator account
-  let ptx = await algodclient.pendingTransactionInformation(tx.txId).do()
-  assetID = ptx['asset-index']
-
+  const ptx = await algodclient.pendingTransactionInformation(tx.txId).do()
+  const assetID = ptx['asset-index']
   return assetID
+}
+
+async function mint(ctx) {
+  const { id } = ctx.params
+  const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
+  if (carbonDocument.status === 'testerino') {
+    return ctx.badRequest('document hasnt been reviewed')
+    // return (ctx.status = 500, ctx.message = 'error 500')
+  }
+
+  const algodclient = algoClient()
+  console.log(await algodclient.status().do())
+  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
+  const mintedNftId = await mintCarbonNft(algodclient, creator, carbonDocument)
+  const carbonDocuments = await strapi.services['carbon-documents'].update(
+    { id },
+    { ...carbonDocument, minted_block_id: '', minted_supplier_asa_id: mintedNftId, minted_climate_asa_id: 0 },
+  )
+  return carbonDocuments
 }
 
 module.exports = {
