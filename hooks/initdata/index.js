@@ -2,19 +2,18 @@
 
 const config = require('config')
 const { delay } = require(process.cwd() + '/utils/time')
-const ROLE_TYPES = require(process.cwd() + '/utils/enums').ROLE_TYPES
+const fs = require('fs')
 
 async function createAdminUser(strapi) {
   strapi.log.info(`[initData] Create admin account`)
   let superAdminRole = await strapi.admin.services.role.getSuperAdmin()
-  if (superAdminRole === null) {
+  while (superAdminRole === null) {
     strapi.log.info(`[initData] Wait 1s to get SuperAdmin role`)
     await delay(1000)
     superAdminRole = await strapi.admin.services.role.getSuperAdmin()
   }
 
   if (process.env.DEFAULT_ADMIN_USER) {
-    //Check if any account exists.
     const admins = await strapi.query('user', 'admin').find()
     if (admins.length === 0) {
       try {
@@ -76,9 +75,32 @@ async function createEditorUser(strapi) {
   }
 }
 
-function initData(strapi) {
-  createAdminUser(strapi)
-  createEditorUser(strapi)
+async function insertData(strapi) {
+  const data = await fs.promises.readFile('hooks/initdata/init-data.json', 'utf8')
+  const parsedData = JSON.parse(data)
+  for (const key in parsedData) {
+    const hasData = await strapi.query(key).model.find({})
+    if (hasData.length) {
+      continue
+    }
+
+    const element = parsedData[key]
+    for (const data of element) {
+      if (typeof data === 'object') {
+        await strapi.query(key).model.create(data)
+      } else if (typeof data === 'string') {
+        await strapi.query(key).model.create({ name: data, description: '' })
+      } else {
+        strapi.log.warn(`[initData] init-data.json: data type not valid`)
+      }
+    }
+  }
+}
+
+async function initData(strapi) {
+  await createAdminUser(strapi)
+  await createEditorUser(strapi)
+  await insertData(strapi)
 }
 
 module.exports = (strapi) => {
