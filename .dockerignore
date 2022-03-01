@@ -2,5 +2,5 @@ node_modules/
 build
 .cache
 .git
-public/uploads
+public/uploads/*
 .env
