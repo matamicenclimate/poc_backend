@@ -98,10 +98,8 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     },
   }
   // the SHA-256 digest of the full resolution media file as a 32-byte string
-  const hash = crypto.createHash('sha256').update(JSON.stringify(metadata))
-  const assetMetadataHash = new Uint8Array(hash.digest())
-  const hash2 = crypto.createHash('sha256').update(JSON.stringify(metadata2))
-  const assetMetadataHash2 = new Uint8Array(hash2.digest())
+  const assetMetadataHash = new Uint8Array(crypto.createHash('sha256').update(JSON.stringify(metadata)).digest())
+  const assetMetadataHash2 = new Uint8Array(crypto.createHash('sha256').update(JSON.stringify(metadata2)).digest())
 
   const unsignedTxn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
     from: creator.addr,
@@ -152,9 +150,11 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     console.log(`Transaction :   ${result.txIDs[idx]}`)
     console.log(`Transaction :   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
   } // wait for transaction to be confirmed
+
   const pendingSupplierAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[0]).do()
   const pendingFeeAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[1]).do()
-  let groupId = pendingSupplierAsaTxn.txn.txn.grp.toString('base64')
+  const groupId = pendingSupplierAsaTxn.txn.txn.grp.toString('base64')
+
   return {
     groupId: groupId,
     supplierAsaId: pendingSupplierAsaTxn['asset-index'],
@@ -167,13 +167,13 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
 async function mint(ctx) {
   const { id } = ctx.params
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
-  if (carbonDocument.status === 'testerino') {
+  // TODO: remove status != minted. its only here for developers sake
+  if (carbonDocument.status !== 'completed' || carbonDocument.status !== 'minted') {
     return ctx.badRequest('document hasnt been reviewed')
-    // return (ctx.status = 500, ctx.message = 'error 500')
   }
 
   const algodclient = algoClient()
-  // console.log(await algodclient.status().do())
+
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const { groupId, supplierAsaId, assetCreationTxn, climateFeeNftId, climateCreationTxn } = await mintCarbonNft(
     algodclient,
