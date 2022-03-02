@@ -152,9 +152,16 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     console.log(`Transaction :   ${result.txIDs[idx]}`)
     console.log(`Transaction :   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
   } // wait for transaction to be confirmed
-  const pending1 = await algodclient.pendingTransactionInformation(result.txIDs[0]).do()
-  const pending2 = await algodclient.pendingTransactionInformation(result.txIDs[1]).do()
-  return { assetID: pending1['asset-index'], climateFeeNftId: pending2['asset-index'] }
+  const pendingSupplierAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[0]).do()
+  const pendingFeeAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[1]).do()
+  let groupId = pendingSupplierAsaTxn.txn.txn.grp.toString('base64')
+  return {
+    groupId: groupId,
+    supplierAsaId: pendingSupplierAsaTxn['asset-index'],
+    assetCreationTxn: result.txIDs[0],
+    climateFeeNftId: pendingFeeAsaTxn['asset-index'],
+    climateCreationTxn: result.txIDs[1],
+  }
 }
 
 async function mint(ctx) {
@@ -168,7 +175,11 @@ async function mint(ctx) {
   const algodclient = algoClient()
   // console.log(await algodclient.status().do())
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
-  const { assetID: mintedNftId, climateFeeNftId } = await mintCarbonNft(algodclient, creator, carbonDocument)
+  const { groupId, supplierAsaId, assetCreationTxn, climateFeeNftId, climateCreationTxn } = await mintCarbonNft(
+    algodclient,
+    creator,
+    carbonDocument,
+  )
 
   // update carbon document with nfts ids
   const carbonDocuments = await strapi.services['carbon-documents'].update(
@@ -176,9 +187,11 @@ async function mint(ctx) {
     {
       ...carbonDocument,
       status: 'minted',
-      minted_block_id: '',
-      minted_supplier_asa_id: mintedNftId,
+      minted_group_id: groupId,
+      minted_supplier_asa_id: supplierAsaId,
+      minted_supplier_asa_txn_id: assetCreationTxn,
       minted_climate_asa_id: climateFeeNftId,
+      minted_climate_asa_txn_id: climateCreationTxn,
     },
   )
 
