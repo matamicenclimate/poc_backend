@@ -47,8 +47,8 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const params = await algodclient.getTransactionParams().do()
 
   // TODO:
-  const unitName = 'ALICEART'
-  const assetName = "Alice's Artwork@arc3"
+  const unitName = 'CARBON'
+  const assetName = 'Carbon Document@arc69'
 
   // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
   const url = 'https://path/to/my/nft/asset/metadata.json'
@@ -67,12 +67,12 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   // metadata
   const metadata = {
     standard: 'arc69',
-    description: `Carbon Emission Credit #123123123`,
+    description: `Carbon Emission Credit ${carbonDocument._id}`,
     // supongo que un hosting centralizado
     external_url: 'https://www.climatetrade.com/assets/....yoquese.pdf',
     mime_type: 'file/pdf',
     properties: {
-      Amount: carbonDocument.credits,
+      Credits: carbonDocument.credits,
       Serial_Number: carbonDocument.serial_number,
       Provider: carbonDocument.registry ? carbonDocument.registry._id : '',
     },
@@ -95,13 +95,13 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     clawback: clawbackAddr,
     reserve: reserveAddr,
     suggestedParams: params,
-    note: new TextEncoder().encode(metadata),
+    note: new TextEncoder().encode(JSON.stringify(metadata)),
   })
 
   // create and send the configurationTxn
   const signedTxn = unsignedTxn.signTxn(creator.sk)
   const txn = await algodclient.sendRawTransaction(signedTxn).do()
-  console.log('Transaction : ' + txn.txId)
+  console.log(`Transaction :   https://testnet.algoexplorer.io/tx/${txn.txId}`)
 
   // wait for transaction to be confirmed
   await waitForConfirmation(algodclient, txn.txId)
@@ -120,13 +120,22 @@ async function mint(ctx) {
   }
 
   const algodclient = algoClient()
-  console.log(await algodclient.status().do())
+  // console.log(await algodclient.status().do())
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const mintedNftId = await mintCarbonNft(algodclient, creator, carbonDocument)
+
+  // update carbon document with nfts ids
   const carbonDocuments = await strapi.services['carbon-documents'].update(
     { id },
-    { ...carbonDocument, minted_block_id: '', minted_supplier_asa_id: mintedNftId, minted_climate_asa_id: 0 },
+    {
+      ...carbonDocument,
+      status: 'minted',
+      minted_block_id: '',
+      minted_supplier_asa_id: mintedNftId,
+      minted_climate_asa_id: 0,
+    },
   )
+
   return carbonDocuments
 }
 

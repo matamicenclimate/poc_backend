@@ -47,7 +47,9 @@
         "accepted",
         "waiting_for_credits",
         "completed",
-        "rejected"
+        "rejected",
+        "minted",
+        "claimed"
       ],
       "default": "pending",
       "required": false
