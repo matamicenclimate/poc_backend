@@ -47,7 +47,9 @@
         "accepted",
         "waiting_for_credits",
         "completed",
-        "rejected"
+        "rejected",
+        "minted",
+        "claimed"
       ],
       "default": "pending",
       "required": false
@@ -55,6 +57,15 @@
     "created_by_user": {
       "type": "email",
       "required": true
+    },
+    "minted_block_id": {
+      "type": "string"
+    },
+    "minted_supplier_asa_id": {
+      "type": "biginteger"
+    },
+    "minted_climate_asa_id": {
+      "type": "biginteger"
     }
   }
 }

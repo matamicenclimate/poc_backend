@@ -8,14 +8,17 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "algo-create-accounts": "node scripts/algorand-create-accounts.js"
   },
   "devDependencies": {
     "jest": "^27.5.1",
     "supertest": "^6.2.2"
   },
   "dependencies": {
+    "algosdk": "^1.13.1",
     "config": "^3.3.6",
+    "dotenv": "^16.0.0",
     "lodash": "^4.17.21",
     "strapi": "3.6.8",
     "strapi-admin": "3.6.8",

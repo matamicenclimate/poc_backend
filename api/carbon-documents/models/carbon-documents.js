@@ -16,12 +16,22 @@ function statusLogic(currentStatus, newStatus) {
     return true
   }
 
-  if ((currentStatus === statusesEnum.COMPLETED) ||
-    (currentStatus === statusesEnum.PENDING && (newStatus !== statusesEnum.ACCEPTED && newStatus !== statusesEnum.REJECTED)) ||
-    (currentStatus === statusesEnum.ACCEPTED && (newStatus !== statusesEnum.WAITING_FOR_CREDITS && newStatus !== statusesEnum.REJECTED)) ||
-    (currentStatus === statusesEnum.WAITING_FOR_CREDITS && (newStatus !== statusesEnum.COMPLETED && newStatus !== statusesEnum.REJECTED)) ||
-    (currentStatus === statusesEnum.REJECTED && newStatus !== statusesEnum.ACCEPTED)) {
-      throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
+  if (
+    currentStatus === statusesEnum.CLAIMED ||
+    (currentStatus === statusesEnum.PENDING &&
+      newStatus !== statusesEnum.ACCEPTED &&
+      newStatus !== statusesEnum.REJECTED) ||
+    (currentStatus === statusesEnum.ACCEPTED &&
+      newStatus !== statusesEnum.WAITING_FOR_CREDITS &&
+      newStatus !== statusesEnum.REJECTED) ||
+    (currentStatus === statusesEnum.WAITING_FOR_CREDITS &&
+      newStatus !== statusesEnum.COMPLETED &&
+      newStatus !== statusesEnum.REJECTED) ||
+    (currentStatus === statusesEnum.COMPLETED && newStatus !== statusesEnum.MINTED) ||
+    (currentStatus === statusesEnum.MINTED && newStatus !== statusesEnum.CLAIMED) ||
+    (currentStatus === statusesEnum.REJECTED && newStatus !== statusesEnum.ACCEPTED)
+  ) {
+    throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
   }
 }
 
@@ -49,10 +59,14 @@ module.exports = {
           await strapi.services['carbon-documents'].update({ id: data._id }, { status: statuses.WAITING_FOR_CREDITS })
         } else if (data.status === statuses.COMPLETED) {
           logMailAction('carbon-documents', statuses.COMPLETED, MAIL_ACTIONS.SENDING, data.created_by_user)
-          await mailer.send('Credits received', `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`, data.created_by_user)
+          await mailer.send(
+            'Credits received',
+            `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`,
+            data.created_by_user,
+          )
           logMailAction('carbon-documents', statuses.COMPLETED, MAIL_ACTIONS.SENT, data.created_by_user)
         }
       }
     },
-  }
+  },
 }
