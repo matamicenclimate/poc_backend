@@ -6,6 +6,16 @@ module.exports = {
     max: 6000,
   },
   info: {
-    collections: ['registries', 'project-types'],
+    collections: [
+      'registries',
+      'project-types',
+      'sdgs',
+      'types',
+      'sub-types',
+      'methodologies',
+      'validators',
+      'first-verifiers',
+      'standards',
+    ],
   },
 }
