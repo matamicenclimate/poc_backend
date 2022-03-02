@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sub_types",
+  "info": {
+    "name": "sub-types"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

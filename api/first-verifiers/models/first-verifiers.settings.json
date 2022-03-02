@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "first_verifiers",
+  "info": {
+    "name": "first-verifiers"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}
