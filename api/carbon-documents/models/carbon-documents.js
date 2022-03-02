@@ -17,6 +17,7 @@ function statusLogic(currentStatus, newStatus) {
   }
 
   if (
+    currentStatus === statusesEnum.CLAIMED ||
     (currentStatus === statusesEnum.PENDING &&
       newStatus !== statusesEnum.ACCEPTED &&
       newStatus !== statusesEnum.REJECTED) ||
@@ -27,6 +28,7 @@ function statusLogic(currentStatus, newStatus) {
       newStatus !== statusesEnum.COMPLETED &&
       newStatus !== statusesEnum.REJECTED) ||
     (currentStatus === statusesEnum.COMPLETED && newStatus !== statusesEnum.MINTED) ||
+    (currentStatus === statusesEnum.MINTED && newStatus !== statusesEnum.CLAIMED) ||
     (currentStatus === statusesEnum.REJECTED && newStatus !== statusesEnum.ACCEPTED)
   ) {
     throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
