@@ -3,18 +3,26 @@
 const mime = require('mime-types')
 
 async function pushFile(ctx) {
-  const file = ctx.request.files.document
-  return await strapi.plugins.upload.services.upload.upload({
-    data:{},
-    files: {
-      path: file.path, 
-      name: file.name,
-      type: mime.lookup(file.path),
-      size: file.size,
-    },
-  });
+  const files = ctx.request.files
+  const objectResponse = {}
+  for (const key in files) {
+    const element = files[key]
+    objectResponse[key] = await strapi.plugins.upload.services.upload.upload({
+      data: {},
+      files: {
+        path: element.path,
+        name: element.name,
+        type: mime.lookup(element.path),
+        size: element.size,
+      },
+    })
+
+    objectResponse[key] = objectResponse[key][0].id
+  }
+
+  return objectResponse
 }
 
 module.exports = {
-  pushFile
+  pushFile,
 }

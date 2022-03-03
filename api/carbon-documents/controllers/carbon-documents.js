@@ -10,11 +10,8 @@ const { algoClient } = require(`${process.cwd()}/config/algorand`)
 async function create(ctx) {
   const collectionName = ctx.originalUrl.substring(1)
   const applicationUid = strapi.api[collectionName].models[collectionName].uid
-  const pushFileResponse = await fileUploader.pushFile(ctx)
-  if (pushFileResponse[0]) {
-    strapi.log.info(`[${pushFileResponse[0].url}] file uploaded`)
-    ctx.request.body.document = pushFileResponse[0].id
-  }
+  const pushFilesResponse = await fileUploader.pushFile(ctx)
+  ctx.request.body = { ...ctx.request.body, ...pushFilesResponse }
 
   const createdDocument = await strapi.services[collectionName].create(ctx.request.body)
   if (process.env.NODE_ENV === 'test') {
