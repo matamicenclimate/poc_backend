@@ -168,7 +168,7 @@ async function mint(ctx) {
   const { id } = ctx.params
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   // TODO: remove status != minted. its only here for developers sake
-  if (carbonDocument.status !== 'completed' || carbonDocument.status !== 'minted') {
+  if ([!'completed', 'minted'].includes(carbonDocument.status)) {
     return ctx.badRequest('document hasnt been reviewed')
   }
 
