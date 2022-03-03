@@ -7,9 +7,9 @@
     { "name": "BME", "instructions": "BME instructions", "description": "" }
   ],
   "project-types": [
-    { "value": "carbon", "description": "Carbon offset" },
-    { "value": "nature", "description": "Nature based solutions" },
-    { "value": "irecs", "description": "Irecs" }
+    { "name": "Carbon offset", "description": "carbon" },
+    { "name": "Nature based solutions", "description": "nature" },
+    { "name": "Irecs", "description": "irecs" }
   ],
   "SDGs": [
     "No Poverty",
