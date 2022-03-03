@@ -16,21 +16,17 @@ function statusLogic(currentStatus, newStatus) {
     return true
   }
 
-  if (
-    currentStatus === statusesEnum.CLAIMED ||
-    (currentStatus === statusesEnum.PENDING &&
-      newStatus !== statusesEnum.ACCEPTED &&
-      newStatus !== statusesEnum.REJECTED) ||
-    (currentStatus === statusesEnum.ACCEPTED &&
-      newStatus !== statusesEnum.WAITING_FOR_CREDITS &&
-      newStatus !== statusesEnum.REJECTED) ||
-    (currentStatus === statusesEnum.WAITING_FOR_CREDITS &&
-      newStatus !== statusesEnum.COMPLETED &&
-      newStatus !== statusesEnum.REJECTED) ||
-    (currentStatus === statusesEnum.COMPLETED && newStatus !== statusesEnum.MINTED) ||
-    (currentStatus === statusesEnum.MINTED && newStatus !== statusesEnum.CLAIMED) ||
-    (currentStatus === statusesEnum.REJECTED && newStatus !== statusesEnum.ACCEPTED)
-  ) {
+  // left: current state | right: possible new states
+  const stateTransition = {
+    [statusesEnum.PENDING]: [statusesEnum.ACCEPTED, statusesEnum.REJECTED],
+    [statusesEnum.ACCEPTED]: [statusesEnum.WAITING_FOR_CREDITS, statusesEnum.REJECTED],
+    [statusesEnum.WAITING_FOR_CREDITS]: [statusesEnum.COMPLETED, statusesEnum.REJECTED],
+    [statusesEnum.COMPLETED]: [statusesEnum.MINTED],
+    [statusesEnum.MINTED]: [statusesEnum.CLAIMED],
+    [statusesEnum.REJECTED]: [statusesEnum.ACCEPTED],
+  }
+
+  if (currentStatus === statusesEnum.CLAIMED || !stateTransition[currentStatus].includes(newStatus)) {
     throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
   }
 }
