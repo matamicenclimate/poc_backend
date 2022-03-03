@@ -16,6 +16,52 @@
       "type": "string",
       "required": true
     },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "project_url": {
+      "type": "string",
+      "required": true
+    },
+    "project_location": {
+      "type": "string"
+    },
+    "thumbnail": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    },
+    "cover": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    },
+    "project_registration": {
+      "type": "date",
+      "required": true
+    },
+    "project_video": {
+      "type": "string"
+    },
+    "credit_start": {
+      "type": "date",
+      "required": true
+    },
+    "credit_end": {
+      "type": "date",
+      "required": true
+    },
     "credits": {
       "type": "biginteger",
       "required": true
@@ -24,21 +70,9 @@
       "type": "string",
       "required": true
     },
-    "document": {
-      "collection": "file",
-      "via": "related",
-      "allowedTypes": [
-        "files"
-      ],
-      "plugin": "upload",
-      "required": true,
-      "pluginOptions": {}
-    },
-    "registry": {
-      "model": "registries"
-    },
-    "project_types": {
-      "collection": "project-types"
+    "registry_url": {
+      "type": "string",
+      "required": true
     },
     "status": {
       "type": "enumeration",
@@ -72,6 +106,73 @@
     },
     "minted_climate_asa_txn_id": {
       "type": "string"
+    },
+    "pdd": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    },
+    "validation_report": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "monitoring_report": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "verification_report": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    },
+    "project_types": {
+      "collection": "project-types"
+    },
+    "sdgs": {
+      "collection": "sdgs"
+    },
+    "type": {
+      "model": "types"
+    },
+    "sub_type": {
+      "model": "sub-types"
+    },
+    "methodology": {
+      "model": "methodologies"
+    },
+    "validator": {
+      "model": "validators"
+    },
+    "first_verifier": {
+      "model": "first-verifiers"
+    },
+    "standard": {
+      "model": "standards"
+    },
+    "registry": {
+      "model": "registries"
     }
   }
 }
