@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nfts",
+  "info": {
+    "name": "nfts",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "group_id": {
+      "type": "string"
+    },
+    "asa_txn_id": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "carbon_document": {
+      "model": "carbon-documents",
+      "via": "nfts"
+    },
+    "last_config_txn": {
+      "type": "string"
+    },
+    "txn_type": {
+      "type": "enumeration",
+      "enum": [
+        "assetCreation",
+        "feeAssetCreation"
+      ]
+    },
+    "asa_id": {
+      "type": "biginteger"
+    }
+  }
+}

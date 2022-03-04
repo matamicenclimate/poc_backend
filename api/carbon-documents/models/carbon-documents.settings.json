@@ -173,6 +173,10 @@
     },
     "registry": {
       "model": "registries"
+    },
+    "nfts": {
+      "via": "carbon_document",
+      "collection": "nfts"
     }
   }
 }

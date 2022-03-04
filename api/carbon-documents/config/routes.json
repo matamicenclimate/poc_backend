@@ -49,7 +49,7 @@
       }
     },
     {
-      "method": "GET",
+      "method": "POST",
       "path": "/carbon-documents/:id/mint",
       "handler": "carbon-documents.mint",
       "config": {
