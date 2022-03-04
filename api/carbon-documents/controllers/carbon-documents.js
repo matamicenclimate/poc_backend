@@ -40,6 +40,39 @@ async function waitForConfirmation(algodclient, txId) {
   }
 }
 
+async function saveNft(data) {
+  const nftsDb = []
+  const nftsData = [
+    {
+      txn_type: 'assetCreation',
+      metadata: data.assetNftMetadata,
+      group_id: data.groupId,
+      asa_id: data.supplierAsaId,
+      asa_txn_id: data.assetCreationTxn,
+      metadata: data.assetNftMetadata,
+      carbon_document: data['carbon_document']._id,
+      last_config_txn: null,
+    },
+    {
+      txn_type: 'feeAssetCreation',
+      metadata: data.climateNftMetadata,
+      group_id: data.groupId,
+      asa_id: data.climateFeeNftId,
+      asa_txn_id: data.climateCreationTxn,
+      metadata: data.climateNftMetadata,
+      carbon_document: data['carbon_document']._id,
+      last_config_txn: null,
+    },
+  ]
+
+  for (const nft of nftsData) {
+    const nftDb = await strapi.services['nfts'].create(nft)
+    nftsDb.push(nftDb)
+  }
+
+  return nftsDb
+}
+
 /**
  *
  * @param {algosdk.Algodv2} algodclient
@@ -152,13 +185,18 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const pendingFeeAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[1]).do()
   const groupId = pendingSupplierAsaTxn.txn.txn.grp.toString('base64')
 
-  return {
+  const mintData = {
     groupId: groupId,
     supplierAsaId: pendingSupplierAsaTxn['asset-index'],
     assetCreationTxn: result.txIDs[0],
     climateFeeNftId: pendingFeeAsaTxn['asset-index'],
     climateCreationTxn: result.txIDs[1],
+    assetNftMetadata: metadata,
+    climateNftMetadata: metadata2,
   }
+
+  mintData['carbon_document'] = carbonDocument
+  await saveNft(mintData)
 }
 
 async function mint(ctx) {
@@ -172,11 +210,7 @@ async function mint(ctx) {
   const algodclient = algoClient()
 
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
-  const { groupId, supplierAsaId, assetCreationTxn, climateFeeNftId, climateCreationTxn } = await mintCarbonNft(
-    algodclient,
-    creator,
-    carbonDocument,
-  )
+  const nftsDb = await mintCarbonNft(algodclient, creator, carbonDocument)
 
   // update carbon document with nfts ids
   const carbonDocuments = await strapi.services['carbon-documents'].update(
@@ -184,11 +218,7 @@ async function mint(ctx) {
     {
       ...carbonDocument,
       status: 'minted',
-      minted_group_id: groupId,
-      minted_supplier_asa_id: supplierAsaId,
-      minted_supplier_asa_txn_id: assetCreationTxn,
-      minted_climate_asa_id: climateFeeNftId,
-      minted_climate_asa_txn_id: climateCreationTxn,
+      nfts: nftsDb,
     },
   )
 
