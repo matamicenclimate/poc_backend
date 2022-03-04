@@ -16,6 +16,7 @@ module.exports = {
       'validators',
       'first-verifiers',
       'standards',
+      'countries',
     ],
   },
 }
