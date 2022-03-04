@@ -73,20 +73,9 @@ async function saveNft(data) {
   return nftsDb
 }
 
-/**
- *
- * @param {algosdk.Algodv2} algodclient
- * @param {*} creator
- * @param {*} carbonDocument
- * @returns
- */
 const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const params = await algodclient.getTransactionParams().do()
-
   const FEE = 0.05
-  // TODO:
-  const unitName = 'CARBON'
-  const assetName = 'Carbon Document@arc69'
 
   // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
   const url = 'https://path/to/my/nft/asset/metadata.json'
@@ -94,37 +83,46 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const metadataUrl = `${url}${mediaTypeSpecifier}`
 
   // asset config
-  const managerAddr = undefined
-  const reserveAddr = undefined
-  const freezeAddr = undefined
-  const clawbackAddr = undefined
-  const defaultFrozen = false
-  const total = 1 // NFTs have totalIssuance of exactly 1
-  const decimals = 0 // NFTs have decimals of exactly 0
+  const assetConfig = {
+    unitName: 'CARBON',
+    assetName: 'Carbon Document@arc69',
+
+    total: 1, // NFTs have totalIssuance of exactly 1
+    decimals: 0, // NFTs have decimals of exactly 0
+
+    manager: undefined,
+    reserve: undefined,
+    freeze: undefined,
+    clawback: undefined,
+    defaultFrozen: false,
+
+    suggestedParams: params,
+  }
 
   // metadata
-  const metadata = {
+  const baseMetadata = {
     standard: 'arc69',
     description: `Carbon Emission Credit ${carbonDocument._id}`,
     // supongo que un hosting centralizado
     external_url: 'https://www.climatetrade.com/assets/....yoquese.pdf',
     mime_type: 'file/pdf',
     properties: {
-      Credits: carbonDocument.credits * (1 - FEE),
       Serial_Number: carbonDocument.serial_number,
       Provider: carbonDocument.registry ? carbonDocument.registry._id : '',
     },
   }
-  const metadata2 = {
-    standard: 'arc69',
-    description: `Carbon Emission Credit ${carbonDocument._id}`,
-    // supongo que un hosting centralizado
-    external_url: 'https://www.climatetrade.com/assets/....yoquese.pdf',
-    mime_type: 'file/pdf',
+  const metadata = {
+    ...baseMetadata,
     properties: {
+      ...baseMetadata.properties,
+      Credits: carbonDocument.credits * (1 - FEE),
+    },
+  }
+  const metadata2 = {
+    ...baseMetadata,
+    properties: {
+      ...baseMetadata.properties,
       Credits: carbonDocument.credits * FEE,
-      Serial_Number: carbonDocument.serial_number,
-      Provider: carbonDocument.registry ? carbonDocument.registry._id : '',
     },
   }
   // the SHA-256 digest of the full resolution media file as a 32-byte string
@@ -132,54 +130,34 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const assetMetadataHash2 = new Uint8Array(crypto.createHash('sha256').update(JSON.stringify(metadata2)).digest())
 
   const unsignedTxn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+    ...assetConfig,
     from: creator.addr,
-    total,
-    decimals,
-    assetName,
-    unitName,
     assetURL: metadataUrl,
     assetMetadataHash,
-    defaultFrozen,
-    freeze: freezeAddr,
-    manager: managerAddr,
-    clawback: clawbackAddr,
-    reserve: reserveAddr,
-    suggestedParams: params,
     note: new TextEncoder().encode(JSON.stringify(metadata)),
   })
 
   const unsignedTxn2 = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+    ...assetConfig,
     from: creator.addr,
-    total,
-    decimals,
-    assetName,
-    unitName,
     assetURL: metadataUrl,
     assetMetadataHash: assetMetadataHash2,
-    defaultFrozen,
-    freeze: freezeAddr,
-    manager: managerAddr,
-    clawback: clawbackAddr,
-    reserve: reserveAddr,
-    suggestedParams: params,
     note: new TextEncoder().encode(JSON.stringify(metadata2)),
   })
 
+  // Construct TransactionWithSigner
+  // Pass TransactionWithSigner to ATC
   const atc = new algosdk.AtomicTransactionComposer()
-  // Construct TransactionWithSigner
-  const tws = { txn: unsignedTxn, signer: algosdk.makeBasicAccountTransactionSigner(creator) }
-  // Pass TransactionWithSigner to ATC
-  atc.addTransaction(tws)
-  // Construct TransactionWithSigner
-  const tws2 = { txn: unsignedTxn2, signer: algosdk.makeBasicAccountTransactionSigner(creator) }
-  // Pass TransactionWithSigner to ATC
-  atc.addTransaction(tws2)
+  atc.addTransaction({ txn: unsignedTxn, signer: algosdk.makeBasicAccountTransactionSigner(creator) })
+  atc.addTransaction({ txn: unsignedTxn2, signer: algosdk.makeBasicAccountTransactionSigner(creator) })
 
   const result = await atc.execute(algodclient, 2)
-  for (const idx in result.txIDs) {
-    console.log(`Transaction :   ${result.txIDs[idx]}`)
-    console.log(`Transaction :   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
-  } // wait for transaction to be confirmed
+  if (process.env.NODE_ENV === 'development') {
+    for (const idx in result.txIDs) {
+      console.log(`Transaction :   ${result.txIDs[idx]}`)
+      console.log(`Transaction :   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
+    } // wait for transaction to be confirmed
+  }
 
   const pendingSupplierAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[0]).do()
   const pendingFeeAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[1]).do()
@@ -193,9 +171,9 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     climateCreationTxn: result.txIDs[1],
     assetNftMetadata: metadata,
     climateNftMetadata: metadata2,
+    carbon_document: carbonDocument,
   }
 
-  mintData['carbon_document'] = carbonDocument
   await saveNft(mintData)
 }
 
