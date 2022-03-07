@@ -25,6 +25,8 @@ const ROLE_TYPES = {
   EDITOR: 'editor',
 }
 
-module.exports.HTTP_STATUS = HTTP_STATUS
-module.exports.HTTP_METHODS = HTTP_METHODS
-module.exports.ROLE_TYPES = ROLE_TYPES
+module.exports = {
+  HTTP_STATUS,
+  HTTP_METHODS,
+  ROLE_TYPES,
+}

@@ -92,21 +92,6 @@
       "type": "email",
       "required": true
     },
-    "minted_group_id": {
-      "type": "string"
-    },
-    "minted_supplier_asa_id": {
-      "type": "biginteger"
-    },
-    "minted_climate_asa_id": {
-      "type": "biginteger"
-    },
-    "minted_supplier_asa_txn_id": {
-      "type": "string"
-    },
-    "minted_climate_asa_txn_id": {
-      "type": "string"
-    },
     "pdd": {
       "collection": "file",
       "via": "related",

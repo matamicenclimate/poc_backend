@@ -2,9 +2,10 @@
 
 const mailer = require(`${process.cwd()}/utils/mailer`)
 const fileUploader = require(`${process.cwd()}/utils/upload`)
+const algorandUtils = require(`${process.cwd()}/utils/algorand`)
+const ALGORAND_ENUMS = require(`${process.cwd()}/utils/enums/algorand`)
 
 const algosdk = require('algosdk')
-const crypto = require('crypto')
 const { algoClient } = require(`${process.cwd()}/config/algorand`)
 
 async function create(ctx) {
@@ -24,44 +25,28 @@ async function create(ctx) {
   return createdDocument
 }
 
-// Function used to wait for a tx confirmation
-async function waitForConfirmation(algodclient, txId) {
-  let response = await algodclient.status().do()
-  let lastround = response['last-round']
-  while (true) {
-    const pendingInfo = await algodclient.pendingTransactionInformation(txId).do()
-    if (pendingInfo['confirmed-round'] !== null && pendingInfo['confirmed-round'] > 0) {
-      // Got the completed Transaction
-      console.log('Transaction ' + txId + ' confirmed in round ' + pendingInfo['confirmed-round'])
-      break
-    }
-    lastround++
-    await algodclient.statusAfterBlock(lastround).do()
-  }
-}
-
-async function saveNft(data) {
+async function saveNft(data, ownerAddress) {
   const nftsDb = []
+  const defaultData = {
+    group_id: data.groupId,
+    carbon_document: data['carbon_document']._id,
+    last_config_txn: null,
+    owner_address: ownerAddress,
+  }
   const nftsData = [
     {
-      txn_type: 'assetCreation',
+      ...defaultData,
+      txn_type: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION,
       metadata: data.assetNftMetadata,
-      group_id: data.groupId,
       asa_id: data.supplierAsaId,
       asa_txn_id: data.assetCreationTxn,
-      metadata: data.assetNftMetadata,
-      carbon_document: data['carbon_document']._id,
-      last_config_txn: null,
     },
     {
-      txn_type: 'feeAssetCreation',
+      ...defaultData,
+      txn_type: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION,
       metadata: data.climateNftMetadata,
-      group_id: data.groupId,
       asa_id: data.climateFeeNftId,
       asa_txn_id: data.climateCreationTxn,
-      metadata: data.climateNftMetadata,
-      carbon_document: data['carbon_document']._id,
-      last_config_txn: null,
     },
   ]
 
@@ -73,76 +58,62 @@ async function saveNft(data) {
   return nftsDb
 }
 
-const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
-  const params = await algodclient.getTransactionParams().do()
-  const FEE = 0.05
+function getBaseMetadata(carbonDocument, options = {}) {
+  const mintDefaults = ALGORAND_ENUMS.MINT_DEFAULTS
+  const fee = ALGORAND_ENUMS.FEES.FEE
+  if (!carbonDocument || !options.txType) {
+    return
+  }
 
+  return {
+    standard: options.standard ?? ALGORAND_ENUMS.ARCS.ARC69,
+    description: options.description ?? `${mintDefaults.METADATA_DESCRIPTION} ${carbonDocument._id}`,
+    external_url: options.external_url ?? mintDefaults.EXTERNAL_URL,
+    mime_type: options.mime_type ?? ALGORAND_ENUMS.MINT_MIME_TYPES.PDF,
+    properties: {
+      Serial_Number: carbonDocument.serial_number ?? null,
+      Provider: carbonDocument.registry._id ?? '',
+      Credits:
+        options.txType === ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION
+          ? carbonDocument.credits * fee
+          : carbonDocument.credits * (1 - fee),
+    },
+  }
+}
+
+/**
+ *
+ * @param {algosdk.Algodv2} algodclient
+ * @param {*} creator
+ * @param {*} carbonDocument
+ * @returns
+ */
+const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
-  const url = 'https://path/to/my/nft/asset/metadata.json'
-  const mediaTypeSpecifier = '#p'
-  const metadataUrl = `${url}${mediaTypeSpecifier}`
+  const metadataUrl = `${ALGORAND_ENUMS.MINT_DEFAULTS.ASSET_URL}${ALGORAND_ENUMS.MINT_DEFAULTS.MEDIA_TYPE_SPECIFIER}`
 
   // asset config
-  const assetConfig = {
-    unitName: 'CARBON',
-    assetName: 'Carbon Document@arc69',
-
-    total: 1, // NFTs have totalIssuance of exactly 1
-    decimals: 0, // NFTs have decimals of exactly 0
-
-    manager: undefined,
-    reserve: undefined,
-    freeze: undefined,
-    clawback: undefined,
-    defaultFrozen: false,
-
-    suggestedParams: params,
-  }
-
-  // metadata
-  const baseMetadata = {
-    standard: 'arc69',
-    description: `Carbon Emission Credit ${carbonDocument._id}`,
-    // supongo que un hosting centralizado
-    external_url: 'https://www.climatetrade.com/assets/....yoquese.pdf',
-    mime_type: 'file/pdf',
-    properties: {
-      Serial_Number: carbonDocument.serial_number,
-      Provider: carbonDocument.registry ? carbonDocument.registry._id : '',
-    },
-  }
-  const metadata = {
-    ...baseMetadata,
-    properties: {
-      ...baseMetadata.properties,
-      Credits: carbonDocument.credits * (1 - FEE),
-    },
-  }
-  const metadata2 = {
-    ...baseMetadata,
-    properties: {
-      ...baseMetadata.properties,
-      Credits: carbonDocument.credits * FEE,
-    },
-  }
+  const assetConfig = await algorandUtils.getAssetConfig(algodclient, ALGORAND_ENUMS.DEFAULT)
+  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
+  const feeAssetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION })
   // the SHA-256 digest of the full resolution media file as a 32-byte string
-  const assetMetadataHash = new Uint8Array(crypto.createHash('sha256').update(JSON.stringify(metadata)).digest())
-  const assetMetadataHash2 = new Uint8Array(crypto.createHash('sha256').update(JSON.stringify(metadata2)).digest())
+  const assetMetadataHash = algorandUtils.getHashedMetadata(assetMetadata)
+  const feeAssetMetadataHash = algorandUtils.getHashedMetadata(feeAssetMetadata)
 
   const unsignedTxn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
     ...assetConfig,
     from: creator.addr,
     assetURL: metadataUrl,
     assetMetadataHash,
-    note: new TextEncoder().encode(JSON.stringify(metadata)),
+    note: algorandUtils.encodeMetadataText(assetMetadata),
   })
 
   const unsignedTxn2 = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
     ...assetConfig,
     from: creator.addr,
     assetURL: metadataUrl,
-    assetMetadataHash: assetMetadataHash2,
-    note: new TextEncoder().encode(JSON.stringify(metadata2)),
+    assetMetadataHash: feeAssetMetadataHash,
+    note: algorandUtils.encodeMetadataText(feeAssetMetadata),
   })
 
   // Construct TransactionWithSigner
@@ -154,8 +125,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const result = await atc.execute(algodclient, 2)
   if (process.env.NODE_ENV === 'development') {
     for (const idx in result.txIDs) {
-      console.log(`Transaction :   ${result.txIDs[idx]}`)
-      console.log(`Transaction :   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
+      strapi.log.info(`Transaction:   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
     } // wait for transaction to be confirmed
   }
 
@@ -169,12 +139,12 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     assetCreationTxn: result.txIDs[0],
     climateFeeNftId: pendingFeeAsaTxn['asset-index'],
     climateCreationTxn: result.txIDs[1],
-    assetNftMetadata: metadata,
-    climateNftMetadata: metadata2,
+    assetNftMetadata: assetMetadata,
+    climateNftMetadata: feeAssetMetadata,
     carbon_document: carbonDocument,
   }
 
-  await saveNft(mintData)
+  await saveNft(mintData, creator.addr)
 }
 
 async function mint(ctx) {

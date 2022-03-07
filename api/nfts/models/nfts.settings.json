@@ -22,8 +22,8 @@
       "type": "json"
     },
     "carbon_document": {
-      "model": "carbon-documents",
-      "via": "nfts"
+      "via": "nfts",
+      "model": "carbon-documents"
     },
     "last_config_txn": {
       "type": "string"
@@ -37,6 +37,13 @@
     },
     "asa_id": {
       "type": "biginteger"
+    },
+    "is_holded": {
+      "type": "boolean",
+      "default": true
+    },
+    "owner_address": {
+      "type": "string"
     }
   }
 }
