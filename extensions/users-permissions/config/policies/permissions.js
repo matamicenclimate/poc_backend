@@ -6,18 +6,18 @@ const { Magic } = require('@magic-sdk/admin')
 function getCleanAuthToken(authorizationHeader) {
   const textTrim = 'Bearer '
   if (!authorizationHeader.includes(textTrim)) {
-    console.log('unable to retrieve issuer info')
+    strapi.log.info('unable to retrieve issuer info')
     return
   }
 
   return authorizationHeader.replace(textTrim, '')
 }
 
-async function checkDidToken(ctx) {
+async function checkIssuer(ctx) {
   const magic = new Magic(process.env.MAGIC_KEY)
 
   if (!ctx.state.user) {
-    console.log('Unable to validate did token')
+    strapi.log.info('Unable to validate did token')
     return
   }
 
@@ -25,18 +25,18 @@ async function checkDidToken(ctx) {
     email: ctx.state.user.email,
   })
 
-  if (!userDb || !userDb.didToken) {
+  if (!userDb || !userDb.issuer) {
     const cleanToken = getCleanAuthToken(ctx.request.header.authorization)
     if (cleanToken) {
       const issuer = await magic.token.getIssuer(cleanToken)
-      const magicUser = await magic.users.getMetadataByIssuer(issuer)
+      const metadata = await magic.users.getMetadataByIssuer(issuer)
       if (!issuer) {
         return
       }
 
       const updatedUser = await strapi.plugins['users-permissions'].services.user.edit(
         { _id: userDb._id },
-        { didToken: issuer },
+        { issuer: metadata.issuer, publicAddress: metadata.publicAddress },
       )
 
       return updatedUser
@@ -50,7 +50,7 @@ module.exports = async (ctx, next) => {
   let role
 
   await strapi.plugins['magic'].services['magic'].loginWithMagic(ctx)
-  checkDidToken(ctx)
+  checkIssuer(ctx)
 
   if (ctx.state.user) {
     // request is already authenticated in a different way

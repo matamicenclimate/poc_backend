@@ -59,15 +59,22 @@
       "plugin": "users-permissions",
       "configurable": false
     },
+    "issuer": {
+      "type": "string",
+      "configurable": false,
+      "private": true
+    },
     "type": {
       "type": "enumeration",
-      "enum": ["buyer", "supplier"],
+      "enum": [
+        "buyer",
+        "supplier"
+      ],
       "required": true,
       "default": "buyer"
     },
-    "didToken": {
+    "publicAddress": {
       "type": "string",
-      "configurable": false,
       "private": true
     }
   }
