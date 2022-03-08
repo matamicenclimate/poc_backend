@@ -61,12 +61,14 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": [
-        "buyer",
-        "supplier"
-      ],
+      "enum": ["buyer", "supplier"],
       "required": true,
       "default": "buyer"
+    },
+    "didToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true
     }
   }
 }
