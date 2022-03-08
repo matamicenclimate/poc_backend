@@ -24,7 +24,10 @@
       "type": "string",
       "required": true
     },
-    "project_location": {
+    "project_latitude": {
+      "type": "string"
+    },
+    "project_longitude": {
       "type": "string"
     },
     "thumbnail": {
