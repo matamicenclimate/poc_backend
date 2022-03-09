@@ -18,7 +18,7 @@ async function sendMail(subject, content, mailTo) {
 
     return true
   } catch (error) {
-    console.log(error)
+    strapi.log.error(error)
   }
 }
 

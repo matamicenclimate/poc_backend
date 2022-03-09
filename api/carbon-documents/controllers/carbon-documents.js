@@ -31,8 +31,10 @@ async function saveNft(data, ownerAddress) {
     group_id: data.groupId,
     carbon_document: data['carbon_document']._id,
     last_config_txn: null,
-    owner_address: ownerAddress,
   }
+  const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
+    email: data['carbon_document'].created_by_user,
+  })
   const nftsData = [
     {
       ...defaultData,
@@ -40,6 +42,7 @@ async function saveNft(data, ownerAddress) {
       metadata: data.assetNftMetadata,
       asa_id: data.supplierAsaId,
       asa_txn_id: data.assetCreationTxn,
+      owner_address: userDb.publicAddress,
     },
     {
       ...defaultData,
@@ -47,6 +50,7 @@ async function saveNft(data, ownerAddress) {
       metadata: data.climateNftMetadata,
       asa_id: data.climateFeeNftId,
       asa_txn_id: data.climateCreationTxn,
+      owner_address: ownerAddress,
     },
   ]
 

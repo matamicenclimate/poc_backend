@@ -59,6 +59,11 @@
       "plugin": "users-permissions",
       "configurable": false
     },
+    "issuer": {
+      "type": "string",
+      "configurable": false,
+      "private": true
+    },
     "type": {
       "type": "enumeration",
       "enum": [
@@ -67,6 +72,10 @@
       ],
       "required": true,
       "default": "buyer"
+    },
+    "publicAddress": {
+      "type": "string",
+      "private": true
     }
   }
 }
