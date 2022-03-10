@@ -1,6 +1,7 @@
 'use strict'
 
 const mailer = require(`${process.cwd()}/utils/mailer`)
+const registryConfig = require('config').registry
 
 function makeEnum(statuses) {
   const enumObject = {}
@@ -46,19 +47,27 @@ module.exports = {
     },
     afterUpdate: async function (result, params, data) {
       const statuses = getStatuses()
+      if (data.oldStatus !== result.status) {
+        const userEmail = result.created_by_user
+        if (result.status === statuses.ACCEPTED) {
           const registryInstructions = result.registry.instructions ?? registryConfig.defaultInstructions
+          mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENDING, userEmail)
+          await mailer.send('Document status changed to accepted', registryInstructions, userEmail)
+          mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
+          await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
+        } else if (result.status === statuses.COMPLETED) {
           mailer.logMailAction(
             'carbon-documents',
             statuses.COMPLETED,
             mailer.MAIL_ACTIONS.SENDING,
-            data.created_by_user,
+            userEmail,
           )
           await mailer.send(
             'Credits received',
             `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`,
-            data.created_by_user,
+            userEmail,
           )
-          mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, data.created_by_user)
+          mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
         }
       }
     },
