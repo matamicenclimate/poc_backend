@@ -2,6 +2,7 @@
 
 const _ = require('lodash')
 const { Magic } = require('@magic-sdk/admin')
+const ENUMS = require(`${process.cwd()}/utils/enums`)
 
 function getCleanAuthToken(authorizationHeader) {
   const textTrim = 'Bearer '
@@ -13,10 +14,18 @@ function getCleanAuthToken(authorizationHeader) {
   return authorizationHeader.replace(textTrim, '')
 }
 
+function isStrapiUser(user) {
+  return user.username === ENUMS.ROLE_TYPES.ADMIN || user.username === ENUMS.ROLE_TYPES.EDITOR
+}
+
 async function checkIssuer(ctx) {
   const magic = new Magic(process.env.MAGIC_KEY)
 
-  if (!ctx.state.user) {
+  if (!ctx.state.user || !ctx.state.user.provider || ctx.state.user.provider !== ENUMS.USERS_PROVIDERS.MAGIC) {
+    if (isStrapiUser(ctx.state.user)) {
+      return
+    }
+
     strapi.log.info('Unable to validate did token')
     return
   }
