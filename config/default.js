@@ -19,4 +19,7 @@ module.exports = {
       'countries',
     ],
   },
+  registry: {
+    defaultInstructions: 'Default instructions',
+  },
 }
