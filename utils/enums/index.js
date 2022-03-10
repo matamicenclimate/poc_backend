@@ -25,8 +25,13 @@ const ROLE_TYPES = {
   EDITOR: 'editor',
 }
 
+const USERS_PROVIDERS = {
+  MAGIC: 'magic',
+}
+
 module.exports = {
   HTTP_STATUS,
   HTTP_METHODS,
   ROLE_TYPES,
+  USERS_PROVIDERS,
 }
