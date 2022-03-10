@@ -15,6 +15,10 @@ function getCleanAuthToken(authorizationHeader) {
 }
 
 function isStrapiUser(user) {
+  if (!user) {
+    return
+  }
+
   return user.username === ENUMS.ROLE_TYPES.ADMIN || user.username === ENUMS.ROLE_TYPES.EDITOR
 }
 
