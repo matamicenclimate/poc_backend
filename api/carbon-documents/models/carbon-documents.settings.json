@@ -165,6 +165,9 @@
     "nfts": {
       "via": "carbon_document",
       "collection": "nfts"
+    },
+    "country": {
+      "model": "countries"
     }
   }
 }
