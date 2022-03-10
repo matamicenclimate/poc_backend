@@ -46,14 +46,7 @@ module.exports = {
     },
     afterUpdate: async function (result, params, data) {
       const statuses = getStatuses()
-      if (data.oldStatus !== data.status) {
-        if (data.status === statuses.ACCEPTED) {
-          const registryInstructions = data.registry.instructions
-          mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENDING, data.created_by_user)
-          await mailer.send('Document status changed to accepted', registryInstructions, data.created_by_user)
-          mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, data.created_by_user)
-          await strapi.services['carbon-documents'].update({ id: data._id }, { status: statuses.WAITING_FOR_CREDITS })
-        } else if (data.status === statuses.COMPLETED) {
+          const registryInstructions = result.registry.instructions ?? registryConfig.defaultInstructions
           mailer.logMailAction(
             'carbon-documents',
             statuses.COMPLETED,
