@@ -4,16 +4,36 @@ const mailer = require(`${process.cwd()}/utils/mailer`)
 const fileUploader = require(`${process.cwd()}/utils/upload`)
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
 const ALGORAND_ENUMS = require(`${process.cwd()}/utils/enums/algorand`)
+const formatters = require(`${process.cwd()}/utils/formatters`)
+const utils = require(`${process.cwd()}/utils`)
 
 const algosdk = require('algosdk')
 const { algoClient } = require(`${process.cwd()}/config/algorand`)
+
+function formatBodyArrays(collectionTypeAtts, requestBody) {
+  for (const key of collectionTypeAtts) {
+    const incomingAttData = requestBody[key]
+    if (incomingAttData) {
+      const parsedData = JSON.parse(incomingAttData)
+      requestBody[key] = formatters.mongoIdFormatter(parsedData)
+    }
+  }
+
+  return requestBody
+}
 
 async function create(ctx) {
   const collectionName = ctx.originalUrl.substring(1)
   const applicationUid = strapi.api[collectionName].models[collectionName].uid
   const pushFilesResponse = await fileUploader.pushFile(ctx)
   ctx.request.body = { ...ctx.request.body, ...pushFilesResponse }
+  const collectionTypeAtts = utils.getAttributesByType(
+    strapi.api[collectionName].models[collectionName].attributes,
+    'collection',
+    'plugin',
+  )
 
+  ctx.request.body = formatBodyArrays(collectionTypeAtts, ctx.request.body)
   const createdDocument = await strapi.services[collectionName].create(ctx.request.body)
   if (process.env.NODE_ENV === 'test') {
     return createdDocument
