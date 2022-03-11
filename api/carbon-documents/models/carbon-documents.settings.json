@@ -135,8 +135,8 @@
       "required": true,
       "pluginOptions": {}
     },
-    "project_types": {
-      "collection": "project-types"
+    "project_type": {
+      "model": "project-types"
     },
     "sdgs": {
       "collection": "sdgs"
