@@ -1,13 +1,13 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
-import { Header as PluginHeader } from '@buffetjs/custom';
-import { get, isEqual, isEmpty, toString } from 'lodash';
-import PropTypes from 'prop-types';
-import isEqualFastCompare from 'react-fast-compare';
-import { Text } from '@buffetjs/core';
-import { templateObject, ModalConfirm } from 'strapi-helper-plugin';
-import { getTrad } from '../../../utils';
-import { connect, getDraftRelations, select } from './utils';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
+import { useIntl } from 'react-intl'
+import { Header as PluginHeader } from '@buffetjs/custom'
+import { get, isEqual, isEmpty, toString } from 'lodash'
+import PropTypes from 'prop-types'
+import isEqualFastCompare from 'react-fast-compare'
+import { Text } from '@buffetjs/core'
+import { templateObject, ModalConfirm } from 'strapi-helper-plugin'
+import { getTrad } from '../../../utils'
+import { connect, getDraftRelations, select } from './utils'
 
 const primaryButtonObject = {
   color: 'primary',
@@ -16,7 +16,7 @@ const primaryButtonObject = {
     minWidth: 150,
     fontWeight: 600,
   },
-};
+}
 
 const Header = ({
   allowedActions: { canUpdate, canCreate, canPublish },
@@ -31,49 +31,47 @@ const Header = ({
   onUnpublish,
   status,
 }) => {
-  const [showWarningUnpublish, setWarningUnpublish] = useState(false);
-  const { formatMessage } = useIntl();
-  const formatMessageRef = useRef(formatMessage);
-  const [draftRelationsCount, setDraftRelationsCount] = useState(0);
-  const [showWarningDraftRelation, setShowWarningDraftRelation] = useState(false);
-  const [shouldUnpublish, setShouldUnpublish] = useState(false);
-  const [shouldPublish, setShouldPublish] = useState(false);
+  const [showWarningUnpublish, setWarningUnpublish] = useState(false)
+  const { formatMessage } = useIntl()
+  const formatMessageRef = useRef(formatMessage)
+  const [draftRelationsCount, setDraftRelationsCount] = useState(0)
+  const [showWarningDraftRelation, setShowWarningDraftRelation] = useState(false)
+  const [shouldUnpublish, setShouldUnpublish] = useState(false)
+  const [shouldPublish, setShouldPublish] = useState(false)
 
-  const currentContentTypeMainField = useMemo(() => get(layout, ['settings', 'mainField'], 'id'), [
-    layout,
-  ]);
+  const currentContentTypeMainField = useMemo(() => get(layout, ['settings', 'mainField'], 'id'), [layout])
 
-  const currentContentTypeName = useMemo(() => get(layout, ['info', 'name']), [layout]);
+  const currentContentTypeName = useMemo(() => get(layout, ['info', 'name']), [layout])
 
   const didChangeData = useMemo(() => {
-    return !isEqual(initialData, modifiedData) || (isCreatingEntry && !isEmpty(modifiedData));
-  }, [initialData, isCreatingEntry, modifiedData]);
-  const apiID = useMemo(() => layout.apiID, [layout.apiID]);
+    return !isEqual(initialData, modifiedData) || (isCreatingEntry && !isEmpty(modifiedData))
+  }, [initialData, isCreatingEntry, modifiedData])
+  const apiID = useMemo(() => layout.apiID, [layout.apiID])
 
   /* eslint-disable indent */
   const entryHeaderTitle = isCreatingEntry
     ? formatMessage({
         id: getTrad('containers.Edit.pluginHeader.title.new'),
       })
-    : templateObject({ mainField: currentContentTypeMainField }, initialData).mainField;
+    : templateObject({ mainField: currentContentTypeMainField }, initialData).mainField
   /* eslint-enable indent */
 
   const headerTitle = useMemo(() => {
-    const title = isSingleType ? currentContentTypeName : entryHeaderTitle;
+    const title = isSingleType ? currentContentTypeName : entryHeaderTitle
 
-    return title || currentContentTypeName;
-  }, [currentContentTypeName, entryHeaderTitle, isSingleType]);
+    return title || currentContentTypeName
+  }, [currentContentTypeName, entryHeaderTitle, isSingleType])
 
   const checkIfHasDraftRelations = useCallback(() => {
-    const count = getDraftRelations(modifiedData, layout, componentLayouts);
+    const count = getDraftRelations(modifiedData, layout, componentLayouts)
 
-    setDraftRelationsCount(count);
+    setDraftRelationsCount(count)
 
-    return count > 0;
-  }, [modifiedData, layout, componentLayouts]);
+    return count > 0
+  }, [modifiedData, layout, componentLayouts])
 
   const headerActions = useMemo(() => {
-    let headerActions = [];
+    let headerActions = []
 
     if ((isCreatingEntry && canCreate) || (!isCreatingEntry && canUpdate)) {
       headerActions = [
@@ -90,23 +88,23 @@ const Header = ({
             fontWeight: 600,
           },
         },
-      ];
+      ]
     }
 
     if (hasDraftAndPublish && canPublish) {
-      const isPublished = !isEmpty(initialData.published_at);
-      const isLoading = isPublished ? status === 'unpublish-pending' : status === 'publish-pending';
-      const labelID = isPublished ? 'app.utils.unpublish' : 'app.utils.publish';
+      const isPublished = !isEmpty(initialData.published_at)
+      const isLoading = isPublished ? status === 'unpublish-pending' : status === 'publish-pending'
+      const labelID = isPublished ? 'app.utils.unpublish' : 'app.utils.publish'
       /* eslint-disable indent */
       const onClick = isPublished
         ? () => setWarningUnpublish(true)
-        : e => {
+        : (e) => {
             if (!checkIfHasDraftRelations()) {
-              onPublish(e);
+              onPublish(e)
             } else {
-              setShowWarningDraftRelation(true);
+              setShowWarningDraftRelation(true)
             }
-          };
+          }
       /* eslint-enable indent */
 
       const action = {
@@ -115,40 +113,41 @@ const Header = ({
         isLoading,
         label: formatMessage({ id: labelID }),
         onClick,
-      };
+      }
 
-      headerActions.unshift(action);
+      headerActions.unshift(action)
     }
 
-    if (canCreate || canUpdate) {
-      const isPublished = !isEmpty(initialData.published_at);
-      const isLoading = isPublished ? status === 'unpublish-pending' : status === 'publish-pending';
-      const labelID = 'Mint';
-      // endpoint: /carbon-documents/:id/mint -> body: {}
+    if (layout.uid === 'application::carbon-documents.carbon-documents') {
+      const isMintable = initialData.status === 'completed' ? true : false
+      const labelID = 'Mint'
       /* eslint-disable indent */
-      const onClick = isPublished
-        ? () => setWarningUnpublish(true)
-        : e => {
-            if (!checkIfHasDraftRelations()) {
-              onPublish(e);
-            } else {
-              setShowWarningDraftRelation(true);
-            }
-          };
+      function mintNft(document) {
+        fetch(`/carbon-documents/${document.id}/mint`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(document),
+        })
+      }
+
+      const onClick = isMintable ? () => mintNft(initialData) : () => console.log('error')
+
       /* eslint-enable indent */
 
       const action = {
         ...primaryButtonObject,
-        disabled: isCreatingEntry || didChangeData,
-        isLoading,
+        disabled: !isMintable,
         label: formatMessage({ id: labelID }),
         onClick,
-      };
+      }
 
-      headerActions.unshift(action);
+      headerActions.unshift(action)
     }
 
-    return headerActions;
+    return headerActions
   }, [
     isCreatingEntry,
     canCreate,
@@ -161,7 +160,7 @@ const Header = ({
     initialData,
     onPublish,
     checkIfHasDraftRelations,
-  ]);
+  ])
 
   const headerProps = useMemo(() => {
     return {
@@ -170,48 +169,48 @@ const Header = ({
       },
       content: `${formatMessageRef.current({ id: getTrad('api.id') })} : ${apiID}`,
       actions: headerActions,
-    };
-  }, [headerActions, headerTitle, apiID]);
+    }
+  }, [headerActions, headerTitle, apiID])
 
-  const toggleWarningPublish = () => setWarningUnpublish(prevState => !prevState);
+  const toggleWarningPublish = () => setWarningUnpublish((prevState) => !prevState)
 
   const toggleWarningDraftRelation = useCallback(() => {
-    setShowWarningDraftRelation(prev => !prev);
-  }, []);
+    setShowWarningDraftRelation((prev) => !prev)
+  }, [])
 
   const handleConfirmPublish = useCallback(() => {
-    setShouldPublish(true);
-    setShowWarningDraftRelation(false);
-  }, []);
+    setShouldPublish(true)
+    setShowWarningDraftRelation(false)
+  }, [])
 
   const handleConfirmUnpublish = useCallback(() => {
-    setShouldUnpublish(true);
-    setWarningUnpublish(false);
-  }, []);
+    setShouldUnpublish(true)
+    setWarningUnpublish(false)
+  }, [])
 
   const handleCloseModalPublish = useCallback(
-    e => {
+    (e) => {
       if (shouldPublish) {
-        onPublish(e);
+        onPublish(e)
       }
 
-      setShouldUnpublish(false);
+      setShouldUnpublish(false)
     },
-    [onPublish, shouldPublish]
-  );
+    [onPublish, shouldPublish],
+  )
 
   const handleCloseModalUnpublish = useCallback(
-    e => {
+    (e) => {
       if (shouldUnpublish) {
-        onUnpublish(e);
+        onUnpublish(e)
       }
 
-      setShouldUnpublish(false);
+      setShouldUnpublish(false)
     },
-    [onUnpublish, shouldUnpublish]
-  );
+    [onUnpublish, shouldUnpublish],
+  )
 
-  const contentIdSuffix = draftRelationsCount > 1 ? 'plural' : 'singular';
+  const contentIdSuffix = draftRelationsCount > 1 ? 'plural' : 'singular'
 
   return (
     <>
@@ -246,7 +245,7 @@ const Header = ({
               id: getTrad(`popUpwarning.warning.has-draft-relations.message.${contentIdSuffix}`),
               values: {
                 count: draftRelationsCount,
-                b: chunks => (
+                b: (chunks) => (
                   <Text as="span" fontWeight="bold">
                     {chunks}
                   </Text>
@@ -260,8 +259,8 @@ const Header = ({
         </>
       )}
     </>
-  );
-};
+  )
+}
 
 Header.propTypes = {
   allowedActions: PropTypes.shape({
@@ -279,8 +278,8 @@ Header.propTypes = {
   modifiedData: PropTypes.object.isRequired,
   onPublish: PropTypes.func.isRequired,
   onUnpublish: PropTypes.func.isRequired,
-};
+}
 
-const Memoized = memo(Header, isEqualFastCompare);
+const Memoized = memo(Header, isEqualFastCompare)
 
-export default connect(Memoized, select);
+export default connect(Memoized, select)
