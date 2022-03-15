@@ -97,10 +97,24 @@ async function insertData(strapi) {
   }
 }
 
+async function createToken(strapi) {
+  const token = await strapi.services.token.find()
+
+  if (!token) {
+    const createdToken = await strapi.services.token.emit()
+    strapi.log.info(`[initData] Token added ${createdToken.algoexplorer_url}`)
+  } else {
+    strapi.log.info(`[initData] Token already exists ${token.algoexplorer_url}`)
+  }
+}
+
 async function initData(strapi) {
   await createAdminUser(strapi)
   await createEditorUser(strapi)
   await insertData(strapi)
+  if (process.env.NODE_ENV === 'development') {
+    await createToken(strapi)
+  }
 }
 
 module.exports = (strapi) => {

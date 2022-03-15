@@ -31,11 +31,21 @@ async function getAssetConfig(algodClient, type = ALGORAND_ENUMS.DEFAULT, option
   }
 }
 
-function getAssetOptions(creator) {
-  return {
+function getAssetOptions(creator, isToken = false, total = 1) {
+  const assetOptions = {
     manager: creator.addr,
     freeze: creator.addr,
+    total: Number(total),
   }
+
+  if (isToken) {
+    assetOptions.unitName = 'TOKEN'
+    assetOptions.assetName = 'Token'
+    assetOptions.reserve = creator.addr
+    assetOptions.decimals = 1
+  }
+
+  return assetOptions
 }
 
 module.exports = {
