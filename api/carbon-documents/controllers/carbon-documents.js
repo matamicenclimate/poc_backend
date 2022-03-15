@@ -117,7 +117,8 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const metadataUrl = `${ALGORAND_ENUMS.MINT_DEFAULTS.ASSET_URL}${ALGORAND_ENUMS.MINT_DEFAULTS.MEDIA_TYPE_SPECIFIER}`
 
   // asset config
-  const assetConfig = await algorandUtils.getAssetConfig(algodclient, ALGORAND_ENUMS.DEFAULT)
+  const assetOptions = algorandUtils.getAssetOptions(creator)
+  const assetConfig = await algorandUtils.getAssetConfig(algodclient, ALGORAND_ENUMS.DEFAULT, assetOptions)
   const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
   const feeAssetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION })
   // the SHA-256 digest of the full resolution media file as a 32-byte string
