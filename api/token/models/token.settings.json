@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "tokens",
+  "info": {
+    "name": "Token"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "asa_id": {
+      "type": "biginteger"
+    },
+    "asa_txn_id": {
+      "type": "string"
+    },
+    "algoexplorer_url": {
+      "type": "string"
+    },
+    "price": {
+      "type": "float"
+    }
+  }
+}
