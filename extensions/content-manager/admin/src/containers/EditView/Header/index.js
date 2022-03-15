@@ -5,7 +5,7 @@ import { get, isEqual, isEmpty, toString } from 'lodash'
 import PropTypes from 'prop-types'
 import isEqualFastCompare from 'react-fast-compare'
 import { Text } from '@buffetjs/core'
-import { templateObject, ModalConfirm } from 'strapi-helper-plugin'
+import { templateObject, ModalConfirm, request } from 'strapi-helper-plugin'
 import { getTrad } from '../../../utils'
 import { connect, getDraftRelations, select } from './utils'
 
@@ -123,17 +123,16 @@ const Header = ({
       const labelID = 'Mint'
       /* eslint-disable indent */
       function mintNft(document) {
-        fetch(`/carbon-documents/${document.id}/mint`, {
+        strapi.notification.info('Minting carbon document...')
+        request(`/carbon-documents/${document.id}/mint`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(document),
+          body: document,
         })
+        .then(() => strapi.notification.success('Carbon document minted'))
+        .catch((error) => strapi.notification.error(error))
       }
 
-      const onClick = isMintable ? () => mintNft(initialData) : () => console.log('error')
+      const onClick = isMintable ? () => mintNft(initialData) : () => strapi.notification.error('error')
 
       /* eslint-enable indent */
 
