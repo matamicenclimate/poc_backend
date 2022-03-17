@@ -20,8 +20,8 @@ async function getAssetConfig(algodClient, type = ALGORAND_ENUMS.DEFAULT, option
   return {
     unitName: options.unitName ?? ALGORAND_ENUMS.UNITS.CARBON,
     assetName: options.assetName ?? ALGORAND_ENUMS.ASSET_NAMES.CARBON_ARC69,
-    total: options.assetName ?? 1, // NFTs have totalIssuance of exactly 1
-    decimals: options.assetName ?? 0, // NFTs have decimals of exactly 0
+    total: options.total ?? 1, // NFTs have totalIssuance of exactly 1
+    decimals: options.decimals ?? 0, // NFTs have decimals of exactly 0
     manager: options.manager ?? undefined,
     reserve: options.reserve ?? undefined,
     freeze: options.freeze ?? undefined,
@@ -31,9 +31,27 @@ async function getAssetConfig(algodClient, type = ALGORAND_ENUMS.DEFAULT, option
   }
 }
 
+function getAssetOptions(creator, isToken = false, total = 1) {
+  const assetOptions = {
+    manager: creator.addr,
+    freeze: creator.addr,
+    total: Number(total),
+  }
+
+  if (isToken) {
+    assetOptions.unitName = 'TOKEN'
+    assetOptions.assetName = 'Token'
+    assetOptions.reserve = creator.addr
+    assetOptions.decimals = 1
+  }
+
+  return assetOptions
+}
+
 module.exports = {
   algorand,
   getHashedMetadata,
   encodeMetadataText,
   getAssetConfig,
+  getAssetOptions,
 }

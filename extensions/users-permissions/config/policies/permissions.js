@@ -30,7 +30,9 @@ async function checkIssuer(ctx) {
       return
     }
 
-    strapi.log.info('Unable to validate did token')
+    if (process.env.NODE_ENV !== 'test') {
+      strapi.log.info('Unable to validate did token')
+    }
     return
   }
 

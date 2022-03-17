@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/token",
+      "handler": "token.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/token",
+      "handler": "token.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/token",
+      "handler": "token.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
