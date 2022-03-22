@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/utils/swap",
+      "handler": "utils.swap",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
