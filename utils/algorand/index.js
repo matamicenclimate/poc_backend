@@ -48,10 +48,25 @@ function getAssetOptions(creator, isToken = false, total = 1) {
   return assetOptions
 }
 
+function getDecodedNote(note) {
+  return Buffer.from(note, 'base64').toString()
+}
+
+function getTransactionMetadata(body) {
+  let transactions = body.transactions
+  transactions = transactions.filter((transaction) => transaction['tx-type'] === 'acfg')
+  const lastConfigTransactionNote = transactions.slice(-1).pop().note
+  const assetMetadata = getDecodedNote(lastConfigTransactionNote)
+
+  return JSON.parse(assetMetadata)
+}
+
 module.exports = {
   algorand,
   getHashedMetadata,
   encodeMetadataText,
   getAssetConfig,
   getAssetOptions,
+  getDecodedNote,
+  getTransactionMetadata,
 }
