@@ -1,16 +1,17 @@
 const request = require('supertest')
 
-describe('Token', () => {
+describe('APP Config', () => {
   let dataStub = {
-    asa_id: '123456789',
-    asa_txn_id: 'asa_txn_id',
-    algoexplorer_url: 'algoexplorer_url',
-    price: 1,
+    climatecoin_asa_id: '123456789',
+    climatecoin_asa_txn_id: 'asa_txn_id',
+    climatecoin_algoexplorer_url: 'algoexplorer_url',
+    climatecoin_price: 1,
+    usdc_asa_id: '123456789',
   }
 
-  it('PUT /token', async () => {
+  it('PUT /app-config', async () => {
     await request(strapi.server)
-      .put('/token')
+      .put('/app-config')
       .send(dataStub)
       .expect(200)
       .expect('Content-Type', /json/)
@@ -20,9 +21,9 @@ describe('Token', () => {
       })
   })
 
-  it('GET /token', async () => {
+  it('GET /app-config', async () => {
     await request(strapi.server)
-      .get(`/token`)
+      .get(`/app-config`)
       .expect(200)
       .expect('Content-Type', /json/)
       .then((response) => {
@@ -31,9 +32,9 @@ describe('Token', () => {
       })
   })
 
-  it('DELETE /token', async () => {
+  it('DELETE /app-config', async () => {
     await request(strapi.server)
-      .delete('/token')
+      .delete('/app-config')
       .expect(200)
       .expect('Content-Type', /json/)
       .then((response) => {

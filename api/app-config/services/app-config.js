@@ -10,7 +10,7 @@ const algosdk = require('algosdk')
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
 const ALGORAND_ENUMS = require(`${process.cwd()}/utils/enums/algorand`)
 
-async function emitToken() {
+async function emitClimateCoinToken() {
   const algodclient = algoClient()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const assetOptions = algorandUtils.getAssetOptions(creator, true, process.env.CLIMATECOIN_ASA_TOTAL_SUPPLY)
@@ -28,16 +28,16 @@ async function emitToken() {
   await algodclient.sendRawTransaction(signedTxn).do()
   const confirmedTxn = await algosdk.waitForConfirmation(algodclient, txnId, 4)
 
-  const tokenData = {
-    asa_id: confirmedTxn['asset-index'],
-    asa_txn_id: txnId,
-    algoexplorer_url: `https://testnet.algoexplorer.io/tx/${txnId}`,
+  const climateCoinTokenData = {
+    climatecoin_asa_id: confirmedTxn['asset-index'],
+    climatecoin_asa_txn_id: txnId,
+    climatecoin_algoexplorer_url: `https://testnet.algoexplorer.io/tx/${txnId}`,
   }
-  const token = await strapi.services.token.createOrUpdate(tokenData)
+  const climateCoinToken = await strapi.services['app-config'].createOrUpdate(climateCoinTokenData)
 
-  return token
+  return climateCoinToken
 }
 
 module.exports = {
-  emit: emitToken,
+  emitClimateCoinToken,
 }
