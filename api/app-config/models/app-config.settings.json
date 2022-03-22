@@ -1,8 +1,8 @@
 {
   "kind": "singleType",
-  "collectionName": "tokens",
+  "collectionName": "app_configs",
   "info": {
-    "name": "Token"
+    "name": "app-config"
   },
   "options": {
     "increments": true,
@@ -11,17 +11,20 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "asa_id": {
+    "climatecoin_asa_id": {
       "type": "biginteger"
     },
-    "asa_txn_id": {
+    "climatecoin_asa_txn_id": {
       "type": "string"
     },
-    "algoexplorer_url": {
+    "climatecoin_algoexplorer_url": {
       "type": "string"
     },
-    "price": {
+    "climatecoin_price": {
       "type": "float"
+    },
+    "usdc_asa_id": {
+      "type": "biginteger"
     }
   }
 }

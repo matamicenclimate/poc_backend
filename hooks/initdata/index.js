@@ -98,13 +98,13 @@ async function insertData(strapi) {
 }
 
 async function createToken(strapi) {
-  const token = await strapi.services.token.find()
+  const appConfig = await strapi.services['app-config'].find()
 
-  if (!token) {
-    const createdToken = await strapi.services.token.emit()
-    strapi.log.info(`[initData] Token added ${createdToken.algoexplorer_url}`)
+  if (!appConfig) {
+    const createdAppConfig = await strapi.services['app-config'].emitClimateCoinToken()
+    strapi.log.info(`[initData] ClimateCoin token added ${createdAppConfig.climatecoin_algoexplorer_url}`)
   } else {
-    strapi.log.info(`[initData] Token already exists ${token.algoexplorer_url}`)
+    strapi.log.info(`[initData] ClimateCoin token already exists ${appConfig.climatecoin_algoexplorer_url}`)
   }
 }
 
