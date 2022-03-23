@@ -7,6 +7,7 @@ describe('APP Config', () => {
     climatecoin_algoexplorer_url: 'algoexplorer_url',
     climatecoin_price: 1,
     usdc_asa_id: '123456789',
+    climatecoin_app_id: '123456789',
   }
 
   it('PUT /app-config', async () => {
