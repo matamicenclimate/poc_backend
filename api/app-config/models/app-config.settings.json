@@ -2,7 +2,8 @@
   "kind": "singleType",
   "collectionName": "app_configs",
   "info": {
-    "name": "app-config"
+    "name": "app-config",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -24,6 +25,9 @@
       "type": "float"
     },
     "usdc_asa_id": {
+      "type": "biginteger"
+    },
+    "climatecoin_app_id": {
       "type": "biginteger"
     }
   }
