@@ -16,7 +16,7 @@
     "supertest": "^6.2.2"
   },
   "dependencies": {
-    "algosdk": "^1.14.0",
+    "algosdk": "^1.15.0",
     "config": "^3.3.6",
     "dotenv": "^16.0.0",
     "lodash": "^4.17.21",
