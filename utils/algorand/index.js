@@ -79,6 +79,10 @@ function getMethodByName(name) {
   return m
 }
 
+function getEscrowFromApp(appId) {
+  return algosdk.getApplicationAddress(appId)
+}
+
 module.exports = {
   algorand,
   getHashedMetadata,
@@ -89,4 +93,5 @@ module.exports = {
   getTransactionMetadata,
   getContract,
   getMethodByName,
+  getEscrowFromApp,
 }

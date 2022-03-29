@@ -114,15 +114,17 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
 
   const suggestedParams = await algodclient.getTransactionParams().do()
   const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
-  const fee = ALGORAND_ENUMS.FEES.FEE
+
   atc.addMethodCall({
     appID: Number(process.env.APP_ID),
     method: algorandUtils.getMethodByName('create_nft'),
     sender: creator.addr,
     signer: algosdk.makeBasicAccountTransactionSigner(creator),
     suggestedParams,
-    methodArgs: [carbonDocument.credits * (1 - fee), algorandUtils.encodeMetadataText(assetMetadata)],
+    note: algorandUtils.encodeMetadataText(assetMetadata),
+    methodArgs: [Number(carbonDocument.credits)],
   })
+
   try {
     const result = await atc.execute(algodclient, 2)
     const transactionId = result.txIDs[0]
@@ -131,8 +133,8 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
       (transaction) => transaction['tx-type'] === 'acfg',
     )
 
-    const developerAsaTxn = txnsCfg[0]
-    const feeAsaTxn = txnsCfg[1]
+    const feeAsaTxn = txnsCfg[0]
+    const developerAsaTxn = txnsCfg[1]
     const mintData = {
       groupId: developerAsaTxn.group,
       developerAsaId: developerAsaTxn['created-asset-index'],
@@ -141,6 +143,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
       assetNftMetadata: assetMetadata,
       carbon_document: carbonDocument,
     }
+
     await saveNft(mintData, creator.addr)
   } catch (error) {
     strapi.log.error(error)
