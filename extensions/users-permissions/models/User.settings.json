@@ -68,7 +68,7 @@
       "type": "enumeration",
       "enum": [
         "buyer",
-        "supplier"
+        "developer"
       ],
       "required": true,
       "default": "buyer"
