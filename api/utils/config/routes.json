@@ -2,8 +2,8 @@
   "routes": [
     {
       "method": "POST",
-      "path": "/utils/swap",
-      "handler": "utils.swap",
+      "path": "/utils/claim",
+      "handler": "utils.claim",
       "config": {
         "policies": []
       }

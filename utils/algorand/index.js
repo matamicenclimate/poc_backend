@@ -3,6 +3,8 @@
 const crypto = require('crypto')
 const algorand = {}
 const ALGORAND_ENUMS = require(`${process.cwd()}/utils/enums/algorand`)
+const algosdk = require('algosdk')
+const fs = require('fs')
 
 function getHashedMetadata(metadata) {
   return new Uint8Array(crypto.createHash('sha256').update(JSON.stringify(metadata)).digest())
@@ -61,6 +63,26 @@ function getTransactionMetadata(body) {
   return JSON.parse(assetMetadata)
 }
 
+function getContract() {
+  const buff = fs.readFileSync(`${process.cwd()}/utils/algorand/climatecoin_vault_asc.json`)
+  const contract = new algosdk.ABIContract(JSON.parse(buff.toString()))
+
+  return contract
+}
+
+function getMethodByName(name) {
+  const contract = getContract()
+  const m = contract.methods.find((mt) => {
+    return mt.name == name
+  })
+  if (m === undefined) throw Error('Method undefined: ' + name)
+  return m
+}
+
+function getEscrowFromApp(appId) {
+  return algosdk.getApplicationAddress(appId)
+}
+
 module.exports = {
   algorand,
   getHashedMetadata,
@@ -69,4 +91,7 @@ module.exports = {
   getAssetOptions,
   getDecodedNote,
   getTransactionMetadata,
+  getContract,
+  getMethodByName,
+  getEscrowFromApp,
 }
