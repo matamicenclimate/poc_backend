@@ -1,0 +1,43 @@
+{
+  "name": "climatecoin_vault_arc4",
+  "methods": [
+    {
+      "name": "mint_climatecoin",
+      "desc": "mints climatecoins",
+      "args": [],
+      "returns": { "type": "uint64" }
+    },
+    {
+      "name": "set_minter_address",
+      "desc": "sets the nft minter address",
+      "args": [{ "name": "minter_address", "type": "address" }],
+      "returns": { "type": "address" }
+    },
+    {
+      "name": "swap_nft_to_fungible",
+      "desc": "swap NFT to Climatecoin",
+      "args": [{ "name": "nft_id", "type": "asset" }],
+      "returns": { "type": "uint64" }
+    },
+    {
+      "name": "create_nft",
+      "desc": "Create an nft with appropriate parameters, return its id",
+      "args": [
+        { "name": "total_supply", "type": "uint64" },
+        { "name": "metadata", "type": "string" }
+      ],
+      "returns": { "name": "developer-nft-id", "type": "uint64" }
+    },
+    {
+      "name": "move",
+      "desc": "Moves the asset passed from one account to another",
+      "args": [
+        { "name": "royalty_asset", "type": "asset" },
+        { "name": "from", "type": "account" },
+        { "name": "to", "type": "account" },
+        { "name": "amount", "type": "uint64" }
+      ],
+      "returns": { "type": "void" }
+    }
+  ]
+}

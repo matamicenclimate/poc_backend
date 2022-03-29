@@ -1,6 +1,6 @@
 'use strict'
 
-const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
+const { algoClient } = require(`${process.cwd()}/config/algorand`)
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
 const algosdk = require('algosdk')
 const https = require('https')

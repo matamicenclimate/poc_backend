@@ -8,7 +8,7 @@ const formatters = require(`${process.cwd()}/utils/formatters`)
 const utils = require(`${process.cwd()}/utils`)
 
 const algosdk = require('algosdk')
-const { algoClient } = require(`${process.cwd()}/config/algorand`)
+const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
@@ -60,16 +60,16 @@ async function saveNft(data, ownerAddress) {
       ...defaultData,
       txn_type: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION,
       metadata: data.assetNftMetadata,
-      asa_id: data.supplierAsaId,
-      asa_txn_id: data.assetCreationTxn,
+      asa_id: data.developerAsaId,
+      asa_txn_id: data.txn,
       owner_address: userDb.publicAddress,
     },
     {
       ...defaultData,
       txn_type: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION,
-      metadata: data.climateNftMetadata,
+      metadata: data.assetNftMetadata,
       asa_id: data.climateFeeNftId,
-      asa_txn_id: data.climateCreationTxn,
+      asa_txn_id: data.txn,
       owner_address: ownerAddress,
     },
   ]
@@ -96,11 +96,7 @@ function getBaseMetadata(carbonDocument, options = {}) {
     mime_type: options.mime_type ?? ALGORAND_ENUMS.MINT_MIME_TYPES.PDF,
     properties: {
       Serial_Number: carbonDocument.serial_number ?? null,
-      Provider: carbonDocument.registry._id ?? '',
-      Credits:
-        options.txType === ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION
-          ? carbonDocument.credits * fee
-          : carbonDocument.credits * (1 - fee),
+      Provider: carbonDocument.registry.name ?? '',
     },
   }
 }
@@ -113,63 +109,42 @@ function getBaseMetadata(carbonDocument, options = {}) {
  * @returns
  */
 const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
-  // should specify type https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0069.md
-  const metadataUrl = `${ALGORAND_ENUMS.MINT_DEFAULTS.ASSET_URL}${ALGORAND_ENUMS.MINT_DEFAULTS.MEDIA_TYPE_SPECIFIER}`
-
-  // asset config
-  const assetOptions = algorandUtils.getAssetOptions(creator)
-  const assetConfig = await algorandUtils.getAssetConfig(algodclient, ALGORAND_ENUMS.DEFAULT, assetOptions)
-  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
-  const feeAssetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION })
-  // the SHA-256 digest of the full resolution media file as a 32-byte string
-  const assetMetadataHash = algorandUtils.getHashedMetadata(assetMetadata)
-  const feeAssetMetadataHash = algorandUtils.getHashedMetadata(feeAssetMetadata)
-
-  const unsignedTxn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-    ...assetConfig,
-    from: creator.addr,
-    assetURL: metadataUrl,
-    assetMetadataHash,
-    note: algorandUtils.encodeMetadataText(assetMetadata),
-  })
-
-  const unsignedTxn2 = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-    ...assetConfig,
-    from: creator.addr,
-    assetURL: metadataUrl,
-    assetMetadataHash: feeAssetMetadataHash,
-    note: algorandUtils.encodeMetadataText(feeAssetMetadata),
-  })
-
-  // Construct TransactionWithSigner
-  // Pass TransactionWithSigner to ATC
   const atc = new algosdk.AtomicTransactionComposer()
-  atc.addTransaction({ txn: unsignedTxn, signer: algosdk.makeBasicAccountTransactionSigner(creator) })
-  atc.addTransaction({ txn: unsignedTxn2, signer: algosdk.makeBasicAccountTransactionSigner(creator) })
+  const indexerClient = algoIndexer()
 
-  const result = await atc.execute(algodclient, 2)
-  if (process.env.NODE_ENV === 'development') {
-    for (const idx in result.txIDs) {
-      strapi.log.info(`Transaction:   https://testnet.algoexplorer.io/tx/${result.txIDs[idx]}`)
-    } // wait for transaction to be confirmed
+  const suggestedParams = await algodclient.getTransactionParams().do()
+  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
+  const fee = ALGORAND_ENUMS.FEES.FEE
+  atc.addMethodCall({
+    appID: Number(process.env.APP_ID),
+    method: algorandUtils.getMethodByName('create_nft'),
+    sender: creator.addr,
+    signer: algosdk.makeBasicAccountTransactionSigner(creator),
+    suggestedParams,
+    methodArgs: [carbonDocument.credits * (1 - fee), algorandUtils.encodeMetadataText(assetMetadata)],
+  })
+  try {
+    const result = await atc.execute(algodclient, 2)
+    const transactionId = result.txIDs[0]
+    const transactionInfo = await indexerClient.searchForTransactions().address(creator.addr).txid(transactionId).do()
+    const txnsCfg = transactionInfo.transactions[0]['inner-txns'].filter(
+      (transaction) => transaction['tx-type'] === 'acfg',
+    )
+
+    const developerAsaTxn = txnsCfg[0]
+    const feeAsaTxn = txnsCfg[1]
+    const mintData = {
+      groupId: developerAsaTxn.group,
+      developerAsaId: developerAsaTxn['created-asset-index'],
+      txn: transactionId,
+      climateFeeNftId: feeAsaTxn['created-asset-index'],
+      assetNftMetadata: assetMetadata,
+      carbon_document: carbonDocument,
+    }
+    await saveNft(mintData, creator.addr)
+  } catch (error) {
+    strapi.log.error(error)
   }
-
-  const pendingSupplierAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[0]).do()
-  const pendingFeeAsaTxn = await algodclient.pendingTransactionInformation(result.txIDs[1]).do()
-  const groupId = pendingSupplierAsaTxn.txn.txn.grp.toString('base64')
-
-  const mintData = {
-    groupId: groupId,
-    supplierAsaId: pendingSupplierAsaTxn['asset-index'],
-    assetCreationTxn: result.txIDs[0],
-    climateFeeNftId: pendingFeeAsaTxn['asset-index'],
-    climateCreationTxn: result.txIDs[1],
-    assetNftMetadata: assetMetadata,
-    climateNftMetadata: feeAssetMetadata,
-    carbon_document: carbonDocument,
-  }
-
-  await saveNft(mintData, creator.addr)
 }
 
 async function mint(ctx) {
