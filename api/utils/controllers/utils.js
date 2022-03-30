@@ -34,6 +34,8 @@ async function claim(ctx) {
 
   const result = await atc.execute(algodclient, 2)
 
+  await strapi.services['carbon-documents'].update({ id: carbonDocument }, { status: 'claimed' })
+
   return result
 }
 
