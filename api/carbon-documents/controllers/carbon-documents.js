@@ -144,7 +144,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
       carbon_document: carbonDocument,
     }
 
-    await saveNft(mintData, creator.addr)
+    return await saveNft(mintData, creator.addr)
   } catch (error) {
     strapi.log.error(error)
   }
@@ -169,7 +169,8 @@ async function mint(ctx) {
     {
       ...carbonDocument,
       status: 'minted',
-      nfts: nftsDb,
+      developer_nft: nftsDb[0],
+      fee_nft: nftsDb[1],
     },
   )
 

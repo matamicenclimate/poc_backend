@@ -12,8 +12,8 @@ async function claim(ctx) {
 
   const { carbonDocument, email } = ctx.request.body
   const carbonDocumentData = await strapi.services['carbon-documents'].findOne({ id: carbonDocument })
-  const userNft = carbonDocumentData.nfts.filter((nft) => nft.txn_type === 'assetCreation')[0]
-  const assetId = Number(userNft.asa_id)
+  const developerNft = carbonDocumentData.developer_nft
+  const assetId = Number(developerNft.asa_id)
   const assetInfo = await indexerClient.searchForAssets().index(assetId).do()
   const total = assetInfo.assets[0].params.total
 
