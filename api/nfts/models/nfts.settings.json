@@ -21,10 +21,6 @@
     "metadata": {
       "type": "json"
     },
-    "carbon_document": {
-      "via": "nfts",
-      "model": "carbon-documents"
-    },
     "last_config_txn": {
       "type": "string"
     },

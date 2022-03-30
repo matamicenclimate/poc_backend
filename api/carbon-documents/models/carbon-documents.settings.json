@@ -86,7 +86,8 @@
         "completed",
         "rejected",
         "minted",
-        "claimed"
+        "claimed",
+        "swapped"
       ],
       "default": "pending",
       "required": false
@@ -162,12 +163,14 @@
     "registry": {
       "model": "registries"
     },
-    "nfts": {
-      "via": "carbon_document",
-      "collection": "nfts"
-    },
     "country": {
       "model": "countries"
+    },
+    "developer_nft": {
+      "model": "nfts"
+    },
+    "fee_nft": {
+      "model": "nfts"
     }
   }
 }

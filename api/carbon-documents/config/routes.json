@@ -55,6 +55,22 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/carbon-documents/:id/claim",
+      "handler": "carbon-documents.claim",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/carbon-documents/:id/swap",
+      "handler": "carbon-documents.swap",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

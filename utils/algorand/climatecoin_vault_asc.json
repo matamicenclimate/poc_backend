@@ -1,5 +1,10 @@
 {
   "name": "climatecoin_vault_arc4",
+  "networks": {
+    "testnet": {
+      "appID": 80758140
+    }
+  },
   "methods": [
     {
       "name": "mint_climatecoin",

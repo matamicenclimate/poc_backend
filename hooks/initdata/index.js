@@ -97,24 +97,10 @@ async function insertData(strapi) {
   }
 }
 
-async function createToken(strapi) {
-  const appConfig = await strapi.services['app-config'].find()
-
-  if (!appConfig) {
-    const createdAppConfig = await strapi.services['app-config'].emitClimateCoinToken()
-    strapi.log.info(`[initData] ClimateCoin token added ${createdAppConfig.climatecoin_algoexplorer_url}`)
-  } else {
-    strapi.log.info(`[initData] ClimateCoin token already exists ${appConfig.climatecoin_algoexplorer_url}`)
-  }
-}
-
 async function initData(strapi) {
   await createAdminUser(strapi)
   await createEditorUser(strapi)
   await insertData(strapi)
-  if (process.env.NODE_ENV === 'development') {
-    await createToken(strapi)
-  }
 }
 
 module.exports = (strapi) => {
