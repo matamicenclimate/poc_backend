@@ -63,6 +63,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/carbon-documents/:id/swap",
+      "handler": "carbon-documents.swap",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

@@ -24,10 +24,11 @@ function statusLogic(currentStatus, newStatus) {
     [statusesEnum.WAITING_FOR_CREDITS]: [statusesEnum.COMPLETED, statusesEnum.REJECTED],
     [statusesEnum.COMPLETED]: [statusesEnum.MINTED],
     [statusesEnum.MINTED]: [statusesEnum.CLAIMED],
+    [statusesEnum.CLAIMED]: [statusesEnum.SWAPPED],
     [statusesEnum.REJECTED]: [statusesEnum.ACCEPTED],
   }
 
-  if (currentStatus === statusesEnum.CLAIMED || !stateTransition[currentStatus].includes(newStatus)) {
+  if (currentStatus === statusesEnum.SWAPPED || !stateTransition[currentStatus].includes(newStatus)) {
     throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
   }
 }
@@ -56,12 +57,7 @@ module.exports = {
           mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
           await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
         } else if (result.status === statuses.COMPLETED) {
-          mailer.logMailAction(
-            'carbon-documents',
-            statuses.COMPLETED,
-            mailer.MAIL_ACTIONS.SENDING,
-            userEmail,
-          )
+          mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENDING, userEmail)
           await mailer.send(
             'Credits received',
             `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`,
