@@ -153,9 +153,8 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
 async function mint(ctx) {
   const { id } = ctx.params
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
-  // TODO: remove status != minted. its only here for developers sake
-  if (!['completed', 'minted'].includes(carbonDocument.status)) {
-    return ctx.badRequest('document hasnt been reviewed')
+  if (!['completed'].includes(carbonDocument.status)) {
+    return ctx.badRequest("Document hasn't been reviewed")
   }
 
   const algodclient = algoClient()
@@ -177,7 +176,64 @@ async function mint(ctx) {
   return carbonDocuments
 }
 
+async function claim(ctx) {
+  const { id } = ctx.params
+  const { email } = ctx.request.body
+  const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
+  if (!['minted'].includes(carbonDocument.status)) {
+    return ctx.badRequest("Document hasn't been minted")
+  }
+
+  const algodclient = algoClient()
+  const indexerClient = algoIndexer()
+  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
+
+  const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
+    email,
+  })
+  const developerPublicAddress = userDb.publicAddress
+
+  const developerNft = carbonDocument.developer_nft
+  const assetId = Number(developerNft.asa_id)
+
+  await claimNft(algodclient, indexerClient, creator, assetId, developerPublicAddress)
+
+  const updatedCarbonDocument = await strapi.services['carbon-documents'].update(
+    { id: carbonDocument },
+    { status: 'claimed' },
+  )
+
+  return updatedCarbonDocument
+}
+
+async function claimNft(algodclient, indexerClient, creator, assetId, developerPublicAddress) {
+  const atc = new algosdk.AtomicTransactionComposer()
+
+  const assetInfo = await indexerClient.searchForAssets().index(assetId).do()
+  const total = assetInfo.assets[0].params.total
+
+  const suggestedParams = await algodclient.getTransactionParams().do()
+  atc.addMethodCall({
+    appID: Number(process.env.APP_ID),
+    method: algorandUtils.getMethodByName('move'),
+    sender: creator.addr,
+    signer: algosdk.makeBasicAccountTransactionSigner(creator),
+    suggestedParams,
+    methodArgs: [
+      Number(assetId),
+      algorandUtils.getEscrowFromApp(Number(process.env.APP_ID)),
+      developerPublicAddress,
+      total,
+    ],
+  })
+
+  const result = await atc.execute(algodclient, 2)
+
+  return result
+}
+
 module.exports = {
   create,
   mint,
+  claim,
 }
