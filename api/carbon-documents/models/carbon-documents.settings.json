@@ -86,7 +86,8 @@
         "completed",
         "rejected",
         "minted",
-        "claimed"
+        "claimed",
+        "swapped"
       ],
       "default": "pending",
       "required": false
