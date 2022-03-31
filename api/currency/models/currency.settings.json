@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "currencies",
+  "info": {
+    "name": "Currency"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "usd_eur": {
+      "type": "float"
+    },
+    "usd_jpy": {
+      "type": "float"
+    },
+    "usd_gbp": {
+      "type": "float"
+    },
+    "usd_btc": {
+      "type": "float"
+    }
+  }
+}
