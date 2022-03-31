@@ -178,7 +178,6 @@ async function mint(ctx) {
 
 async function claim(ctx) {
   const { id } = ctx.params
-  const { email } = ctx.request.body
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['minted'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been minted")
@@ -189,7 +188,7 @@ async function claim(ctx) {
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
 
   const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
-    email,
+    email: carbonDocument.created_by_user,
   })
   const developerPublicAddress = userDb.publicAddress
 

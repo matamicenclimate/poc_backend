@@ -22,4 +22,5 @@ module.exports = {
   registry: {
     defaultInstructions: 'Default instructions',
   },
+  currencies: ['EUR', 'JPY', 'GBP', 'BTC'],
 }
