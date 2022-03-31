@@ -6,6 +6,7 @@ describe('Currency', () => {
     usd_jpy: 110.3,
     usd_gbp: 0.73,
     usd_btc: 0.000028,
+    usd_usd: 1,
   }
 
   let createdElement

@@ -2,7 +2,8 @@
   "kind": "singleType",
   "collectionName": "currencies",
   "info": {
-    "name": "Currency"
+    "name": "Currency",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -21,6 +22,9 @@
       "type": "float"
     },
     "usd_btc": {
+      "type": "float"
+    },
+    "usd_usd": {
       "type": "float"
     }
   }
