@@ -40,6 +40,9 @@
     },
     "owner_address": {
       "type": "string"
+    },
+    "supply": {
+      "type": "biginteger"
     }
   }
 }
