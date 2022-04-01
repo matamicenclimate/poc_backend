@@ -63,6 +63,7 @@ async function saveNft(data, ownerAddress) {
       asa_id: data.developerAsaId,
       asa_txn_id: data.txn,
       owner_address: userDb.publicAddress,
+      supply: data.developerSupply,
     },
     {
       ...defaultData,
@@ -71,6 +72,7 @@ async function saveNft(data, ownerAddress) {
       asa_id: data.climateFeeNftId,
       asa_txn_id: data.txn,
       owner_address: ownerAddress,
+      supply: data.feeSupply,
     },
   ]
 
@@ -142,6 +144,8 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
       climateFeeNftId: feeAsaTxn['created-asset-index'],
       assetNftMetadata: assetMetadata,
       carbon_document: carbonDocument,
+      developerSupply: developerAsaTxn['asset-config-transaction'].params.total,
+      feeSupply: feeAsaTxn['asset-config-transaction'].params.total,
     }
 
     return await saveNft(mintData, creator.addr)
