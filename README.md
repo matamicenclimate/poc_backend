@@ -30,3 +30,7 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
 # Tests
 
 ```export DEBUG=nock.* && yarn test```
+
+### Volumes
+
+Create the volume on the server and mount it in `/opt/public/uploads`
