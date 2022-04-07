@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notifications",
+  "info": {
+    "name": "Notifications"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "is_readed": {
+      "type": "boolean",
+      "default": false
+    },
+    "carbon_document": {
+      "model": "carbon-documents"
+    }
+  }
+}

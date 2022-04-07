@@ -65,6 +65,12 @@ module.exports = {
           )
           mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
         }
+
+        await strapi.services.notifications.create({
+          title: `Carbon document ${result.status}`,
+          description: `Carbon document status changed to ${result.status}`,
+          carbon_document: result.id,
+        })
       }
     },
   },
