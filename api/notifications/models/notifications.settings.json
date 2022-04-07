@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "notifications",
   "info": {
-    "name": "Notifications"
+    "name": "Notifications",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -19,12 +20,19 @@
       "type": "text",
       "required": false
     },
-    "is_readed": {
+    "is_read": {
       "type": "boolean",
       "default": false
     },
-    "carbon_document": {
-      "model": "carbon-documents"
+    "model": {
+      "type": "string"
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
     }
   }
 }

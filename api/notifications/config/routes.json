@@ -10,6 +10,14 @@
     },
     {
       "method": "GET",
+      "path": "/notifications/me",
+      "handler": "notifications.me",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/notifications/count",
       "handler": "notifications.count",
       "config": {
@@ -44,6 +52,14 @@
       "method": "DELETE",
       "path": "/notifications/:id",
       "handler": "notifications.delete",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/me/read",
+      "handler": "notifications.markAllAsRead",
       "config": {
         "policies": []
       }
