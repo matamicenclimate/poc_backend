@@ -57,7 +57,7 @@
       }
     },
     {
-      "method": "GET",
+      "method": "PUT",
       "path": "/notifications/me/read",
       "handler": "notifications.markAllAsRead",
       "config": {
