@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -12,6 +12,14 @@ async function me(ctx) {
   return notifications
 }
 
+async function markAllAsRead(ctx) {
+  const user = ctx.state.user.id
+  await strapi.query('notifications').model.updateMany({ user: user, is_read: false }, { is_read: true })
+
+  return true
+}
+
 module.exports = {
   me,
+  markAllAsRead,
 }

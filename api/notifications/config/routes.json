@@ -55,6 +55,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/me/read",
+      "handler": "notifications.markAllAsRead",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
