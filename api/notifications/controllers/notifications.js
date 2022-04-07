@@ -5,4 +5,13 @@
  * to customize this controller
  */
 
-module.exports = {};
+async function me(ctx) {
+  const user = ctx.state.user.id
+  const notifications = await strapi.services.notifications.find({ user: user })
+
+  return notifications
+}
+
+module.exports = {
+  me,
+}
