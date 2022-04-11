@@ -7,14 +7,14 @@
 
 async function me(ctx) {
   const user = ctx.state.user.id
-  const notifications = await strapi.services.notifications.find({ user: user })
+  const notifications = await strapi.services.notifications.find({ user: user, ...ctx.query })
 
   return notifications
 }
 
 async function markAllAsRead(ctx) {
   const user = ctx.state.user.id
-  await strapi.query('notifications').model.updateMany({ user: user, is_read: false }, { is_read: true })
+  await strapi.query('notifications').model.updateMany({ user: user, is_read: false, ...ctx.query }, { is_read: true })
 
   return true
 }
