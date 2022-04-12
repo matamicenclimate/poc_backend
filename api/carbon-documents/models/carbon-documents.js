@@ -76,6 +76,11 @@ module.exports = {
           model_id: result.id,
           user: userDb.id,
         })
+
+        // Add activity when carbon document status is "swapped"
+        if (result.status === 'swapped') {
+          await strapi.services.activities.add(userDb, result.developer_nft)
+        }
       }
     },
   },
