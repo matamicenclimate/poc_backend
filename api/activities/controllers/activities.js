@@ -5,4 +5,13 @@
  * to customize this controller
  */
 
-module.exports = {}
+async function me(ctx) {
+  const user = ctx.state.user.id
+  const activities = await strapi.services.activities.find({ user: user, ...ctx.query })
+
+  return activities
+}
+
+module.exports = {
+  me,
+}

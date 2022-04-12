@@ -10,6 +10,14 @@
     },
     {
       "method": "GET",
+      "path": "/activities/me",
+      "handler": "activities.me",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/activities/count",
       "handler": "activities.count",
       "config": {
