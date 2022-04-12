@@ -5,4 +5,15 @@
  * to customize this service
  */
 
-module.exports = {}
+async function add(userDb, nft) {
+  return await strapi.services.activities.create({
+    date: new Date(),
+    type: 'swap',
+    user: userDb.id,
+    nft,
+  })
+}
+
+module.exports = {
+  add,
+}
