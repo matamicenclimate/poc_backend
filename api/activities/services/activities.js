@@ -11,6 +11,7 @@ async function add(userDb, nft) {
     type: 'swap',
     user: userDb.id,
     nft,
+    supply: nft.supply,
   })
 }
 

@@ -27,6 +27,9 @@
     },
     "nft": {
       "model": "nfts"
+    },
+    "supply": {
+      "type": "biginteger"
     }
   }
 }
