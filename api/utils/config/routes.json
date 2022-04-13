@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/chart/balance/me",
+      "handler": "utils.chartBalanceMe",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
