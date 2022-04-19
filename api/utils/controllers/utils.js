@@ -15,9 +15,8 @@ async function chartBalanceMe(ctx) {
     {
       $group: {
         _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
-        count: { $sum: 1 },
-        supply: { $sum: '$supply' },
-        type: { $first: '$type' },
+        income: { $sum: { $cond: [{ $eq: ['$type', 'swap'] }, '$supply', 0] } },
+        expenses: { $sum: { $cond: [{ $eq: ['$type', 'burn'] }, '$supply', 0] } },
       },
     },
     { $sort: { _id: 1 } },
@@ -25,16 +24,19 @@ async function chartBalanceMe(ctx) {
 
   let data = []
   userActivities.forEach((userActivity) => {
-    if (userActivity.type === 'swap') {
-      const extractedMonth = userActivity._id.split('-')[1]
-      const extractedMonthName = monthNames[Number(extractedMonth) - 1]
-      const monthIndex = labels.indexOf(extractedMonthName)
-      data[monthIndex] = userActivity.supply
-    }
+    const total = userActivity.income - userActivity.expenses
+    const extractedMonth = userActivity._id.split('-')[1]
+    const extractedMonthName = monthNames[Number(extractedMonth) - 1]
+    const monthIndex = labels.indexOf(extractedMonthName)
+    data[monthIndex] = total
   })
 
   data = Array.from(data, (item) => item || 0)
-  data.forEach((d, i) => (data[i] = data[i - 1] === undefined ? 0 : data[i] > 0 ? data[i] : data[i - 1]))
+  data.forEach((d, i) => {
+    if (data[i - 1] === undefined) data[i] = data[i - 1] = 0
+    if (data[i] === 0) data[i] = data[i - 1]
+    if (data[i] !== data[i - 1]) data[i] += data[i - 1]
+  })
 
   return { labels, data }
 }
