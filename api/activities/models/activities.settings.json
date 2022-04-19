@@ -22,7 +22,8 @@
     "type": {
       "type": "enumeration",
       "enum": [
-        "swap"
+        "swap",
+        "burn"
       ]
     },
     "nft": {
