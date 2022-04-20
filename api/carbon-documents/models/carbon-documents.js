@@ -67,7 +67,7 @@ module.exports = {
         }
 
         const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
-          email: data.created_by_user,
+          email: result.created_by_user,
         })
         await strapi.services.notifications.create({
           title: `Carbon document ${result.status}`,
