@@ -273,7 +273,7 @@ async function swap(ctx) {
   return updatedCarbonDocument
 }
 
-async function updateActivity(nft, txn_id) {
+async function updateActivity(nft, txn_id, is_group, group_id) {
   return await strapi.services.activities.update({ nft, type: 'swap' }, { txn_id, is_group, group_id })
 }
 
