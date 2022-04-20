@@ -86,10 +86,14 @@ async function saveNft(data, ownerAddress) {
 
 function getBaseMetadata(carbonDocument, options = {}) {
   const mintDefaults = ALGORAND_ENUMS.MINT_DEFAULTS
-  const fee = ALGORAND_ENUMS.FEES.FEE
   if (!carbonDocument || !options.txType) {
     return
   }
+
+  let sdgs = []
+  carbonDocument.sdgs.forEach((sdg) => {
+    sdgs.push(sdg.name)
+  })
 
   return {
     standard: options.standard ?? ALGORAND_ENUMS.ARCS.ARC69,
@@ -97,8 +101,29 @@ function getBaseMetadata(carbonDocument, options = {}) {
     external_url: options.external_url ?? mintDefaults.EXTERNAL_URL,
     mime_type: options.mime_type ?? ALGORAND_ENUMS.MINT_MIME_TYPES.PDF,
     properties: {
-      Serial_Number: carbonDocument.serial_number ?? null,
-      Provider: carbonDocument.registry.name ?? '',
+      project_type: carbonDocument.project_type.name,
+      country: carbonDocument.country.name,
+      sdgs: sdgs.join(',') ?? '',
+      title: carbonDocument.title,
+      description: carbonDocument.description,
+      project_url: carbonDocument.project_url,
+      latitude: carbonDocument.project_latitude ?? '',
+      longitude: carbonDocument.project_longitude ?? '',
+      credits: carbonDocument.credits,
+      serial_number: carbonDocument.serial_number,
+      project_registration: carbonDocument.project_registration,
+      project_video: carbonDocument.project_video ?? '',
+      credit_start: carbonDocument.credit_start,
+      credit_end: carbonDocument.credit_end,
+      type: carbonDocument.type.name,
+      subtype: carbonDocument.sub_type.name,
+      methodology: carbonDocument.methodology.name ?? '',
+      validator: carbonDocument.validator.name ?? '',
+      first_verifier: carbonDocument.first_verifier.name ?? '',
+      standard: carbonDocument.standard.name,
+      registry: carbonDocument.registry.name,
+      registry_url: carbonDocument.registry_url,
+      id: carbonDocument._id,
     },
   }
 }
