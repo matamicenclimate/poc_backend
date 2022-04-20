@@ -34,6 +34,13 @@
     },
     "txn_id": {
       "type": "string"
+    },
+    "is_group": {
+      "type": "boolean",
+      "default": false
+    },
+    "group_id": {
+      "type": "string"
     }
   }
 }

@@ -261,20 +261,20 @@ async function claimNft(algodclient, indexerClient, creator, assetId, developerP
 
 async function swap(ctx) {
   const { id } = ctx.params
-  const { txnId } = ctx.request.body
+  const { txnId, isGroup, groupId } = ctx.request.body
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
 
   const updatedCarbonDocument = await strapi.services['carbon-documents'].update({ id }, { status: 'swapped' })
-  await updateActivity(updatedCarbonDocument.developer_nft.id, txnId)
+  await updateActivity(updatedCarbonDocument.developer_nft.id, txnId, isGroup, groupId)
 
   return updatedCarbonDocument
 }
 
 async function updateActivity(nft, txn_id) {
-  return await strapi.services.activities.update({ nft, type: 'swap' }, { txn_id })
+  return await strapi.services.activities.update({ nft, type: 'swap' }, { txn_id, is_group, group_id })
 }
 
 module.exports = {
