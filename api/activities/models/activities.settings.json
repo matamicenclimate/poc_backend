@@ -31,6 +31,9 @@
     },
     "supply": {
       "type": "biginteger"
+    },
+    "txn_id": {
+      "type": "string"
     }
   }
 }
