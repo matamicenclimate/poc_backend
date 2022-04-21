@@ -26,6 +26,9 @@
     },
     "usd_usd": {
       "type": "float"
+    },
+    "usd_climatecoin": {
+      "type": "float"
     }
   }
 }
