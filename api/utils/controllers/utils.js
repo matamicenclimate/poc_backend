@@ -123,7 +123,8 @@ async function getOtherUserActivities(toDate, user) {
     },
     { $sort: { _id: 1 } },
   ])
-  const otherUserActivitiesTotal = otherUserActivities[0].income - otherUserActivities[0].expenses
+  const otherUserActivitiesTotal =
+    otherUserActivities.length > 0 ? otherUserActivities[0].income - otherUserActivities[0].expenses : 0
 
   return [otherUserActivitiesTotal]
 }
