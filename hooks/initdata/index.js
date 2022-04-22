@@ -113,6 +113,7 @@ async function removeDeletePermissionForEditor(strapi) {
   })
   if (carbonDocumentDeletePermission.length > 0) {
     await strapi.query('permission', 'admin').delete({ id: carbonDocumentDeletePermission[0].id })
+    strapi.log.info('[initData] removed carbon document delete permission for editor role')
   }
 }
 
