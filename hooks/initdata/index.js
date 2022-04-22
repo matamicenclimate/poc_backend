@@ -100,7 +100,20 @@ async function insertData(strapi) {
 async function initData(strapi) {
   await createAdminUser(strapi)
   await createEditorUser(strapi)
+  await removeDeletePermissionForEditor(strapi)
   await insertData(strapi)
+}
+
+async function removeDeletePermissionForEditor(strapi) {
+  const editorRole = await strapi.admin.services.role.findOne({ code: 'strapi-editor' })
+  const carbonDocumentDeletePermission = await strapi.admin.services.permission.find({
+    subject: 'application::carbon-documents.carbon-documents',
+    action: 'plugins::content-manager.explorer.delete',
+    role: editorRole._id,
+  })
+  if (carbonDocumentDeletePermission.length > 0) {
+    await strapi.query('permission', 'admin').delete({ id: carbonDocumentDeletePermission[0].id })
+  }
 }
 
 module.exports = (strapi) => {
