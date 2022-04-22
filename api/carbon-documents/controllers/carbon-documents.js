@@ -174,7 +174,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
 
     return await saveNft(mintData, creator.addr)
   } catch (error) {
-    strapi.log.error(error)
+    throw strapi.errors.badRequest(error)
   }
 }
 
@@ -188,20 +188,26 @@ async function mint(ctx) {
   const algodclient = algoClient()
 
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
-  const nftsDb = await mintCarbonNft(algodclient, creator, carbonDocument)
 
-  // update carbon document with nfts ids
-  const carbonDocuments = await strapi.services['carbon-documents'].update(
-    { id },
-    {
-      ...carbonDocument,
-      status: 'minted',
-      developer_nft: nftsDb[0],
-      fee_nft: nftsDb[1],
-    },
-  )
+  try {
+    const nftsDb = await mintCarbonNft(algodclient, creator, carbonDocument)
 
-  return carbonDocuments
+    // update carbon document with nfts ids
+    const carbonDocuments = await strapi.services['carbon-documents'].update(
+      { id },
+      {
+        ...carbonDocument,
+        status: 'minted',
+        developer_nft: nftsDb[0],
+        fee_nft: nftsDb[1],
+      },
+    )
+
+    return carbonDocuments
+  } catch (error) {
+    strapi.log.error(error)
+    return { status: error.status, message: error.message }
+  }
 }
 
 async function claim(ctx) {

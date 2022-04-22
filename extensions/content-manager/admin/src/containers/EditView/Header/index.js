@@ -128,8 +128,16 @@ const Header = ({
           method: 'POST',
           body: document,
         })
-        .then(() => strapi.notification.success('Carbon document minted'))
-        .catch((error) => strapi.notification.error(error))
+          .then((result) => {
+            if (result.status > 300) {
+              console.log('*** ERROR ***')
+              console.log(result.message)
+              strapi.notification.error('Check error in console')
+            } else {
+              strapi.notification.success('Carbon document minted')
+            }
+          })
+          .catch((error) => strapi.notification.error(error))
       }
 
       const onClick = isMintable ? () => mintNft(initialData) : () => strapi.notification.error('error')
