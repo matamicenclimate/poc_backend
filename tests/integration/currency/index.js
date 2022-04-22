@@ -7,6 +7,7 @@ describe('Currency', () => {
     usd_gbp: 0.73,
     usd_btc: 0.000028,
     usd_usd: 1,
+    usd_climatecoin: 40,
   }
 
   let createdElement
