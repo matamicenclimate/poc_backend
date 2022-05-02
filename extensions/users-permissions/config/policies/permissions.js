@@ -3,6 +3,7 @@
 const _ = require('lodash')
 const { Magic } = require('@magic-sdk/admin')
 const ENUMS = require(`${process.cwd()}/utils/enums`)
+const fileUploader = require(`${process.cwd()}/utils/upload`)
 
 function getCleanAuthToken(authorizationHeader) {
   const textTrim = 'Bearer '
@@ -66,7 +67,10 @@ module.exports = async (ctx, next) => {
 
   await strapi.plugins['magic'].services['magic'].loginWithMagic(ctx)
   checkIssuer(ctx)
-
+  if(ctx.request.files && ctx.request.files.avatar) {
+    const pushFilesResponse = await fileUploader.pushFile(ctx)
+    ctx.request.body = { ...ctx.request.body, ...pushFilesResponse }
+  }
   if (ctx.state.user) {
     // request is already authenticated in a different way
     return next()
