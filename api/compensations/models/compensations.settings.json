@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "compensations",
+  "info": {
+    "name": "Compensations",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nfts": {
+      "collection": "nfts"
+    },
+    "txnId": {
+      "type": "string"
+    }
+  }
+}
