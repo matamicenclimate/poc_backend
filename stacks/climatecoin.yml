@@ -1,0 +1,86 @@
+version: "3.3"
+
+volumes:
+  mongodb_data: {}
+  mongodb_backup: {}
+  backend_data: {}
+
+services:
+  backend: &backend
+    image: registry.dekaside.com/climatecoin/climatecoin-backend:latest
+    command: yarn start
+    depends_on:
+      - mongo
+    networks:
+      - climatecoin
+    env_file:
+      - ./.env.backend
+
+  backend-proxy:
+    image: registry.dekaside.com/library/nginx:latest
+    environment:
+      - NGINX_UPSTREAM_APP=app
+      - NGINX_UPSTREAM_SERVER=backend
+      - NGINX_UPSTREAM_PORT=1337
+      - NGINX_PORT=80
+      - NGINX_HOST=backend.climatecoin.staging.dekaside.com
+      - NGINX_MAX_BODY_SIZE=20M
+    depends_on:
+      - backend
+    networks:
+      - traefik-public
+      - climatecoin
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.climatecoin-backend-http.rule=Host(`backend.climatecoin.staging.dekaside.com`)
+        - traefik.http.routers.climatecoin-backend-http.entrypoints=http
+        - traefik.http.routers.climatecoin-backend-http.middlewares=https-redirect
+        - traefik.http.routers.climatecoin-backend-https.rule=Host(`backend.climatecoin.staging.dekaside.com`)
+        - traefik.http.routers.climatecoin-backend-https.entrypoints=https
+        - traefik.http.routers.climatecoin-backend-https.tls=true
+        - traefik.http.routers.climatecoin-backend-https.tls.certresolver=le
+        - traefik.http.services.climatecoin-backend-https.loadbalancer.server.port=80
+
+  mongo:
+    image: mongo:latest
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == node03.staging.dekaside.com
+    networks:
+      - climatecoin
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_backup:/backups
+    env_file:
+      - ./.env.backend
+  
+  frontend:
+    image: registry.dekaside.com/climatecoin/climatecoin-frontend:latest
+    command: ./start
+    networks:
+      - traefik-public
+      - climatecoin
+    env_file:
+      - ./.env.frontend
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.climatecoin-http.rule=Host(`climatecoin.staging.dekaside.com`)
+        - traefik.http.routers.climatecoin-http.entrypoints=http
+        - traefik.http.routers.climatecoin-http.middlewares=https-redirect
+        - traefik.http.routers.climatecoin-https.rule=Host(`climatecoin.staging.dekaside.com`)
+        - traefik.http.routers.climatecoin-https.entrypoints=https
+        - traefik.http.routers.climatecoin-https.tls=true
+        - traefik.http.routers.climatecoin-https.tls.certresolver=le
+        - traefik.http.services.climatecoin.loadbalancer.server.port=80
+
+networks:
+  traefik-public:
+    external: true
+  climatecoin:

@@ -34,18 +34,22 @@
     "asa_id": {
       "type": "biginteger"
     },
-    "is_in_contract": {
-      "type": "boolean",
-      "default": true
-    },
     "owner_address": {
       "type": "string"
     },
     "supply": {
       "type": "biginteger"
     },
-    "has_been_claimed": {
-      "type": "boolean"
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "created",
+        "claimed",
+        "swapped",
+        "burned"
+      ],
+      "default": "created",
+      "required": true
     }
   }
 }

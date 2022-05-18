@@ -10,18 +10,16 @@ const algorandUtils = require(`${process.cwd()}/utils/algorand`)
  */
 
 async function calculate(ctx) {
-  const { amount, nfts } = ctx.request.query
-
+  const { amount } = ctx.request.query
+  const nftsToBurn = await getNFTsToBurn(amount)
+  if (!nftsToBurn.length) {
+    throw new Error('There are no nfts to burn')
+  }
   const algodclient = algoClient()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-  const assetsToCompensateFrom = nfts.map((item) => Number(item))
-
-  /* TODO:
-    assetsToCompensateFrom should come from the DB
-    we have to select the worst ones. (by date or creation)
-  */
+  const assetsToCompensateFrom = nftsToBurn.map((item) => Number(item))
 
   const burnParametersTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
@@ -40,3 +38,18 @@ async function calculate(ctx) {
 }
 
 module.exports = { calculate }
+async function getNFTsToBurn(amount) {
+  const byLastInserted = 'id:desc'
+  const nfts = await strapi.services.nfts.find({ status: 'swapped', _sort: byLastInserted })
+  let totalAmountBurned = 0
+  const nftsToBurn = nfts.filter((nft) => {
+    if (amount > totalAmountBurned) {
+      totalAmountBurned += nft.supply
+
+      return nft
+    }
+    return false
+  })
+  return nftsToBurn
+}
+
