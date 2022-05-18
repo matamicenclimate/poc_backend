@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/compensations",
+      "handler": "compensations.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/compensations/calculate",
+      "handler": "compensations.calculate",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/compensations/count",
+      "handler": "compensations.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/compensations/:id",
+      "handler": "compensations.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/compensations",
+      "handler": "compensations.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/compensations/:id",
+      "handler": "compensations.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/compensations/:id",
+      "handler": "compensations.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

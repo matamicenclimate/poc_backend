@@ -34,7 +34,7 @@
     "asa_id": {
       "type": "biginteger"
     },
-    "is_holded": {
+    "is_in_contract": {
       "type": "boolean",
       "default": true
     },
@@ -43,6 +43,9 @@
     },
     "supply": {
       "type": "biginteger"
+    },
+    "has_been_claimed": {
+      "type": "boolean"
     }
   }
 }
