@@ -9,6 +9,7 @@ const utils = require(`${process.cwd()}/utils`)
 
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
+const { getEscrowFromApp } = require('../../../utils/algorand')
 
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
@@ -148,7 +149,11 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
     signer: algosdk.makeBasicAccountTransactionSigner(creator),
     suggestedParams,
     note: algorandUtils.encodeMetadataText(assetMetadata),
-    methodArgs: [Number(carbonDocument.credits)],
+    methodArgs: [
+      Number(carbonDocument.credits),
+      Number(process.env.DUMP_APP_ID),
+      getEscrowFromApp(Number(process.env.DUMP_APP_ID)),
+    ],
   })
 
   try {
