@@ -1,26 +1,27 @@
-'use strict';
+'use strict'
 
-const algosdk = require("algosdk");
-const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
+const algosdk = require('algosdk')
+const { algoClient } = require(`${process.cwd()}/config/algorand`)
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
-
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
 
-async function calculate (ctx) {
-  const { amount, nfts } = ctx.request.query;
-  console.log("hello")
+async function calculate(ctx) {
+  const { amount, nfts } = ctx.request.query
 
   const algodclient = algoClient()
-  const indexerClient = algoIndexer()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-  const assetsToCompensateFrom = []
-  console.log( Number(process.env.APP_ID))
+  const assetsToCompensateFrom = nfts.map((item) => Number(item))
+
+  /* TODO:
+    assetsToCompensateFrom should come from the DB
+    we have to select the worst ones. (by date or creation)
+  */
 
   const burnParametersTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
@@ -31,10 +32,11 @@ async function calculate (ctx) {
     foreignAssets: assetsToCompensateFrom,
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
-  });
+  })
 
-  console.log(burnParametersTxn)
-  return nfts
+  const signedTxn = await burnParametersTxn.signTxn(creator.sk)
+
+  return signedTxn
 }
 
-module.exports = {calculate};
+module.exports = { calculate }
