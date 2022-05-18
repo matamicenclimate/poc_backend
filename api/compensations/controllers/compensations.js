@@ -34,7 +34,7 @@ async function calculate(ctx) {
 
   const signedTxn = await burnParametersTxn.signTxn(creator.sk)
 
-  return signedTxn
+  return { txn: signedTxn, assets: assetsToCompensateFrom }
 }
 
 module.exports = { calculate }
@@ -52,4 +52,3 @@ async function getNFTsToBurn(amount) {
   })
   return nftsToBurn
 }
-
