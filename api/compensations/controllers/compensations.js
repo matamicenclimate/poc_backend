@@ -19,7 +19,7 @@ async function calculate(ctx) {
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-  const assetsToCompensateFrom = nftsToBurn.map((item) => Number(item))
+  const assetsToCompensateFrom = nftsToBurn.map((item) => Number(item.asa_id))
 
   const burnParametersTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
