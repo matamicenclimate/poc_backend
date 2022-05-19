@@ -41,6 +41,14 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/nfts/:id/burn",
+      "handler": "nfts.burn",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/nfts/:id",
       "handler": "nfts.delete",

@@ -130,7 +130,9 @@ module.exports = async (ctx, next) => {
     },
     [],
   )
-
+  // if (process.env.NODE_ENV === 'test') {
+  //   return await next()
+  // }
   if (!permission) {
     return handleErrors(ctx, undefined, 'forbidden')
   }
