@@ -17,6 +17,9 @@
     },
     "txnId": {
       "type": "string"
+    },
+    "amount": {
+      "type": "biginteger"
     }
   }
 }
