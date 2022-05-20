@@ -2,7 +2,7 @@
   "name": "climatecoin_vault_arc4",
   "networks": {
     "testnet": {
-      "appID": 89706224
+      "appID": 90425303
     }
   },
   "methods": [
@@ -55,13 +55,13 @@
     {
       "name": "burn_parameters",
       "desc": "Burn climatecoins to compensate the emissions from an asset",
-      "args": [{ "name": "compensating_asset", "type": "asset" }],
+      "args": [],
       "returns": { "type": "uint64" }
     },
     {
       "name": "burn_climatecoins",
       "desc": "burn the climatecoins",
-      "args": [{ "name": "asset", "type": "asset" }],
+      "args": [],
       "returns": { "type": "uint64" }
     },
     {

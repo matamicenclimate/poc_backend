@@ -22,6 +22,7 @@ async function calculate(ctx) {
   const suggestedParams = await algodclient.getTransactionParams().do()
 
   const assetsToCompensateFrom = nftsToBurn.map((item) => Number(item.asa_id))
+  const nftIds = nftsToBurn.map((item) => item.id)
 
   const climatecoinTransferTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: user.publicAddress,
@@ -30,7 +31,6 @@ async function calculate(ctx) {
     amount: Number(amount),
     suggestedParams,
   })
-
   const burnParametersTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
     appIndex: Number(process.env.APP_ID),
@@ -47,15 +47,28 @@ async function calculate(ctx) {
     appIndex: Number(process.env.APP_ID),
     appArgs: [algorandUtils.getMethodByName('burn_climatecoins').getSelector()],
     foreignAssets: assetsToCompensateFrom,
+    accounts: [algosdk.getApplicationAddress(Number(process.env.DUMP_APP_ID))],
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
+
   const burnGroupTxn = [climatecoinTransferTxn, burnParametersTxn, burnTxn]
-  let txnGroup = algosdk.assignGroupID(burnGroupTxn)
+  const [transfer, params, burn] = algosdk.assignGroupID(burnGroupTxn)
 
-  const signedTxn = await burnParametersTxn.signTxn(creator.sk)
+  const encodedTransferTxn = algosdk.encodeUnsignedTransaction(transfer)
+  const encodedBurnTxn = algosdk.encodeUnsignedTransaction(burn)
 
-  return { txn: signedTxn, assets: assetsToCompensateFrom, txnGroup }
+  const signedTxn = await params.signTxn(creator.sk)
+
+  return {
+    address: user.publicAddress,
+    amount: Number(amount),
+    assets: assetsToCompensateFrom,
+    nftIds,
+    txn: signedTxn,
+    encodedTransferTxn,
+    encodedBurnTxn,
+  }
 }
 
 module.exports = { calculate }
