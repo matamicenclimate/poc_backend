@@ -61,6 +61,8 @@ async function calculate(ctx) {
   const signedTxn = await params.signTxn(creator.sk)
 
   return {
+    address: user.publicAddress,
+    amount,
     assets: assetsToCompensateFrom,
     nftIds,
     txn: signedTxn,
