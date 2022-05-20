@@ -62,7 +62,7 @@ async function calculate(ctx) {
 
   return {
     address: user.publicAddress,
-    amount,
+    amount: Number(amount),
     assets: assetsToCompensateFrom,
     nftIds,
     txn: signedTxn,
