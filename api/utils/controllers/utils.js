@@ -1,5 +1,10 @@
 'use strict'
-
+async function contractsInfo(ctx) {
+  return {
+    appId: process.env.APP_ID,
+    dumpAppId: process.env.DUMP_APP_ID
+  }
+}
 async function chartBalanceMe(ctx) {
   const { user } = ctx.state
   const { type } = ctx.query
@@ -131,4 +136,5 @@ async function getOtherUserActivities(toDate, user) {
 
 module.exports = {
   chartBalanceMe,
+  contractsInfo
 }
