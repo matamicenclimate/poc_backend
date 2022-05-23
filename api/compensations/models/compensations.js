@@ -10,8 +10,9 @@ module.exports = {
     afterCreate: async function (result) {
       await strapi.services.activities.create({
         type: 'burn',
-        groupId: result.txnId,
-        isGroup: true,
+        group_id: result.txnId,
+        txn_id: result.txnId,
+        is_group: true,
         supply: result.amount,
         user: result.user.id,
         date: new Date(),
