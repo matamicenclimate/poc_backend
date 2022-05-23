@@ -17,13 +17,19 @@ module.exports = ({ env }) => {
     }
   }
 
-  return ({
+  return {
     email,
     upload: {
       provider: 'climate',
       providerOptions: {
         sizeLimit: config.fileSize.max * 1024 * 1024,
       },
-    }
-  })
+    },
+    sentry: {
+      enabled: true,
+      config: {
+        dsn: env('https://c6decc5c8f7f458a848e801d71113ec9@o1258931.ingest.sentry.io/6433300'),
+      },
+    },
+  }
 }

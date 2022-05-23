@@ -16,8 +16,15 @@ module.exports = {
         user: result.user.id,
         date: new Date(),
       })
+      let supply_remaining = result.amount
       const promises = result.nfts.map((nft) => {
-        return strapi.services.nfts.update({ id: nft.id }, { status: 'burned' })
+        const nftFound = await strapi.services['nfts'].findOne({ id: nft.id })
+        if (supply_remaining >= nftFound.supply_remaining) {
+          supply_remaining -= nftFound.supply_remaining
+          return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
+        }
+
+        return strapi.services.nfts.update({ id: nft.id }, { supply_remaining })
       })
       await Promise.all(promises)
     },

@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
 
-async function burn (ctx) {
+async function burn(ctx) {
   try {
     const nft = await strapi.services['nfts'].findOne({ id: ctx.params.id })
     if (nft.status === 'swapped') {
@@ -19,5 +19,5 @@ async function burn (ctx) {
 }
 
 module.exports = {
-  burn
-};
+  burn,
+}

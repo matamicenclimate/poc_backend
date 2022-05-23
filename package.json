@@ -14,10 +14,11 @@
   },
   "devDependencies": {
     "jest": "^27.5.1",
-    "supertest": "^6.2.2",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "supertest": "^6.2.2"
   },
   "dependencies": {
+    "@strapi/plugin-sentry": "^4.1.11",
     "algosdk": "^1.15.0",
     "config": "^3.3.6",
     "dotenv": "^16.0.0",
