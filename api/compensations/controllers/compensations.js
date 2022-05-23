@@ -86,7 +86,7 @@ async function getNFTsToBurn(amount) {
   let totalAmountBurned = 0
   const nftsToBurn = nfts.filter((nft) => {
     if (amount > totalAmountBurned) {
-      totalAmountBurned += nft.supply
+      totalAmountBurned += nft.supply_remaining
 
       return nft
     }

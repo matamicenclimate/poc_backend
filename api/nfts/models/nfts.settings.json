@@ -50,6 +50,9 @@
       ],
       "default": "created",
       "required": true
+    },
+    "supply_remaining": {
+      "type": "biginteger"
     }
   }
 }
