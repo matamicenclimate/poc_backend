@@ -24,6 +24,12 @@ module.exports = ({ env }) => {
       providerOptions: {
         sizeLimit: config.fileSize.max * 1024 * 1024,
       },
-    }
+    },
+    sentry: {
+      enabled: true,
+      config: {
+        dsn: env('DSN'),
+      },
+    },
   })
 }

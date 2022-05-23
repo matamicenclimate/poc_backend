@@ -18,6 +18,7 @@
     "prettier": "^2.6.2"
   },
   "dependencies": {
+    "@strapi/plugin-sentry": "^4.1.11",
     "algosdk": "^1.15.0",
     "config": "^3.3.6",
     "dotenv": "^16.0.0",
