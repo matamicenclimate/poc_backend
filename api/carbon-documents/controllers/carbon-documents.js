@@ -240,7 +240,7 @@ async function claim(ctx) {
     { id: carbonDocument },
     { status: 'claimed' },
   )
-  await strapi.services.nfts.update({nft: updatedCarbonDocument.developer_nft.id}, { status: 'claimed' })
+  await strapi.services.nfts.update({ id: updatedCarbonDocument.developer_nft.id }, { status: 'claimed' })
 
   return updatedCarbonDocument
 }
@@ -282,7 +282,7 @@ async function swap(ctx) {
   const updatedCarbonDocument = await strapi.services['carbon-documents'].update({ id }, { status: 'swapped' })
   await updateActivity(updatedCarbonDocument.developer_nft.id, txnId, isGroup, groupId)
 
-  await strapi.services.nfts.update({nft: updatedCarbonDocument.developer_nft.id}, { status: 'swapped' })
+  await strapi.services.nfts.update({ id: updatedCarbonDocument.developer_nft.id }, { status: 'swapped' })
 
   return updatedCarbonDocument
 }
