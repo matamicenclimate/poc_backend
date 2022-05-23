@@ -71,7 +71,15 @@ async function calculate(ctx) {
   }
 }
 
-module.exports = { calculate }
+async function me(ctx) {
+  const user = ctx.state.user.id
+  const activities = await strapi.services.compensations.find({ user: user, ...ctx.query })
+
+  return activities
+}
+
+module.exports = { me, calculate }
+
 async function getNFTsToBurn(amount) {
   const byLastInserted = 'id:desc'
   const nfts = await strapi.services.nfts.find({ status: 'swapped', _sort: byLastInserted })

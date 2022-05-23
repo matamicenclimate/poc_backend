@@ -20,6 +20,19 @@
     },
     "amount": {
       "type": "biginteger"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "accepted",
+        "completed"
+      ],
+      "default": "pending"
     }
   }
 }
