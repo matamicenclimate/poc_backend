@@ -29,7 +29,7 @@ module.exports = {
           return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
         }
 
-        const finalSupply = nftFound.supply_remaining.subtract(supply_remaining)
+        const finalSupply = nftFound.supply_remaining - supply_remaining
         return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply })
       })
       await Promise.all(promises)
