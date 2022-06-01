@@ -84,13 +84,12 @@ async function getNFTsToBurn(amount) {
   const byLastInserted = 'id:desc'
   const nfts = await strapi.services.nfts.find({ status: 'swapped', _sort: byLastInserted })
   let totalAmountBurned = 0
-  const nftsToBurn = nfts.filter((nft) => {
+  let nftsToBurn = []
+  nfts.forEach((nft) => {
     if (amount > totalAmountBurned) {
       totalAmountBurned += nft.supply_remaining
-
-      return nft
+      nftsToBurn.push(nft)
     }
-    return false
   })
   return nftsToBurn
 }
