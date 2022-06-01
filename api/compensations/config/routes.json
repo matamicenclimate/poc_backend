@@ -49,6 +49,14 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/compensations/:id/mint",
+      "handler": "compensations.mint",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PUT",
       "path": "/compensations/:id",
       "handler": "compensations.update",

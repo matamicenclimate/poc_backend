@@ -24,11 +24,15 @@ const MINT_DEFAULTS = {
   MEDIA_TYPE_SPECIFIER: '#p',
   METADATA_DESCRIPTION: 'Carbon Emission Credit',
   EXTERNAL_URL: 'https://www.climatetrade.com/assets/....yoquese.pdf',
+  COMPENSATION_NFT: {
+    METADATA_DESCRIPTION: 'Carbon Compensation Certificate',
+  },
 }
 
-const TXN_TYPES = {
-  ASSET_CREATION: 'assetCreation',
-  FEE_ASSET_CREATION: 'feeAssetCreation',
+const NFT_TYPES = {
+  FEE: 'fee',
+  DEVELOPER: 'developer',
+  COMPENSATION: 'compensation',
 }
 
 const MINT_MIME_TYPES = {
@@ -41,7 +45,7 @@ module.exports = {
   ARCS,
   ASSET_NAMES,
   MINT_DEFAULTS,
-  TXN_TYPES,
+  NFT_TYPES,
   MINT_MIME_TYPES,
   DEFAULT,
 }

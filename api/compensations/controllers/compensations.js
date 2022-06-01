@@ -3,6 +3,8 @@
 const algosdk = require('algosdk')
 const { algoClient } = require(`${process.cwd()}/config/algorand`)
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
+const { getEscrowFromApp } = require('../../../utils/algorand')
+const ALGORAND_ENUMS = require('../../../utils/enums/algorand')
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -13,7 +15,7 @@ async function calculate(ctx) {
   const { amount } = ctx.request.query
   const user = ctx.state.user
 
-  const nftsToBurn = await getNFTsToBurn(amount)
+  const nftsToBurn = await getNFTsToBurn(Number(amount))
   if (!nftsToBurn.length) {
     throw new Error('There are no nfts to burn')
   }
@@ -78,7 +80,38 @@ async function me(ctx) {
   return activities
 }
 
-module.exports = { me, calculate }
+async function mint(ctx) {
+  const { id } = ctx.params
+  const compensation = await strapi.services['compensations'].findOne({ id })
+  if (!['received_certificates'].includes(compensation.state)) {
+    return ctx.badRequest("Compensation hasn't been reviewed")
+  }
+
+  const algodclient = algoClient()
+
+  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
+
+  try {
+    const compensationNftId = await mintCompensationNft(algodclient, creator, compensation)
+
+    // update carbon document with nfts ids
+    const updatedCompensation = await strapi.services['compensations'].update(
+      { id },
+      {
+        ...compensation,
+        status: 'minted',
+        compensation_nft: compensationNftId,
+      },
+    )
+
+    return updatedCompensation
+  } catch (error) {
+    strapi.log.error(error)
+    return { status: error.status, message: error.message }
+  }
+}
+
+module.exports = { me, calculate, mint }
 
 async function getNFTsToBurn(amount) {
   const byLastInserted = 'id:desc'
@@ -92,4 +125,58 @@ async function getNFTsToBurn(amount) {
     }
   })
   return nftsToBurn
+}
+
+/**
+ *
+ * @param {algosdk.Algodv2} algodclient
+ * @param {*} creator - which user should be the owner of this nft. we can then transfer it to them
+ * @param {*} carbonDocument - db model from the compensation
+ * @returns
+ */
+const mintCompensationNft = async (algodclient, creator, compensationDocument) => {
+  const atc = new algosdk.AtomicTransactionComposer()
+
+  const suggestedParams = await algodclient.getTransactionParams().do()
+  const assetMetadata = {
+    standard: ALGORAND_ENUMS.ARCS.ARC69,
+    description: `${ALGORAND_ENUMS.MINT_DEFAULTS.COMPENSATION_NFT.METADATA_DESCRIPTION}`,
+    external_url: 'mintDefaults.EXTERNAL_URL',
+    mime_type: ALGORAND_ENUMS.MINT_MIME_TYPES.PDF,
+    properties: {
+      Reference: compensationDocument._id,
+      Amount: compensationDocument.amount,
+    },
+  }
+
+  atc.addMethodCall({
+    appID: Number(process.env.APP_ID),
+    method: algorandUtils.getMethodByName('mint_compensation_nft'),
+    sender: creator.addr,
+    signer: algosdk.makeBasicAccountTransactionSigner(creator),
+    suggestedParams,
+    note: algorandUtils.encodeMetadataText(assetMetadata),
+  })
+
+  try {
+    const result = await atc.execute(algodclient, 2)
+    const mintedNftId = result.methodResults[0].returnValue
+    const mintedTxnId = result.methodResults[0].txID
+
+    const nftDb = await strapi.services['nfts'].create({
+      group_id: mintedTxnId,
+      // carbon_document: data['carbon_document']._id,
+      last_config_txn: null,
+      nft_type: ALGORAND_ENUMS.NFT_TYPES.COMPENSATION,
+      metadata: assetMetadata,
+      asa_id: mintedNftId,
+      asa_txn_id: mintedTxnId,
+      owner_address: compensationDocument.user.publicAddress,
+      supply: 1,
+    })
+
+    return nftDb.id
+  } catch (error) {
+    throw strapi.errors.badRequest(error)
+  }
 }

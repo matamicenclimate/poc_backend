@@ -59,7 +59,7 @@ async function saveNft(data, ownerAddress) {
   const nftsData = [
     {
       ...defaultData,
-      txn_type: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION,
+      nft_type: ALGORAND_ENUMS.NFT_TYPES.DEVELOPER,
       metadata: data.assetNftMetadata,
       asa_id: data.developerAsaId,
       asa_txn_id: data.txn,
@@ -68,7 +68,7 @@ async function saveNft(data, ownerAddress) {
     },
     {
       ...defaultData,
-      txn_type: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION,
+      nft_type: ALGORAND_ENUMS.NFT_TYPES.FEE,
       metadata: data.assetNftMetadata,
       asa_id: data.climateFeeNftId,
       asa_txn_id: data.txn,
@@ -140,7 +140,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const indexerClient = algoIndexer()
 
   const suggestedParams = await algodclient.getTransactionParams().do()
-  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
+  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.NFT_TYPES.DEVELOPER })
 
   atc.addMethodCall({
     appID: Number(process.env.APP_ID),
