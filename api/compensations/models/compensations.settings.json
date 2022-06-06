@@ -8,14 +8,14 @@
   "options": {
     "increments": true,
     "timestamps": true,
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "nfts": {
       "collection": "nfts"
     },
-    "txnId": {
+    "txn_id": {
       "type": "string"
     },
     "amount": {
@@ -28,11 +28,40 @@
     "state": {
       "type": "enumeration",
       "enum": [
-        "pending",
-        "accepted",
-        "completed"
+        "created",
+        "pending_notification",
+        "pending_certificates",
+        "received_certificates",
+        "minted"
       ],
-      "default": "pending"
+      "default": "created"
+    },
+    "consolidation_certificate": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "registry_certificates": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files",
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "compensation_nft": {
+      "model": "nfts"
+    },
+    "consolidation_certificate_ipfs_cid": {
+      "type": "string"
     }
   }
 }

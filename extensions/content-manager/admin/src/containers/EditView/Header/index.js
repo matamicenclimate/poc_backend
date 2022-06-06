@@ -38,7 +38,7 @@ const Header = ({
   const [showWarningDraftRelation, setShowWarningDraftRelation] = useState(false)
   const [shouldUnpublish, setShouldUnpublish] = useState(false)
   const [shouldPublish, setShouldPublish] = useState(false)
-
+  const [requestPending, setRequestPending] = useState(false)
   const currentContentTypeMainField = useMemo(() => get(layout, ['settings', 'mainField'], 'id'), [layout])
 
   const currentContentTypeName = useMemo(() => get(layout, ['info', 'name']), [layout])
@@ -147,6 +147,42 @@ const Header = ({
       const action = {
         ...primaryButtonObject,
         disabled: !isMintable,
+        label: formatMessage({ id: labelID }),
+        onClick,
+      }
+
+      headerActions.unshift(action)
+    }
+
+    if (layout.uid === 'application::compensations.compensations') {
+      const isMintable = initialData.state === 'received_certificates' ? true : false
+      const labelID = 'Mint'
+      /* eslint-disable indent */
+      function mintNft(document) {
+        strapi.notification.info('Minting compensation nft...')
+        request(`/compensations/${document.id}/mint`, {
+          method: 'POST',
+          body: document,
+        })
+          .then((result) => {
+            if (result.status > 300) {
+              console.log('*** ERROR ***')
+              console.log(result.message)
+              strapi.notification.error('Check error in console')
+            } else {
+              strapi.notification.success('Carbon document minted')
+            }
+          })
+          .catch((error) => strapi.notification.error(error))
+      }
+
+      const onClick = isMintable ? () => mintNft(initialData) : () => strapi.notification.error('error')
+
+      /* eslint-enable indent */
+
+      const action = {
+        ...primaryButtonObject,
+        disabled: !isMintable || requestPending,
         label: formatMessage({ id: labelID }),
         onClick,
       }

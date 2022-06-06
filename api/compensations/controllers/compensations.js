@@ -1,9 +1,14 @@
 'use strict'
 
 const algosdk = require('algosdk')
+
 const { algoClient } = require(`${process.cwd()}/config/algorand`)
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
+const ALGORAND_ENUMS = require('../../../utils/enums/algorand')
+const { readFileFromUploads } = require('../../../utils/upload')
 
+const { createPDF, generateCompensationPDF } = require('../../../utils/pdf')
+const { uploadFileToIPFS } = require('../../../utils/ipfs')
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
@@ -13,7 +18,7 @@ async function calculate(ctx) {
   const { amount } = ctx.request.query
   const user = ctx.state.user
 
-  const nftsToBurn = await getNFTsToBurn(amount)
+  const nftsToBurn = await getNFTsToBurn(Number(amount))
   if (!nftsToBurn.length) {
     throw new Error('There are no nfts to burn')
   }
@@ -78,19 +83,130 @@ async function me(ctx) {
   return activities
 }
 
-module.exports = { me, calculate }
+async function mint(ctx) {
+  const { id } = ctx.params
+  const compensation = await strapi.services['compensations'].findOne({ id })
+  if (!['received_certificates'].includes(compensation.state)) {
+    return ctx.badRequest("Compensation hasn't been reviewed")
+  }
+  const ipfsCIDs = await uploadFilesToIPFS(compensation)
+  const algodclient = algoClient()
+
+  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
+
+  try {
+    const filePath = `${compensation.id}.pdf`
+    const html = generateCompensationPDF(ipfsCIDs)
+    await createPDF(html, filePath)
+
+    const pdfBuffer = await readFileFromUploads(filePath)
+    const consolidationPdfCid = await uploadFileToIPFS(pdfBuffer, 'application/pdf')
+
+    const compensationNftId = await algoFn.mintCompensationNft(algodclient, creator, compensation, consolidationPdfCid)
+
+    const updatedCompensation = await strapi.services['compensations'].update(
+      { id },
+      {
+        ...compensation,
+        // TODO: uncoment after testing
+        // state: 'minted',
+        compensation_nft: compensationNftId,
+        consolidation_certificate_ipfs_cid: consolidationPdfCid,
+      },
+    )
+
+    return updatedCompensation
+  } catch (error) {
+    console.log(error.message, error.stack)
+
+    strapi.log.error(error)
+    return { status: error.status, message: error.message }
+  }
+}
+const algoFn = {
+  mintCompensationNft: async (algodclient, creator, compensationDocument, ipfsUrl) => {
+    const atc = new algosdk.AtomicTransactionComposer()
+  
+    const suggestedParams = await algodclient.getTransactionParams().do()
+    const assetMetadata = {
+      standard: ALGORAND_ENUMS.ARCS.ARC69,
+      description: `${ALGORAND_ENUMS.MINT_DEFAULTS.COMPENSATION_NFT.METADATA_DESCRIPTION}`,
+      external_url: ipfsUrl,
+      mime_type: ALGORAND_ENUMS.MINT_MIME_TYPES.PDF,
+      properties: {
+        Reference: compensationDocument._id,
+        Amount: compensationDocument.amount,
+      },
+    }
+  
+    atc.addMethodCall({
+      appID: Number(process.env.APP_ID),
+      method: algorandUtils.getMethodByName('mint_compensation_nft'),
+      sender: creator.addr,
+      signer: algosdk.makeBasicAccountTransactionSigner(creator),
+      suggestedParams,
+      note: algorandUtils.encodeMetadataText(assetMetadata),
+    })
+  
+    try {
+      const result = await atc.execute(algodclient, 2)
+      const mintedNftId = result.methodResults[0].returnValue
+      const mintedTxnId = result.methodResults[0].txID
+  
+      const nftDb = await strapi.services['nfts'].create({
+        group_id: mintedTxnId,
+        // carbon_document: data['carbon_document']._id,
+        last_config_txn: null,
+        nft_type: ALGORAND_ENUMS.NFT_TYPES.COMPENSATION,
+        metadata: assetMetadata,
+        asa_id: mintedNftId,
+        asa_txn_id: mintedTxnId,
+        owner_address: compensationDocument.user.publicAddress,
+        supply: 1,
+      })
+  
+      return nftDb.id
+    } catch (error) {
+      throw strapi.errors.badRequest(error)
+    }
+  }
+}
+module.exports = {
+  me,
+  calculate,
+  mint,
+  algoFn,
+}
 
 async function getNFTsToBurn(amount) {
   const byLastInserted = 'id:desc'
   const nfts = await strapi.services.nfts.find({ status: 'swapped', _sort: byLastInserted })
   let totalAmountBurned = 0
-  const nftsToBurn = nfts.filter((nft) => {
+  let nftsToBurn = []
+  nfts.forEach((nft) => {
     if (amount > totalAmountBurned) {
       totalAmountBurned += nft.supply_remaining
-
-      return nft
+      nftsToBurn.push(nft)
     }
-    return false
   })
   return nftsToBurn
 }
+
+async function uploadFilesToIPFS(compensation) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const ipfsCIDs = []
+      for (const nft of compensation.registry_certificates) {
+        const file = await readFileFromUploads(`${nft.hash}${nft.ext}`)
+        const result = await uploadFileToIPFS(file, nft.mime)
+        ipfsCIDs.push(result)
+      }
+      resolve(ipfsCIDs)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+
+

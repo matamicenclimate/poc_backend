@@ -6,7 +6,6 @@ const algorandUtils = require(`${process.cwd()}/utils/algorand`)
 const ALGORAND_ENUMS = require(`${process.cwd()}/utils/enums/algorand`)
 const formatters = require(`${process.cwd()}/utils/formatters`)
 const utils = require(`${process.cwd()}/utils`)
-
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
@@ -59,7 +58,7 @@ async function saveNft(data, ownerAddress) {
   const nftsData = [
     {
       ...defaultData,
-      txn_type: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION,
+      nft_type: ALGORAND_ENUMS.NFT_TYPES.DEVELOPER,
       metadata: data.assetNftMetadata,
       asa_id: data.developerAsaId,
       asa_txn_id: data.txn,
@@ -68,7 +67,7 @@ async function saveNft(data, ownerAddress) {
     },
     {
       ...defaultData,
-      txn_type: ALGORAND_ENUMS.TXN_TYPES.FEE_ASSET_CREATION,
+      nft_type: ALGORAND_ENUMS.NFT_TYPES.FEE,
       metadata: data.assetNftMetadata,
       asa_id: data.climateFeeNftId,
       asa_txn_id: data.txn,
@@ -140,7 +139,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const indexerClient = algoIndexer()
 
   const suggestedParams = await algodclient.getTransactionParams().do()
-  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.TXN_TYPES.ASSET_CREATION })
+  const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.NFT_TYPES.DEVELOPER })
 
   atc.addMethodCall({
     appID: Number(process.env.APP_ID),
@@ -207,7 +206,6 @@ async function mint(ctx) {
         fee_nft: nftsDb[1],
       },
     )
-
     return carbonDocuments
   } catch (error) {
     strapi.log.error(error)

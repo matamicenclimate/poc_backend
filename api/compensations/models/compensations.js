@@ -5,6 +5,8 @@
  * to customize this model
  */
 
+const mailer = require(`${process.cwd()}/utils/mailer`)
+
 module.exports = {
   lifecycles: {
     afterCreate: async function (result) {
@@ -27,10 +29,19 @@ module.exports = {
           return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
         }
 
-        const finalSupply = nftFound.supply_remaining.subtract(supply_remaining)
+        const finalSupply = nftFound.supply_remaining - supply_remaining
         return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply })
       })
       await Promise.all(promises)
+
+      /**
+       * Handle compensation request notification email
+       */
+      const collectionName = 'compensations'
+      const applicationUid = strapi.api[collectionName].models[collectionName].uid
+      const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${result.id}`
+      const mailContent = `A new compensation request has been made.<br>Available here: ${url}`
+      await mailer.send('New compensation', mailContent)
     },
   },
 }

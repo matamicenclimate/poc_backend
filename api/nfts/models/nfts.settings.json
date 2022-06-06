@@ -24,11 +24,12 @@
     "last_config_txn": {
       "type": "string"
     },
-    "txn_type": {
+    "nft_type": {
       "type": "enumeration",
       "enum": [
-        "assetCreation",
-        "feeAssetCreation"
+        "fee",
+        "developer",
+        "compensation"
       ]
     },
     "asa_id": {
