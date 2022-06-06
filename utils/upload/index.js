@@ -1,7 +1,8 @@
 'use strict'
 
 const mime = require('mime-types')
-
+const fs = require('fs/promises')
+const path = require('path')
 async function pushFile(ctx) {
   const files = ctx.request.files
   const objectResponse = {}
@@ -23,6 +24,11 @@ async function pushFile(ctx) {
   return objectResponse
 }
 
+const readFileFromUploads = async (name) => {
+  return await fs.readFile(path.join('public/uploads', `${name}`))
+}
+
 module.exports = {
   pushFile,
+  readFileFromUploads,
 }

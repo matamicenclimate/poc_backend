@@ -6,7 +6,6 @@ const algorandUtils = require(`${process.cwd()}/utils/algorand`)
 const ALGORAND_ENUMS = require(`${process.cwd()}/utils/enums/algorand`)
 const formatters = require(`${process.cwd()}/utils/formatters`)
 const utils = require(`${process.cwd()}/utils`)
-
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
@@ -207,7 +206,6 @@ async function mint(ctx) {
         fee_nft: nftsDb[1],
       },
     )
-
     return carbonDocuments
   } catch (error) {
     strapi.log.error(error)

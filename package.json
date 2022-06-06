@@ -8,20 +8,23 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "test": "jest --forceExit",
+    "test": "jest --forceExit --silent=false",
     "release": "standard-version",
-    "algo-create-accounts": "node scripts/algorand-create-accounts.js"
+    "algo-create-accounts": "node scripts/algorand-create-accounts.js",
+    "postinstall": "echo \"module.exports = require('./cjs/lib/treewalk')\" > node_modules/carbites/treewalk.js"
   },
   "devDependencies": {
     "jest": "^27.5.1",
-    "supertest": "^6.2.2",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "supertest": "^6.2.2"
   },
   "dependencies": {
     "algosdk": "^1.15.0",
     "config": "^3.3.6",
     "dotenv": "^16.0.0",
     "lodash": "^4.17.21",
+    "nft.storage": "^3.0.1",
+    "puppeteer": "^14.2.0",
     "standard-version": "^9.5.0",
     "strapi": "3.6.8",
     "strapi-admin": "3.6.8",

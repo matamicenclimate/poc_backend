@@ -59,6 +59,9 @@
     },
     "compensation_nft": {
       "model": "nfts"
+    },
+    "consolidation_certificate_ipfs_cid": {
+      "type": "string"
     }
   }
 }

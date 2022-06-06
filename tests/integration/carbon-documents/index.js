@@ -56,7 +56,7 @@ describe('Carbon-documents', () => {
       .expect('Content-Type', /json/)
       .then((response) => {
         expect(response.body).toBeDefined()
-        expect(response.body.length).toBe(1)
+        expect(response.body.length > 0).toBe(true)
       })
   })
 
