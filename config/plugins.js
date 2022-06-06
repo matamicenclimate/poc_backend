@@ -28,7 +28,7 @@ module.exports = ({ env }) => {
     sentry: {
       enabled: true,
       config: {
-        dsn: env('DSN'),
+        dsn: env('SENTRY_DSN'),
       },
     },
   })
