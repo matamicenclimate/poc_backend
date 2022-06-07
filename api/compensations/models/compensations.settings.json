@@ -62,6 +62,9 @@
     },
     "consolidation_certificate_ipfs_cid": {
       "type": "string"
+    },
+    "burn_receipt": {
+      "type": "json"
     }
   }
 }

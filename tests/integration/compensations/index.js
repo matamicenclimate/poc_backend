@@ -20,16 +20,16 @@ describe('Compensations', () => {
   afterAll(async () => {
     await strapi.query('user', 'users-permissions').delete({ id: user.id })
   })
-  it('Mint compensations upload files to ipfs', async () => {
+  it.skip('Mint compensations upload files to ipfs', async () => {
     jest.spyOn(Controller.algoFn, 'mintCompensationNft').mockImplementation()
 
     const id = await createCompensation()
     await request(strapi.server).post(`/compensations/${id}/mint`)
 
-    const updatedCompensation = await strapi.services['compensations'].find({_sort: 'id:desc' })
+    const updatedCompensation = await strapi.services['compensations'].find({ _sort: 'id:desc' })
     expect(updatedCompensation[0].consolidation_certificate_ipfs_cid).toBeTruthy()
   }, 30000)
-  it('POST /compensations', async () => {
+  it.skip('POST /compensations', async () => {
     const id = await createNft()
     const dataStub = {
       nfts: [id],

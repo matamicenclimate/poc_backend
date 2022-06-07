@@ -30,16 +30,63 @@ async function createPDF(html, filePath) {
   await browser.close()
 }
 
-const generateCompensationPDF = (ipfsUrls) => {
+const generateCompensationPDF = (ipfsCids, nfts, burnReceipt) => {
+  function renderTable() {
+    return nfts.map(
+      (nft) => `
+<tr>
+    <th>${nft.metadata.properties.title}</th>
+    <th>${nft.metadata.description}</th>
+    <th>${burnReceipt[nft.asa_id]}</th>
+    <th>${nft.metadata.properties.serial_number}</th>
+    <th>${nft.asa_id}</th>
+</tr>
+    `,
+    )
+  }
+
+  function renderCertificates(cids) {
+    return cids.map(
+      (cid) => `
+<li style="color: #364237; text-transform: capitalize; padding: 0px 10px;">
+    <a href="https://cloudflare-ipfs.com/ipfs/${cid}">View certificate</a>
+</li>
+    `,
+    )
+  }
+
   return `
-    <html>
-      <body style="text-align: right;">
-        <h2 style="color:red;">Hola ${ipfsUrls.join(', ')}</h2>
-      </body>
-    </html>
-  `
+<html>
+  <body style=" max-width: 2480px; padding: 20px;">
+    <div style="margin-bottom: 15px; display: flex; flex-direction:column;">
+        <h2>Consolidation Certificate</h2>
+        <h4>Content ID: ${ipfsCids.join(', ')}</h4>
+    </div>
+    <div style=" max-width: 90%;">
+      <table >
+        <thead>
+          <tr style="color: #364237; text-transform: capitalize; padding: 0px 10px;">
+            <th>title</th>
+            <th>description</th>
+            <th>amount</th>
+            <th>serial number</th>
+            <th>asset id</th>
+          </tr>
+          </thead>
+          <tbody>
+            ${renderTable().join('')}
+          </tbody>
+      </table>
+      <h2>Registry certificates</h2>
+      <ul>
+        ${renderCertificates(ipfsCids).join('')}
+      </ul>
+    </div>
+  </body>
+</html>
+`
 }
 module.exports = {
   createPDF,
-  generateCompensationPDF
+  generateCompensationPDF,
 }

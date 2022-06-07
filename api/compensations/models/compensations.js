@@ -20,19 +20,24 @@ module.exports = {
         date: new Date(),
       })
 
-      let supply_remaining = result.amount
+      const burnReceipt = {}
+      let amountToBurn = result.amount
       const promises = result.nfts.map(async (nft) => {
         const nftFound = await strapi.services['nfts'].findOne({ id: nft.id })
 
-        if (supply_remaining >= nftFound.supply_remaining) {
-          supply_remaining -= nftFound.supply_remaining
+        if (amountToBurn >= nftFound.supply_remaining) {
+          burnReceipt[nftFound.asa_id] = nftFound.supply_remaining
+          amountToBurn -= nftFound.supply_remaining
           return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
         }
 
-        const finalSupply = nftFound.supply_remaining - supply_remaining
+        burnReceipt[nftFound.asa_id] = amountToBurn
+        const finalSupply = nftFound.supply_remaining - amountToBurn
         return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply })
       })
       await Promise.all(promises)
+
+      await strapi.services.compensations.update({ id: result.id }, { burn_receipt: burnReceipt })
 
       /**
        * Handle compensation request notification email
