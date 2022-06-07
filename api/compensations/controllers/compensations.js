@@ -126,19 +126,19 @@ async function mint(ctx) {
 const algoFn = {
   mintCompensationNft: async (algodclient, creator, compensationDocument, ipfsUrl) => {
     const atc = new algosdk.AtomicTransactionComposer()
-  
+
     const suggestedParams = await algodclient.getTransactionParams().do()
     const assetMetadata = {
       standard: ALGORAND_ENUMS.ARCS.ARC69,
       description: `${ALGORAND_ENUMS.MINT_DEFAULTS.COMPENSATION_NFT.METADATA_DESCRIPTION}`,
-      external_url: ipfsUrl,
+      external_url: `ipfs://${ipfsUrl}#p`,
       mime_type: ALGORAND_ENUMS.MINT_MIME_TYPES.PDF,
       properties: {
         Reference: compensationDocument._id,
         Amount: compensationDocument.amount,
       },
     }
-  
+
     atc.addMethodCall({
       appID: Number(process.env.APP_ID),
       method: algorandUtils.getMethodByName('mint_compensation_nft'),
@@ -147,12 +147,12 @@ const algoFn = {
       suggestedParams,
       note: algorandUtils.encodeMetadataText(assetMetadata),
     })
-  
+
     try {
       const result = await atc.execute(algodclient, 2)
       const mintedNftId = result.methodResults[0].returnValue
       const mintedTxnId = result.methodResults[0].txID
-  
+
       const nftDb = await strapi.services['nfts'].create({
         group_id: mintedTxnId,
         // carbon_document: data['carbon_document']._id,
@@ -164,12 +164,12 @@ const algoFn = {
         owner_address: compensationDocument.user.publicAddress,
         supply: 1,
       })
-  
+
       return nftDb.id
     } catch (error) {
       throw strapi.errors.badRequest(error)
     }
-  }
+  },
 }
 module.exports = {
   me,
@@ -207,6 +207,3 @@ async function uploadFilesToIPFS(compensation) {
     }
   })
 }
-
-
-
