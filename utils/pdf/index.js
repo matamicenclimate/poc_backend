@@ -30,7 +30,15 @@ async function createPDF(html, filePath) {
   await browser.close()
 }
 
-const generateCompensationPDF = (ipfsCids, nfts, burnReceipt) => {
+/***
+ *
+ * @param txnId {string}
+ * @param ipfsCids
+ * @param nfts
+ * @param burnReceipt
+ * @returns {string}
+ */
+const generateCompensationPDF = (txnId, ipfsCids, nfts, burnReceipt) => {
   function renderTable() {
     return nfts.map(
       (nft) => `
@@ -61,6 +69,7 @@ const generateCompensationPDF = (ipfsCids, nfts, burnReceipt) => {
     <div style="margin-bottom: 15px; display: flex; flex-direction:column;">
         <h2>Consolidation Certificate</h2>
         <h4>Content ID: ${ipfsCids.join(', ')}</h4>
+        <h4>Transaction ID: <a href="https://testnet.algoexplorer.io/tx/group/${txnId}">${txnId}</a></h4>
     </div>
     <div style=" max-width: 90%;">
       <table >

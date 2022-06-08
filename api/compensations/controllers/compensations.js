@@ -96,7 +96,7 @@ async function mint(ctx) {
 
   try {
     const filePath = `${compensation.id}.pdf`
-    const html = generateCompensationPDF(ipfsCIDs, compensation.nfts, compensation.burn_receipt)
+    const html = generateCompensationPDF(compensation.txn_id, ipfsCIDs, compensation.nfts, compensation.burn_receipt)
     await createPDF(html, filePath)
 
     const pdfBuffer = await readFileFromUploads(filePath)
