@@ -16,6 +16,8 @@ RUN apk upgrade -U \
   && apk add curl \
   && rm -rf /var/cache/*
 
+RUN apk add --no-cache  chromium
+
 WORKDIR /opt
 
 COPY --from=BUILD_IMAGE /opt /opt
