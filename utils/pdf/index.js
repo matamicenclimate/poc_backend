@@ -4,7 +4,8 @@ const path = require('path')
 async function createPDF(html, filePath) {
   // launch a new chrome instance
   const browser = await puppeteer.launch({
-    headless: true,
+    executablePath: '/usr/bin/chromium-browser',
+    args: ['--no-sandbox']
   })
 
   // create a new page
