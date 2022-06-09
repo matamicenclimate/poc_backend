@@ -71,6 +71,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/carbon-documents/:id/swap/prepare",
+      "handler": "carbon-documents.prepareSwap",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

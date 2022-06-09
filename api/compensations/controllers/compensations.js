@@ -9,6 +9,7 @@ const { readFileFromUploads } = require('../../../utils/upload')
 
 const { createPDF, generateCompensationPDF } = require('../../../utils/pdf')
 const { uploadFileToIPFS } = require('../../../utils/ipfs')
+const { parseMultipartData, sanitizeEntity } = require('strapi-utils')
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
@@ -76,6 +77,17 @@ async function calculate(ctx) {
   }
 }
 
+async function create(ctx) {
+  let entity
+  if (ctx.is('multipart')) {
+    const { data, files } = parseMultipartData(ctx)
+    entity = await strapi.services.compensations.create(data, { files })
+  } else {
+    entity = await strapi.services.compensations.create(ctx.request.body)
+  }
+  return sanitizeEntity(entity, { model: strapi.models.compensations })
+}
+
 async function me(ctx) {
   const user = ctx.state.user.id
   const activities = await strapi.services.compensations.find({ user: user, ...ctx.query })
@@ -122,6 +134,7 @@ async function mint(ctx) {
     return { status: error.status, message: error.message }
   }
 }
+
 const algoFn = {
   mintCompensationNft: async (algodclient, creator, compensationDocument, ipfsUrl) => {
     const atc = new algosdk.AtomicTransactionComposer()
@@ -175,6 +188,7 @@ module.exports = {
   calculate,
   mint,
   algoFn,
+  create,
 }
 
 async function getNFTsToBurn(amount) {

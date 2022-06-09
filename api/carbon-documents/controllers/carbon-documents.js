@@ -269,16 +269,79 @@ async function claimNft(algodclient, indexerClient, creator, assetId, developerP
   return result
 }
 
-async function swap(ctx) {
+async function prepareSwap(ctx) {
   const { id } = ctx.params
-  const { txnId, isGroup, groupId } = ctx.request.body
+  const user = ctx.state.user
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
+  const algodclient = algoClient()
+  const suggestedParams = await algodclient.getTransactionParams().do()
 
+  suggestedParams.fee = suggestedParams.fee * 3
+
+  // TODO:: convert bson Long to a js number
+  const nftAsaId = carbonDocument.developer_nft?.asa_id.low_
+  if (!nftAsaId) ctx.badRequest('Missing developer nft')
+
+  const climatecoinVaultAppId = Number(process.env.APP_ID)
+
+  const unfreezeTxn = algosdk.makeApplicationCallTxnFromObject({
+    from: user.publicAddress,
+    appIndex: climatecoinVaultAppId,
+    // the atc appends the assets to the foreignAssets and passes the index of the asses in the appArgs
+    appArgs: [algorandUtils.getMethodByName('unfreeze_nft').getSelector(), algosdk.encodeUint64(0)],
+    foreignAssets: [nftAsaId],
+    onComplete: algosdk.OnApplicationComplete.NoOpOC,
+    suggestedParams,
+  })
+
+  const transferTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+    from: user.publicAddress,
+    // the atc appends the assets to the foreignAssets and passes the index of the asses in the appArgs
+    assetIndex: nftAsaId,
+    to: algosdk.getApplicationAddress(climatecoinVaultAppId),
+    amount: carbonDocument.developer_nft.supply.low_,
+    suggestedParams,
+  })
+
+  const swapTxn = algosdk.makeApplicationCallTxnFromObject({
+    from: user.publicAddress,
+    appIndex: climatecoinVaultAppId,
+    // the atc appends the assets to the foreignAssets and passes the index of the asses in the appArgs
+    appArgs: [algorandUtils.getMethodByName('swap_nft_to_fungible').getSelector(), algosdk.encodeUint64(1)],
+    foreignAssets: [Number(process.env.CLIMATECOIN_ASA_ID), nftAsaId],
+    onComplete: algosdk.OnApplicationComplete.NoOpOC,
+    suggestedParams,
+  })
+
+  const swapGroupTxn = [unfreezeTxn, transferTxn, swapTxn]
+  const [unfreeze, transfer, swap] = algosdk.assignGroupID(swapGroupTxn)
+
+  const encodedTxns = [unfreeze, transfer, swap].map((txn) => algosdk.encodeUnsignedTransaction(txn))
+
+  return encodedTxns
+}
+
+async function swap(ctx) {
+  const { id } = ctx.params
+  const { signedTxn } = ctx.request.body
+  const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
+  if (!['claimed'].includes(carbonDocument.status)) {
+    return ctx.badRequest("Document hasn't been claimed")
+  }
+  const algodClient = algoClient()
+  const txnBlob = signedTxn.map((txn) => Buffer.from(Object.values(txn)))
+
+  const { txId } = await algodClient.sendRawTransaction(txnBlob).do()
+  const result = await algosdk.waitForConfirmation(algodClient, txId, 3)
+
+  const groupId = Buffer.from(result.txn.txn.grp).toString('base64')
+
+  const isGroup = true
   const updatedCarbonDocument = await strapi.services['carbon-documents'].update({ id }, { status: 'swapped' })
-  await updateActivity(updatedCarbonDocument.developer_nft.id, txnId, isGroup, groupId)
+  await updateActivity(updatedCarbonDocument.developer_nft.id, txId, isGroup, groupId)
 
   await strapi.services.nfts.update({ id: updatedCarbonDocument.developer_nft.id }, { status: 'swapped' })
 
@@ -294,4 +357,5 @@ module.exports = {
   mint,
   claim,
   swap,
+  prepareSwap,
 }
