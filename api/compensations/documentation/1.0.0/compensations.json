@@ -828,10 +828,25 @@
               "avatar": {
                 "type": "string"
               },
-              "first_name": {
+              "name": {
                 "type": "string"
               },
-              "last_name": {
+              "surname": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "bio": {
+                "type": "string"
+              },
+              "personal_URL": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "alias": {
                 "type": "string"
               },
               "created_by": {

@@ -1327,10 +1327,46 @@
               }
             }
           },
-          "first_name": {
+          "name": {
             "type": "string"
           },
-          "last_name": {
+          "surname": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "personal_URL": {
+            "type": "string"
+          },
+          "country": {
+            "required": [
+              "id",
+              "name",
+              "code"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "alias": {
             "type": "string"
           }
         }
@@ -1389,10 +1425,25 @@
           "publicAddress": {
             "type": "string"
           },
-          "first_name": {
+          "name": {
             "type": "string"
           },
-          "last_name": {
+          "surname": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "personal_URL": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "alias": {
             "type": "string"
           },
           "created_by": {

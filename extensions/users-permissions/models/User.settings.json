@@ -87,10 +87,25 @@
       "required": false,
       "pluginOptions": {}
     },
-    "first_name": {
+    "name": {
       "type": "string"
     },
-    "last_name": {
+    "surname": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "bio": {
+      "type": "text"
+    },
+    "personal_URL": {
+      "type": "string"
+    },
+    "country": {
+      "model": "countries"
+    },
+    "alias": {
       "type": "string"
     }
   }
