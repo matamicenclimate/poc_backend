@@ -647,10 +647,6 @@
           },
           "supply_remaining": {
             "type": "integer"
-          },
-          "published_at": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       },
@@ -700,10 +696,6 @@
           },
           "supply_remaining": {
             "type": "integer"
-          },
-          "published_at": {
-            "type": "string",
-            "format": "date-time"
           },
           "created_by": {
             "type": "string"

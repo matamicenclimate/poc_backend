@@ -37,6 +37,7 @@ async function calculate(ctx) {
     amount: Number(amount),
     suggestedParams,
   })
+
   const burnParametersTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
     appIndex: Number(process.env.APP_ID),
@@ -67,7 +68,6 @@ async function calculate(ctx) {
   const signedTxn = await params.signTxn(creator.sk)
 
   return {
-    address: user.publicAddress,
     amount: Number(amount),
     assets: assetsToCompensateFrom,
     nftIds,
@@ -78,14 +78,26 @@ async function calculate(ctx) {
 }
 
 async function create(ctx) {
-  let entity
-  if (ctx.is('multipart')) {
-    const { data, files } = parseMultipartData(ctx)
-    entity = await strapi.services.compensations.create(data, { files })
-  } else {
-    entity = await strapi.services.compensations.create(ctx.request.body)
-  }
-  return sanitizeEntity(entity, { model: strapi.models.compensations })
+  const { signedTxn, ...compensationData } = ctx.request.body
+  const user = ctx.state.user
+
+  if (!signedTxn) ctx.reject('Txn is missing in request body')
+
+  const algodClient = algoClient()
+  const txnBlob = [
+    Buffer.from(Object.values(signedTxn[0])),
+    Buffer.from(signedTxn[1].data),
+    Buffer.from(Object.values(signedTxn[2])),
+  ]
+  const { txId } = await algodClient.sendRawTransaction(txnBlob).do()
+  const result = await algosdk.waitForConfirmation(algodClient, txId, 3)
+
+  const groupId = Buffer.from(result.txn.txn.grp).toString('base64')
+
+  const newCompensation = { ...compensationData, txn_id: groupId, user: user.id }
+
+  const newDocument = await strapi.services.compensations.create(newCompensation)
+  return sanitizeEntity(newDocument, { model: strapi.models.compensations })
 }
 
 async function me(ctx) {
@@ -193,7 +205,13 @@ module.exports = {
 
 async function getNFTsToBurn(amount) {
   const byLastInserted = 'id:desc'
+  // TODO: should filter by carbon document's start date
   const nfts = await strapi.services.nfts.find({ status: 'swapped', _sort: byLastInserted })
+  // const carbonDocuments = await strapi.services['carbon-documents'].find({
+  //   status: 'swapped',
+  //   _sort: 'credit_start:desc',
+  // })
+  // const nfts = carbonDocuments.map((nft) => nft.developer_nft)
   let totalAmountBurned = 0
   let nftsToBurn = []
   nfts.forEach((nft) => {

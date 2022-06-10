@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "06/09/2022 11:27:42 AM"
+    "x-generation-date": "06/10/2022 11:28:53 AM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -11692,9 +11692,6 @@
               "supply_remaining": {
                 "type": "integer"
               },
-              "published_at": {
-                "type": "string"
-              },
               "created_by": {
                 "type": "string"
               },
@@ -12525,9 +12522,6 @@
               "supply_remaining": {
                 "type": "integer"
               },
-              "published_at": {
-                "type": "string"
-              },
               "created_by": {
                 "type": "string"
               },
@@ -12585,9 +12579,6 @@
               },
               "supply_remaining": {
                 "type": "integer"
-              },
-              "published_at": {
-                "type": "string"
               },
               "created_by": {
                 "type": "string"
@@ -12775,9 +12766,6 @@
                 },
                 "supply_remaining": {
                   "type": "integer"
-                },
-                "published_at": {
-                  "type": "string"
                 },
                 "created_by": {
                   "type": "string"
@@ -13060,9 +13048,6 @@
               "supply_remaining": {
                 "type": "integer"
               },
-              "published_at": {
-                "type": "string"
-              },
               "created_by": {
                 "type": "string"
               },
@@ -13340,10 +13325,6 @@
           },
           "supply_remaining": {
             "type": "integer"
-          },
-          "published_at": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       },
@@ -13393,10 +13374,6 @@
           },
           "supply_remaining": {
             "type": "integer"
-          },
-          "published_at": {
-            "type": "string",
-            "format": "date-time"
           },
           "created_by": {
             "type": "string"

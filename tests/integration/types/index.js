@@ -1,6 +1,6 @@
 const request = require('supertest')
 
-describe('Types', () => {
+describe.skip('Types', () => {
   let dataStub = {
     name: 'test1',
     description: '',

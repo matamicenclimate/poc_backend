@@ -1575,9 +1575,6 @@
               "supply_remaining": {
                 "type": "integer"
               },
-              "published_at": {
-                "type": "string"
-              },
               "created_by": {
                 "type": "string"
               },
@@ -1635,9 +1632,6 @@
               },
               "supply_remaining": {
                 "type": "integer"
-              },
-              "published_at": {
-                "type": "string"
               },
               "created_by": {
                 "type": "string"

@@ -281,7 +281,7 @@ async function prepareSwap(ctx) {
 
   suggestedParams.fee = suggestedParams.fee * 3
 
-  // TODO:: convert bson Long to a js number
+  // TODO: convert bson Long to a js number
   const nftAsaId = carbonDocument.developer_nft?.asa_id.low_
   if (!nftAsaId) ctx.badRequest('Missing developer nft')
 
