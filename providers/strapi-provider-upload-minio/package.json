@@ -1,0 +1,33 @@
+{
+  "name": "strapi-provider-upload-minio",
+  "version": "0.0.1",
+  "description": "Minio provider for Strapi upload",
+  "homepage": "http://strapi.io",
+  "keywords": [
+    "upload",
+    "minio"
+  ],
+  "directories": {
+    "lib": "./lib"
+  },
+  "main": "./lib",
+  "strapi": {
+    "isProvider": true
+  },
+  "author": {
+    "name": "Dekalabs"
+  },
+  "maintainers": [
+    {
+      "name": "Dekalabs"
+    }
+  ],
+  "peerDependencies": {
+    "minio": "^7.0.28"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

@@ -4,50 +4,78 @@
  * Module dependencies
  */
 
+/* eslint-disable import/no-unresolved */
+/* eslint-disable no-unused-vars */
 // Public node modules.
-const fs = require('fs')
-const path = require('path')
-const { errors } = require('strapi-plugin-upload')
-const config = require('config')
+const Minio = require('minio')
 
 module.exports = {
-  init({ sizeLimit = config.fileSize.max * 1024 * 1024 } = {}) {
-    const verifySize = (file) => {
-      if (file.size > sizeLimit) {
-        throw errors.entityTooLarge()
-      }
-    }
-    const configPublicPath = strapi.config.get('middleware.settings.public.path', strapi.config.paths.static)
-
-    const uploadDir = path.resolve(strapi.dir, configPublicPath)
+  init: ({
+    endPoint,
+    bucket,
+    port,
+    accessKey,
+    secretKey,
+    useSSL,
+    folder,
+    isDocker,
+    host,
+    overridePath,
+    ..._options
+  }) => {
+    const MINIO = new Minio.Client({
+      port: parseInt(port, 10),
+      useSSL,
+      endPoint,
+      accessKey,
+      secretKey,
+    })
 
     return {
-      upload(file) {
-        verifySize(file)
-
+      upload: (file) => {
         return new Promise((resolve, reject) => {
-          // write file in public/assets folder
-          fs.writeFile(path.join(uploadDir, `/uploads/${file.hash}${file.ext}`), file.buffer, (err) => {
-            if (err) {
-              return reject(err)
-            }
+          // upload file to a bucket
+          const pathChunk = file.path ? `${file.path}/` : ''
+          const path = `${folder}/${pathChunk}`
+          MINIO.putObject(
+            bucket,
+            `${path}${file.hash}${file.ext}`,
+            Buffer.from(file.buffer, 'binary'),
+            {
+              'Content-Type': file.mime,
+            },
+            (err, _etag) => {
+              if (err) {
+                return reject(err)
+              }
 
-            file.url = `${process.env.BASE_URL}/uploads/${file.hash}${file.ext}`
+              const filePath = `${bucket}/${path}${file.hash}${file.ext}`
+              let hostPart = `${MINIO.protocol}//${MINIO.host}:${MINIO.port}`
 
-            resolve()
-          })
+              if (isDocker) {
+                const http = useSSL ? 'https' : 'http'
+                hostPart = `${http}://${host}`
+              }
+
+              file.url = `${hostPart}/${filePath}`
+
+              if (overridePath) {
+                file.url = `${overridePath}/${file.hash}${file.ext}`
+              }
+
+              resolve()
+            },
+          )
         })
       },
-      delete(file) {
+
+      delete: (file) => {
         return new Promise((resolve, reject) => {
-          const filePath = path.join(uploadDir, `/uploads/${file.hash}${file.ext}`)
+          // delete file on S3 bucket
+          const pathChunk = file.path ? `${file.path}/` : ''
+          const path = `${folder}/${pathChunk}`
 
-          if (!fs.existsSync(filePath)) {
-            return resolve("File doesn't exist")
-          }
-
-          // remove file from public/assets folder
-          fs.unlink(filePath, (err) => {
+          MINIO.removeObject(bucket, `${path}${file.hash}${file.ext}`, (err) => {
             if (err) {
               return reject(err)
             }

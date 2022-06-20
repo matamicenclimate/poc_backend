@@ -17,19 +17,38 @@ module.exports = ({ env }) => {
     }
   }
 
-  return ({
+  return {
     email,
     upload: {
-      provider: 'climate',
+      provider: 'minio',
       providerOptions: {
-        sizeLimit: config.fileSize.max * 1024 * 1024,
+        accessKey: process.env.MINIO_ACCESS_KEY,
+        secretKey: process.env.MINIO_SECRET_KEY,
+        bucket: process.env.MINIO_BUCKET,
+        endPoint: process.env.MINIO_ENDPOINT,
+        port: parseInt(process.env.MINIO_PORT),
+        useSSL: process.env.MINIO_USE_SSL === 'true',
+        // folder: 'upload',
+        isDocker: false,
+        host: process.env.MINIO_HOST,
       },
     },
+    // upload: {
+    //   provider: 'aws-s3',
+    //   providerOptions: {
+    //     accessKeyId: process.env.MINIO_ACCESS_KEY,
+    //     secretAccessKey: process.env.MINIO_SECRET_KEY,
+    //     params: {
+    //       Bucket: process.env.MINIO_BUCKET,
+    //     },
+    //     endpoint: 'https://storage.staging.dekaside.com',
+    //   },
+    // },
     sentry: {
       enabled: true,
       config: {
         dsn: env('DSN'),
       },
     },
-  })
+  }
 }

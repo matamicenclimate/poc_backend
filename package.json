@@ -23,8 +23,10 @@
     "algosdk": "^1.15.0",
     "config": "^3.3.6",
     "dotenv": "^16.0.0",
+    "i": "^0.3.7",
     "lodash": "^4.17.21",
     "nft.storage": "^3.0.1",
+    "npm": "^8.12.2",
     "puppeteer": "^14.2.0",
     "standard-version": "^9.5.0",
     "strapi": "3.6.8",
@@ -40,6 +42,7 @@
     "strapi-plugin-users-permissions": "3.6.8",
     "strapi-provider-email-mailgun": "^3.6.8",
     "strapi-provider-upload-climate": "file:providers/strapi-provider-upload-climate",
+    "strapi-provider-upload-minio": "file:providers/strapi-provider-upload-minio",
     "strapi-utils": "3.6.8"
   },
   "author": {
