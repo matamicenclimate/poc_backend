@@ -28,7 +28,7 @@ module.exports = ({ env }) => {
         endPoint: process.env.MINIO_ENDPOINT,
         port: parseInt(process.env.MINIO_PORT),
         useSSL: process.env.MINIO_USE_SSL === 'true',
-        // folder: 'upload',
+        folder: 'upload',
         host: process.env.MINIO_HOST,
       },
     },
