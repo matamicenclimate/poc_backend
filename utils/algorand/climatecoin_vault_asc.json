@@ -2,7 +2,7 @@
   "name": "climatecoin_vault_arc4",
   "networks": {
     "testnet": {
-      "appID": 90425303
+      "appID": 93095174
     }
   },
   "methods": [
@@ -37,7 +37,7 @@
       "returns": { "type": "uint64" }
     },
     {
-      "name": "create_nft",
+      "name": "mint_developer_nft",
       "desc": "Create an nft with appropriate parameters, return its id",
       "args": [
         { "name": "total_supply", "type": "uint64" },
@@ -51,6 +51,25 @@
       "desc": "mint a compensation NFT after burning climatecoins",
       "args": [],
       "returns": { "type": "uint64" }
+    },
+    {
+      "name": "mint_unverified_compensation_nft",
+      "desc": "mint a temporal compensation NFT after burning climatecoins while the burn is being manually verified",
+      "args": [
+        { "name": "dump_app_id", "type": "application" }
+      ],
+      "returns": { "type": "uint64" }
+    },
+    {
+      "name": "verify_compensation_nft",
+      "desc": "verify the climatecoins burn, exchange the temporal with the definitive nft",
+      "args": [
+        { "name": "unverified_nft_id", "type": "asset" },
+        { "name": "verified_nft_id", "type": "asset" },
+        { "name": "unverified_nft_holder", "type": "account" },
+        { "name": "dump_app_address", "type": "account" }
+      ],
+      "returns": { "type": "void" }
     },
     {
       "name": "unfreeze_nft",
@@ -74,7 +93,7 @@
       "name": "move",
       "desc": "Moves the asset passed from one account to another",
       "args": [
-        { "name": "asset", "type": "asset" },
+        { "name": "asset_id", "type": "asset" },
         { "name": "from", "type": "account" },
         { "name": "to", "type": "account" },
         { "name": "amount", "type": "uint64" }

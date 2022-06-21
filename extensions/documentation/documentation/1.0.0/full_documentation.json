@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "06/10/2022 11:28:53 AM"
+    "x-generation-date": "06/20/2022 2:54:07 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -95,7 +95,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -281,7 +283,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -346,7 +350,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "parameters": []
       }
     },
@@ -401,7 +407,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "parameters": []
       }
     },
@@ -452,7 +460,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -512,7 +522,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -584,7 +596,9 @@
           }
         },
         "summary": "",
-        "tags": ["Activities"],
+        "tags": [
+          "Activities"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -650,7 +664,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -840,7 +856,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -905,7 +923,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "parameters": []
       }
     },
@@ -960,7 +980,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1024,7 +1046,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -1096,7 +1120,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1162,7 +1188,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -1231,7 +1259,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -1300,7 +1330,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -1369,7 +1401,9 @@
           }
         },
         "summary": "",
-        "tags": ["Carbon-documents"],
+        "tags": [
+          "Carbon-documents"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1434,7 +1468,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -1620,7 +1656,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -1685,7 +1723,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "parameters": []
       }
     },
@@ -1740,7 +1780,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "parameters": []
       }
     },
@@ -1795,7 +1837,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "parameters": []
       }
     },
@@ -1846,7 +1890,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1906,7 +1952,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -1978,7 +2026,9 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -2044,7 +2094,283 @@
           }
         },
         "summary": "",
-        "tags": ["Compensations"],
+        "tags": [
+          "Compensations"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "foo": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compensations/{id}/claim/receipt": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retrieve compensations document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Compensations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "description": "Create a new compensations record",
+        "responses": {
+          "200": {
+            "description": "Retrieve compensations document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Compensations"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "foo": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compensations/{id}/claim/certificate": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retrieve compensations document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Compensations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "description": "Create a new compensations record",
+        "responses": {
+          "200": {
+            "description": "Retrieve compensations document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Compensations"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -2112,7 +2438,9 @@
           }
         },
         "summary": "",
-        "tags": ["Countries"],
+        "tags": [
+          "Countries"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -2298,7 +2626,9 @@
           }
         },
         "summary": "",
-        "tags": ["Countries"],
+        "tags": [
+          "Countries"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -2363,7 +2693,9 @@
           }
         },
         "summary": "",
-        "tags": ["Countries"],
+        "tags": [
+          "Countries"
+        ],
         "parameters": []
       }
     },
@@ -2414,7 +2746,9 @@
           }
         },
         "summary": "",
-        "tags": ["Countries"],
+        "tags": [
+          "Countries"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -2474,7 +2808,9 @@
           }
         },
         "summary": "",
-        "tags": ["Countries"],
+        "tags": [
+          "Countries"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -2546,7 +2882,9 @@
           }
         },
         "summary": "",
-        "tags": ["Countries"],
+        "tags": [
+          "Countries"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -2611,7 +2949,9 @@
           }
         },
         "summary": "",
-        "tags": ["Currency"],
+        "tags": [
+          "Currency"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -2797,7 +3137,9 @@
           }
         },
         "summary": "",
-        "tags": ["Currency"],
+        "tags": [
+          "Currency"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -2858,7 +3200,9 @@
           }
         },
         "summary": "",
-        "tags": ["Currency"],
+        "tags": [
+          "Currency"
+        ],
         "parameters": []
       }
     },
@@ -2913,7 +3257,9 @@
           }
         },
         "summary": "",
-        "tags": ["First-verifiers"],
+        "tags": [
+          "First-verifiers"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -3103,7 +3449,9 @@
           }
         },
         "summary": "",
-        "tags": ["First-verifiers"],
+        "tags": [
+          "First-verifiers"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -3168,7 +3516,9 @@
           }
         },
         "summary": "",
-        "tags": ["First-verifiers"],
+        "tags": [
+          "First-verifiers"
+        ],
         "parameters": []
       }
     },
@@ -3223,7 +3573,9 @@
           }
         },
         "summary": "",
-        "tags": ["First-verifiers"],
+        "tags": [
+          "First-verifiers"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -3287,7 +3639,9 @@
           }
         },
         "summary": "",
-        "tags": ["First-verifiers"],
+        "tags": [
+          "First-verifiers"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -3359,7 +3713,9 @@
           }
         },
         "summary": "",
-        "tags": ["First-verifiers"],
+        "tags": [
+          "First-verifiers"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -3425,7 +3781,9 @@
           }
         },
         "summary": "",
-        "tags": ["Info"],
+        "tags": [
+          "Info"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -3616,7 +3974,9 @@
           }
         },
         "summary": "",
-        "tags": ["Methodologies"],
+        "tags": [
+          "Methodologies"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -3802,7 +4162,9 @@
           }
         },
         "summary": "",
-        "tags": ["Methodologies"],
+        "tags": [
+          "Methodologies"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -3867,7 +4229,9 @@
           }
         },
         "summary": "",
-        "tags": ["Methodologies"],
+        "tags": [
+          "Methodologies"
+        ],
         "parameters": []
       }
     },
@@ -3918,7 +4282,9 @@
           }
         },
         "summary": "",
-        "tags": ["Methodologies"],
+        "tags": [
+          "Methodologies"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -3978,7 +4344,9 @@
           }
         },
         "summary": "",
-        "tags": ["Methodologies"],
+        "tags": [
+          "Methodologies"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -4050,7 +4418,9 @@
           }
         },
         "summary": "",
-        "tags": ["Methodologies"],
+        "tags": [
+          "Methodologies"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -4115,7 +4485,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -4301,7 +4673,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -4366,7 +4740,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "parameters": []
       }
     },
@@ -4417,7 +4793,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -4477,7 +4855,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -4549,7 +4929,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -4615,7 +4997,9 @@
           }
         },
         "summary": "",
-        "tags": ["Nfts"],
+        "tags": [
+          "Nfts"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -4695,7 +5079,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -4881,7 +5267,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -4946,7 +5334,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": []
       }
     },
@@ -5001,7 +5391,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": []
       }
     },
@@ -5052,7 +5444,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -5112,7 +5506,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -5184,7 +5580,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -5250,7 +5648,9 @@
           }
         },
         "summary": "",
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -5320,7 +5720,9 @@
           }
         },
         "summary": "",
-        "tags": ["Preview"],
+        "tags": [
+          "Preview"
+        ],
         "parameters": [
           {
             "name": "contentType",
@@ -5532,7 +5934,9 @@
           }
         },
         "summary": "",
-        "tags": ["Project-types"],
+        "tags": [
+          "Project-types"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -5722,7 +6126,9 @@
           }
         },
         "summary": "",
-        "tags": ["Project-types"],
+        "tags": [
+          "Project-types"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -5787,7 +6193,9 @@
           }
         },
         "summary": "",
-        "tags": ["Project-types"],
+        "tags": [
+          "Project-types"
+        ],
         "parameters": []
       }
     },
@@ -5842,7 +6250,9 @@
           }
         },
         "summary": "",
-        "tags": ["Project-types"],
+        "tags": [
+          "Project-types"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -5906,7 +6316,9 @@
           }
         },
         "summary": "",
-        "tags": ["Project-types"],
+        "tags": [
+          "Project-types"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -5978,7 +6390,9 @@
           }
         },
         "summary": "",
-        "tags": ["Project-types"],
+        "tags": [
+          "Project-types"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -6043,7 +6457,9 @@
           }
         },
         "summary": "",
-        "tags": ["Registries"],
+        "tags": [
+          "Registries"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -6229,7 +6645,9 @@
           }
         },
         "summary": "",
-        "tags": ["Registries"],
+        "tags": [
+          "Registries"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -6294,7 +6712,9 @@
           }
         },
         "summary": "",
-        "tags": ["Registries"],
+        "tags": [
+          "Registries"
+        ],
         "parameters": []
       }
     },
@@ -6345,7 +6765,9 @@
           }
         },
         "summary": "",
-        "tags": ["Registries"],
+        "tags": [
+          "Registries"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -6405,7 +6827,9 @@
           }
         },
         "summary": "",
-        "tags": ["Registries"],
+        "tags": [
+          "Registries"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -6477,7 +6901,9 @@
           }
         },
         "summary": "",
-        "tags": ["Registries"],
+        "tags": [
+          "Registries"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -6542,7 +6968,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sdgs"],
+        "tags": [
+          "Sdgs"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -6728,7 +7156,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sdgs"],
+        "tags": [
+          "Sdgs"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -6793,7 +7223,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sdgs"],
+        "tags": [
+          "Sdgs"
+        ],
         "parameters": []
       }
     },
@@ -6844,7 +7276,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sdgs"],
+        "tags": [
+          "Sdgs"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -6904,7 +7338,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sdgs"],
+        "tags": [
+          "Sdgs"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -6976,7 +7412,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sdgs"],
+        "tags": [
+          "Sdgs"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -7041,7 +7479,9 @@
           }
         },
         "summary": "",
-        "tags": ["Standards"],
+        "tags": [
+          "Standards"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -7227,7 +7667,9 @@
           }
         },
         "summary": "",
-        "tags": ["Standards"],
+        "tags": [
+          "Standards"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -7292,7 +7734,9 @@
           }
         },
         "summary": "",
-        "tags": ["Standards"],
+        "tags": [
+          "Standards"
+        ],
         "parameters": []
       }
     },
@@ -7343,7 +7787,9 @@
           }
         },
         "summary": "",
-        "tags": ["Standards"],
+        "tags": [
+          "Standards"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -7403,7 +7849,9 @@
           }
         },
         "summary": "",
-        "tags": ["Standards"],
+        "tags": [
+          "Standards"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -7475,7 +7923,9 @@
           }
         },
         "summary": "",
-        "tags": ["Standards"],
+        "tags": [
+          "Standards"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -7541,7 +7991,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sub-types"],
+        "tags": [
+          "Sub-types"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -7731,7 +8183,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sub-types"],
+        "tags": [
+          "Sub-types"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -7796,7 +8250,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sub-types"],
+        "tags": [
+          "Sub-types"
+        ],
         "parameters": []
       }
     },
@@ -7851,7 +8307,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sub-types"],
+        "tags": [
+          "Sub-types"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -7915,7 +8373,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sub-types"],
+        "tags": [
+          "Sub-types"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -7987,7 +8447,9 @@
           }
         },
         "summary": "",
-        "tags": ["Sub-types"],
+        "tags": [
+          "Sub-types"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -8052,7 +8514,9 @@
           }
         },
         "summary": "",
-        "tags": ["Types"],
+        "tags": [
+          "Types"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -8238,7 +8702,9 @@
           }
         },
         "summary": "",
-        "tags": ["Types"],
+        "tags": [
+          "Types"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -8303,7 +8769,9 @@
           }
         },
         "summary": "",
-        "tags": ["Types"],
+        "tags": [
+          "Types"
+        ],
         "parameters": []
       }
     },
@@ -8354,7 +8822,9 @@
           }
         },
         "summary": "",
-        "tags": ["Types"],
+        "tags": [
+          "Types"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -8414,7 +8884,9 @@
           }
         },
         "summary": "",
-        "tags": ["Types"],
+        "tags": [
+          "Types"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -8486,7 +8958,9 @@
           }
         },
         "summary": "",
-        "tags": ["Types"],
+        "tags": [
+          "Types"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -8552,7 +9026,9 @@
           }
         },
         "summary": "",
-        "tags": ["Utils"],
+        "tags": [
+          "Utils"
+        ],
         "parameters": []
       }
     },
@@ -8607,7 +9083,9 @@
           }
         },
         "summary": "",
-        "tags": ["Utils"],
+        "tags": [
+          "Utils"
+        ],
         "parameters": []
       }
     },
@@ -8661,7 +9139,9 @@
           }
         },
         "summary": "",
-        "tags": ["Validators"],
+        "tags": [
+          "Validators"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -8847,7 +9327,9 @@
           }
         },
         "summary": "",
-        "tags": ["Validators"],
+        "tags": [
+          "Validators"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -8912,7 +9394,9 @@
           }
         },
         "summary": "",
-        "tags": ["Validators"],
+        "tags": [
+          "Validators"
+        ],
         "parameters": []
       }
     },
@@ -8963,7 +9447,9 @@
           }
         },
         "summary": "",
-        "tags": ["Validators"],
+        "tags": [
+          "Validators"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -9023,7 +9509,9 @@
           }
         },
         "summary": "",
-        "tags": ["Validators"],
+        "tags": [
+          "Validators"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -9095,7 +9583,9 @@
           }
         },
         "summary": "",
-        "tags": ["Validators"],
+        "tags": [
+          "Validators"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -9161,7 +9651,9 @@
           }
         },
         "summary": "",
-        "tags": ["Email - Email"],
+        "tags": [
+          "Email - Email"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -9230,7 +9722,9 @@
           }
         },
         "summary": "",
-        "tags": ["Email - Email"],
+        "tags": [
+          "Email - Email"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -9299,7 +9793,9 @@
           }
         },
         "summary": "",
-        "tags": ["Email - Email"],
+        "tags": [
+          "Email - Email"
+        ],
         "parameters": []
       }
     },
@@ -9354,7 +9850,9 @@
           }
         },
         "summary": "",
-        "tags": ["Upload - File"],
+        "tags": [
+          "Upload - File"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -9423,7 +9921,9 @@
           }
         },
         "summary": "",
-        "tags": ["Upload - File"],
+        "tags": [
+          "Upload - File"
+        ],
         "parameters": []
       }
     },
@@ -9478,7 +9978,9 @@
           }
         },
         "summary": "",
-        "tags": ["Upload - File"],
+        "tags": [
+          "Upload - File"
+        ],
         "parameters": []
       }
     },
@@ -9533,7 +10035,9 @@
           }
         },
         "summary": "",
-        "tags": ["Upload - File"],
+        "tags": [
+          "Upload - File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -9597,7 +10101,9 @@
           }
         },
         "summary": "",
-        "tags": ["Upload - File"],
+        "tags": [
+          "Upload - File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -9663,7 +10169,9 @@
           }
         },
         "summary": "",
-        "tags": ["Upload - File"],
+        "tags": [
+          "Upload - File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -9725,7 +10233,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - Role"],
+        "tags": [
+          "UsersPermissions - Role"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -9790,7 +10300,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - Role"],
+        "tags": [
+          "UsersPermissions - Role"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -9976,7 +10488,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - Role"],
+        "tags": [
+          "UsersPermissions - Role"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -10037,7 +10551,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - Role"],
+        "tags": [
+          "UsersPermissions - Role"
+        ],
         "parameters": [
           {
             "name": "role",
@@ -10112,7 +10628,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - Role"],
+        "tags": [
+          "UsersPermissions - Role"
+        ],
         "parameters": [
           {
             "name": "role",
@@ -10177,7 +10695,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -10379,7 +10899,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": []
       }
     },
@@ -10434,7 +10956,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -10499,7 +11023,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -10564,7 +11090,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": [
           {
             "name": "provider",
@@ -10630,7 +11158,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -10699,7 +11229,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -10768,7 +11300,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": []
       }
     },
@@ -10823,7 +11357,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "requestBody": {
           "description": "",
           "required": true,
@@ -10891,7 +11427,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": [
           {
             "name": "_limit",
@@ -11079,7 +11617,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": []
       }
     },
@@ -11130,7 +11670,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -11190,7 +11732,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -11265,7 +11809,9 @@
           }
         },
         "summary": "",
-        "tags": ["UsersPermissions - User"],
+        "tags": [
+          "UsersPermissions - User"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -11284,7 +11830,9 @@
   "components": {
     "schemas": {
       "Activities": {
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -11294,7 +11842,12 @@
             "format": "date-time"
           },
           "user": {
-            "required": ["id", "username", "email", "type"],
+            "required": [
+              "id",
+              "username",
+              "email",
+              "type"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11331,7 +11884,10 @@
               },
               "type": {
                 "type": "string",
-                "enum": ["buyer", "developer"]
+                "enum": [
+                  "buyer",
+                  "developer"
+                ]
               },
               "publicAddress": {
                 "type": "string"
@@ -11370,10 +11926,16 @@
           },
           "type": {
             "type": "string",
-            "enum": ["swap", "burn"]
+            "enum": [
+              "swap",
+              "burn"
+            ]
           },
           "nft": {
-            "required": ["id", "status"],
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11392,7 +11954,12 @@
               },
               "nft_type": {
                 "type": "string",
-                "enum": ["fee", "developer", "compensation"]
+                "enum": [
+                  "fee",
+                  "developer",
+                  "compensation",
+                  "compensation_receipt"
+                ]
               },
               "asa_id": {
                 "type": "integer"
@@ -11405,7 +11972,12 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["created", "claimed", "swapped", "burned"]
+                "enum": [
+                  "created",
+                  "claimed",
+                  "swapped",
+                  "burned"
+                ]
               },
               "supply_remaining": {
                 "type": "integer"
@@ -11444,7 +12016,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["swap", "burn"]
+            "enum": [
+              "swap",
+              "burn"
+            ]
           },
           "nft": {
             "type": "string"
@@ -11508,7 +12083,15 @@
             "type": "string"
           },
           "thumbnail": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11567,7 +12150,15 @@
             }
           },
           "cover": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11667,7 +12258,15 @@
             "type": "string"
           },
           "pdd": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11726,7 +12325,15 @@
             }
           },
           "validation_report": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11785,7 +12392,15 @@
             }
           },
           "monitoring_report": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11844,7 +12459,15 @@
             }
           },
           "verification_report": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11903,7 +12526,10 @@
             }
           },
           "project_type": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11925,7 +12551,10 @@
           "sdgs": {
             "type": "array",
             "items": {
-              "required": ["id", "name"],
+              "required": [
+                "id",
+                "name"
+              ],
               "properties": {
                 "id": {
                   "type": "string"
@@ -11946,7 +12575,10 @@
             }
           },
           "type": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11966,7 +12598,10 @@
             }
           },
           "sub_type": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -11986,7 +12621,10 @@
             }
           },
           "methodology": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12006,7 +12644,10 @@
             }
           },
           "validator": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12026,7 +12667,10 @@
             }
           },
           "first_verifier": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12046,7 +12690,9 @@
             }
           },
           "standard": {
-            "required": ["id"],
+            "required": [
+              "id"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12066,7 +12712,11 @@
             }
           },
           "registry": {
-            "required": ["id", "name", "instructions"],
+            "required": [
+              "id",
+              "name",
+              "instructions"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12089,7 +12739,11 @@
             }
           },
           "country": {
-            "required": ["id", "name", "code"],
+            "required": [
+              "id",
+              "name",
+              "code"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12109,7 +12763,10 @@
             }
           },
           "developer_nft": {
-            "required": ["id", "status"],
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12128,7 +12785,12 @@
               },
               "nft_type": {
                 "type": "string",
-                "enum": ["fee", "developer", "compensation"]
+                "enum": [
+                  "fee",
+                  "developer",
+                  "compensation",
+                  "compensation_receipt"
+                ]
               },
               "asa_id": {
                 "type": "integer"
@@ -12141,7 +12803,12 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["created", "claimed", "swapped", "burned"]
+                "enum": [
+                  "created",
+                  "claimed",
+                  "swapped",
+                  "burned"
+                ]
               },
               "supply_remaining": {
                 "type": "integer"
@@ -12155,7 +12822,10 @@
             }
           },
           "fee_nft": {
-            "required": ["id", "status"],
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12174,7 +12844,12 @@
               },
               "nft_type": {
                 "type": "string",
-                "enum": ["fee", "developer", "compensation"]
+                "enum": [
+                  "fee",
+                  "developer",
+                  "compensation",
+                  "compensation_receipt"
+                ]
               },
               "asa_id": {
                 "type": "integer"
@@ -12187,7 +12862,12 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["created", "claimed", "swapped", "burned"]
+                "enum": [
+                  "created",
+                  "claimed",
+                  "swapped",
+                  "burned"
+                ]
               },
               "supply_remaining": {
                 "type": "integer"
@@ -12320,7 +13000,9 @@
         }
       },
       "Compensations": {
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12328,7 +13010,10 @@
           "nfts": {
             "type": "array",
             "items": {
-              "required": ["id", "status"],
+              "required": [
+                "id",
+                "status"
+              ],
               "properties": {
                 "id": {
                   "type": "string"
@@ -12347,7 +13032,12 @@
                 },
                 "nft_type": {
                   "type": "string",
-                  "enum": ["fee", "developer", "compensation"]
+                  "enum": [
+                    "fee",
+                    "developer",
+                    "compensation",
+                    "compensation_receipt"
+                  ]
                 },
                 "asa_id": {
                   "type": "integer"
@@ -12360,7 +13050,12 @@
                 },
                 "status": {
                   "type": "string",
-                  "enum": ["created", "claimed", "swapped", "burned"]
+                  "enum": [
+                    "created",
+                    "claimed",
+                    "swapped",
+                    "burned"
+                  ]
                 },
                 "supply_remaining": {
                   "type": "integer"
@@ -12381,7 +13076,12 @@
             "type": "integer"
           },
           "user": {
-            "required": ["id", "username", "email", "type"],
+            "required": [
+              "id",
+              "username",
+              "email",
+              "type"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12418,7 +13118,10 @@
               },
               "type": {
                 "type": "string",
-                "enum": ["buyer", "developer"]
+                "enum": [
+                  "buyer",
+                  "developer"
+                ]
               },
               "publicAddress": {
                 "type": "string"
@@ -12458,10 +13161,25 @@
           "state": {
             "type": "string",
             "default": "created",
-            "enum": ["created", "pending_notification", "pending_certificates", "received_certificates", "minted"]
+            "enum": [
+              "created",
+              "pending_notification",
+              "pending_certificates",
+              "received_certificates",
+              "minted",
+              "claimed"
+            ]
           },
           "consolidation_certificate": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12522,7 +13240,15 @@
           "registry_certificates": {
             "type": "array",
             "items": {
-              "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+              "required": [
+                "id",
+                "name",
+                "hash",
+                "mime",
+                "size",
+                "url",
+                "provider"
+              ],
               "properties": {
                 "id": {
                   "type": "string"
@@ -12582,7 +13308,10 @@
             }
           },
           "compensation_nft": {
-            "required": ["id", "status"],
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12601,7 +13330,12 @@
               },
               "nft_type": {
                 "type": "string",
-                "enum": ["fee", "developer", "compensation"]
+                "enum": [
+                  "fee",
+                  "developer",
+                  "compensation",
+                  "compensation_receipt"
+                ]
               },
               "asa_id": {
                 "type": "integer"
@@ -12614,7 +13348,12 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["created", "claimed", "swapped", "burned"]
+                "enum": [
+                  "created",
+                  "claimed",
+                  "swapped",
+                  "burned"
+                ]
               },
               "supply_remaining": {
                 "type": "integer"
@@ -12632,6 +13371,69 @@
           },
           "burn_receipt": {
             "type": "object"
+          },
+          "compensation_receipt_nft": {
+            "required": [
+              "id",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "group_id": {
+                "type": "string"
+              },
+              "asa_txn_id": {
+                "type": "string"
+              },
+              "metadata": {
+                "type": "object"
+              },
+              "last_config_txn": {
+                "type": "string"
+              },
+              "nft_type": {
+                "type": "string",
+                "enum": [
+                  "fee",
+                  "developer",
+                  "compensation",
+                  "compensation_receipt"
+                ]
+              },
+              "asa_id": {
+                "type": "integer"
+              },
+              "owner_address": {
+                "type": "string"
+              },
+              "supply": {
+                "type": "integer"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "created",
+                  "claimed",
+                  "swapped",
+                  "burned"
+                ]
+              },
+              "supply_remaining": {
+                "type": "integer"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "receipt_claimed": {
+            "type": "boolean",
+            "default": false
           }
         }
       },
@@ -12655,7 +13457,14 @@
           "state": {
             "type": "string",
             "default": "created",
-            "enum": ["created", "pending_notification", "pending_certificates", "received_certificates", "minted"]
+            "enum": [
+              "created",
+              "pending_notification",
+              "pending_certificates",
+              "received_certificates",
+              "minted",
+              "claimed"
+            ]
           },
           "compensation_nft": {
             "type": "string"
@@ -12666,6 +13475,13 @@
           "burn_receipt": {
             "type": "object"
           },
+          "compensation_receipt_nft": {
+            "type": "string"
+          },
+          "receipt_claimed": {
+            "type": "boolean",
+            "default": false
+          },
           "created_by": {
             "type": "string"
           },
@@ -12675,7 +13491,11 @@
         }
       },
       "Countries": {
-        "required": ["id", "name", "code"],
+        "required": [
+          "id",
+          "name",
+          "code"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12689,7 +13509,10 @@
         }
       },
       "NewCountries": {
-        "required": ["name", "code"],
+        "required": [
+          "name",
+          "code"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -12706,7 +13529,9 @@
         }
       },
       "Currency": {
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12760,7 +13585,10 @@
         }
       },
       "First-verifiers": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12774,7 +13602,9 @@
         }
       },
       "NewFirst-verifiers": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -12791,7 +13621,10 @@
         }
       },
       "Methodologies": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12805,7 +13638,9 @@
         }
       },
       "NewMethodologies": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -12822,7 +13657,10 @@
         }
       },
       "Nfts": {
-        "required": ["id", "status"],
+        "required": [
+          "id",
+          "status"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12841,7 +13679,12 @@
           },
           "nft_type": {
             "type": "string",
-            "enum": ["fee", "developer", "compensation"]
+            "enum": [
+              "fee",
+              "developer",
+              "compensation",
+              "compensation_receipt"
+            ]
           },
           "asa_id": {
             "type": "integer"
@@ -12855,7 +13698,12 @@
           "status": {
             "type": "string",
             "default": "created",
-            "enum": ["created", "claimed", "swapped", "burned"]
+            "enum": [
+              "created",
+              "claimed",
+              "swapped",
+              "burned"
+            ]
           },
           "supply_remaining": {
             "type": "integer"
@@ -12863,7 +13711,9 @@
         }
       },
       "NewNfts": {
-        "required": ["status"],
+        "required": [
+          "status"
+        ],
         "properties": {
           "group_id": {
             "type": "string"
@@ -12879,7 +13729,12 @@
           },
           "nft_type": {
             "type": "string",
-            "enum": ["fee", "developer", "compensation"]
+            "enum": [
+              "fee",
+              "developer",
+              "compensation",
+              "compensation_receipt"
+            ]
           },
           "asa_id": {
             "type": "integer"
@@ -12893,7 +13748,12 @@
           "status": {
             "type": "string",
             "default": "created",
-            "enum": ["created", "claimed", "swapped", "burned"]
+            "enum": [
+              "created",
+              "claimed",
+              "swapped",
+              "burned"
+            ]
           },
           "supply_remaining": {
             "type": "integer"
@@ -12907,7 +13767,10 @@
         }
       },
       "Notifications": {
-        "required": ["id", "title"],
+        "required": [
+          "id",
+          "title"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -12929,7 +13792,12 @@
             "type": "string"
           },
           "user": {
-            "required": ["id", "username", "email", "type"],
+            "required": [
+              "id",
+              "username",
+              "email",
+              "type"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -12966,7 +13834,10 @@
               },
               "type": {
                 "type": "string",
-                "enum": ["buyer", "developer"]
+                "enum": [
+                  "buyer",
+                  "developer"
+                ]
               },
               "publicAddress": {
                 "type": "string"
@@ -13006,7 +13877,9 @@
         }
       },
       "NewNotifications": {
-        "required": ["title"],
+        "required": [
+          "title"
+        ],
         "properties": {
           "title": {
             "type": "string"
@@ -13036,7 +13909,10 @@
         }
       },
       "Project-types": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13050,7 +13926,9 @@
         }
       },
       "NewProject-types": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -13067,7 +13945,11 @@
         }
       },
       "Registries": {
-        "required": ["id", "name", "instructions"],
+        "required": [
+          "id",
+          "name",
+          "instructions"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13084,7 +13966,10 @@
         }
       },
       "NewRegistries": {
-        "required": ["name", "instructions"],
+        "required": [
+          "name",
+          "instructions"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -13104,7 +13989,10 @@
         }
       },
       "Sdgs": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13118,7 +14006,9 @@
         }
       },
       "NewSdgs": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -13135,7 +14025,9 @@
         }
       },
       "Standards": {
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13165,7 +14057,10 @@
         }
       },
       "Sub-types": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13179,7 +14074,9 @@
         }
       },
       "NewSub-types": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -13196,7 +14093,10 @@
         }
       },
       "Types": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13210,7 +14110,9 @@
         }
       },
       "NewTypes": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -13227,7 +14129,10 @@
         }
       },
       "Validators": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13241,7 +14146,9 @@
         }
       },
       "NewValidators": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -13258,7 +14165,10 @@
         }
       },
       "UsersPermissionsRole": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13276,7 +14186,13 @@
           "permissions": {
             "type": "array",
             "items": {
-              "required": ["id", "type", "controller", "action", "enabled"],
+              "required": [
+                "id",
+                "type",
+                "controller",
+                "action",
+                "enabled"
+              ],
               "properties": {
                 "id": {
                   "type": "string"
@@ -13311,7 +14227,12 @@
           "users": {
             "type": "array",
             "items": {
-              "required": ["id", "username", "email", "type"],
+              "required": [
+                "id",
+                "username",
+                "email",
+                "type"
+              ],
               "properties": {
                 "id": {
                   "type": "string"
@@ -13348,7 +14269,10 @@
                 },
                 "type": {
                   "type": "string",
-                  "enum": ["buyer", "developer"]
+                  "enum": [
+                    "buyer",
+                    "developer"
+                  ]
                 },
                 "publicAddress": {
                   "type": "string"
@@ -13389,7 +14313,9 @@
         }
       },
       "NewUsersPermissionsRole": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -13422,7 +14348,12 @@
         }
       },
       "UsersPermissionsUser": {
-        "required": ["id", "username", "email", "type"],
+        "required": [
+          "id",
+          "username",
+          "email",
+          "type"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -13447,7 +14378,10 @@
             "default": false
           },
           "role": {
-            "required": ["id", "name"],
+            "required": [
+              "id",
+              "name"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -13484,10 +14418,21 @@
           "type": {
             "type": "string",
             "default": "buyer",
-            "enum": ["buyer", "developer"]
+            "enum": [
+              "buyer",
+              "developer"
+            ]
           },
           "avatar": {
-            "required": ["id", "name", "hash", "mime", "size", "url", "provider"],
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -13561,7 +14506,11 @@
             "type": "string"
           },
           "country": {
-            "required": ["id", "name", "code"],
+            "required": [
+              "id",
+              "name",
+              "code"
+            ],
             "properties": {
               "id": {
                 "type": "string"
@@ -13586,7 +14535,11 @@
         }
       },
       "NewUsersPermissionsUser": {
-        "required": ["username", "email", "type"],
+        "required": [
+          "username",
+          "email",
+          "type"
+        ],
         "properties": {
           "username": {
             "type": "string",
@@ -13627,7 +14580,10 @@
           "type": {
             "type": "string",
             "default": "buyer",
-            "enum": ["buyer", "developer"]
+            "enum": [
+              "buyer",
+              "developer"
+            ]
           },
           "publicAddress": {
             "type": "string"
@@ -13662,7 +14618,10 @@
         }
       },
       "Error": {
-        "required": ["code", "message"],
+        "required": [
+          "code",
+          "message"
+        ],
         "properties": {
           "code": {
             "type": "integer",

@@ -1551,7 +1551,8 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation"
+                  "compensation",
+                  "compensation_receipt"
                 ]
               },
               "asa_id": {
@@ -1609,7 +1610,8 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation"
+                  "compensation",
+                  "compensation_receipt"
                 ]
               },
               "asa_id": {

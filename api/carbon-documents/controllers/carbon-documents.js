@@ -143,7 +143,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
 
   atc.addMethodCall({
     appID: Number(process.env.APP_ID),
-    method: algorandUtils.getMethodByName('create_nft'),
+    method: algorandUtils.getMethodByName('mint_developer_nft'),
     sender: creator.addr,
     signer: algosdk.makeBasicAccountTransactionSigner(creator),
     suggestedParams,

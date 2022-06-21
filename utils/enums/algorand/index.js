@@ -33,6 +33,7 @@ const NFT_TYPES = {
   FEE: 'fee',
   DEVELOPER: 'developer',
   COMPENSATION: 'compensation',
+  COMPENSATION_RECEIPT: 'compensation_receipt'
 }
 
 const MINT_MIME_TYPES = {
