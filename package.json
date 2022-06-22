@@ -21,6 +21,7 @@
   "dependencies": {
     "@strapi/plugin-sentry": "4.1.11",
     "algosdk": "1.17.0",
+    "axios": "^0.27.2",
     "config": "^3.3.6",
     "dotenv": "^16.0.0",
     "i": "^0.3.7",

@@ -170,7 +170,7 @@ const Header = ({
               console.log(result.message)
               strapi.notification.error('Check error in console')
             } else {
-              strapi.notification.success('Carbon document minted')
+              strapi.notification.success('Compensation nft minted')
             }
           })
           .catch((error) => strapi.notification.error(error))

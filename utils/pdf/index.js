@@ -4,8 +4,8 @@ const path = require('path')
 async function createPDF(html, filePath) {
   // launch a new chrome instance
   const browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium-browser',
-    args: ['--no-sandbox']
+    executablePath: process.env.NODE_ENV === 'production' ? '/usr/bin/chromium-browser' : undefined,
+    args: ['--no-sandbox'],
   })
 
   // create a new page
@@ -22,13 +22,15 @@ async function createPDF(html, filePath) {
   })
 
   // or a .pdf file
-  await page.pdf({
-    format: 'A4',
-    path: path.join('public/uploads', filePath),
-  })
+  // await page.pdf({
+  //   format: 'A4',
+  //   path: path.join('public/uploads', filePath),
+  // })
 
   // close the browser
   await browser.close()
+
+  return pdfBuffer
 }
 
 /***

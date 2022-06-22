@@ -5,7 +5,7 @@ const algosdk = require('algosdk')
 const { algoClient } = require(`${process.cwd()}/config/algorand`)
 const algorandUtils = require(`${process.cwd()}/utils/algorand`)
 const ALGORAND_ENUMS = require('../../../utils/enums/algorand')
-const { readFileFromUploads } = require('../../../utils/upload')
+const { readFileFromUploads, getFileFromS3 } = require('../../../utils/upload')
 
 const { createPDF, generateCompensationPDF } = require('../../../utils/pdf')
 const { uploadFileToIPFS } = require('../../../utils/ipfs')
@@ -311,10 +311,10 @@ async function mint(ctx) {
   try {
     const filePath = `${compensation.id}.pdf`
     const html = generateCompensationPDF(compensation.txn_id, ipfsCIDs, compensation.nfts, compensation.burn_receipt)
-    await createPDF(html, filePath)
+    const consolidationPdfBuffer = await createPDF(html, filePath)
 
-    const pdfBuffer = await readFileFromUploads(filePath)
-    const consolidationPdfCid = await uploadFileToIPFS(pdfBuffer, 'application/pdf')
+    // const pdfBuffer = await readFileFromUploads(filePath)
+    const consolidationPdfCid = await uploadFileToIPFS(consolidationPdfBuffer, 'application/pdf')
 
     const compensationNftId = await algoFn.mintCompensationNft(algodclient, creator, compensation, consolidationPdfCid)
 
@@ -422,7 +422,8 @@ async function uploadFilesToIPFS(compensation) {
     try {
       const ipfsCIDs = []
       for (const nft of compensation.registry_certificates) {
-        const file = await readFileFromUploads(`${nft.hash}${nft.ext}`)
+        // const file = await readFileFromUploads(`${nft.hash}${nft.ext}`)
+        const file = await getFileFromS3(nft.url)
         const result = await uploadFileToIPFS(file, nft.mime)
         ipfsCIDs.push(result)
       }
