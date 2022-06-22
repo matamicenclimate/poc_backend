@@ -398,14 +398,14 @@ module.exports = {
 }
 
 async function getNFTsToBurn(amount) {
-  const byLastInserted = 'id:desc'
-  // TODO: should filter by carbon document's start date
-  const nfts = await strapi.services.nfts.find({ status: 'swapped', _sort: byLastInserted })
-  // const carbonDocuments = await strapi.services['carbon-documents'].find({
-  //   status: 'swapped',
-  //   _sort: 'credit_start:desc',
-  // })
-  // const nfts = carbonDocuments.map((nft) => nft.developer_nft)
+  const carbonDocuments = await strapi.services['carbon-documents'].find({
+    status: 'swapped',
+    _sort: 'credit_start:desc',
+    // swapped status means that the are ready to be used for burning and they have supply remaining
+    'developer_nft.status': 'swapped',
+  })
+  const nfts = carbonDocuments.map((nft) => nft.developer_nft)
+
   let totalAmountBurned = 0
   let nftsToBurn = []
   nfts.forEach((nft) => {
