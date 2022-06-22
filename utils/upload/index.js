@@ -35,7 +35,7 @@ const readFileFromUploads = async (name) => {
  * @param fileUrl {string}
  */
 const getFileFromS3 = (fileUrl) => {
-  return httpClient.get(fileUrl)
+  return httpClient.get(fileUrl).then((res) => res.data)
 }
 
 module.exports = {

@@ -422,7 +422,6 @@ async function uploadFilesToIPFS(compensation) {
     try {
       const ipfsCIDs = []
       for (const nft of compensation.registry_certificates) {
-        // const file = await readFileFromUploads(`${nft.hash}${nft.ext}`)
         const file = await getFileFromS3(nft.url)
         const result = await uploadFileToIPFS(file, nft.mime)
         ipfsCIDs.push(result)
