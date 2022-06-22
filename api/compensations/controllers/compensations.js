@@ -285,7 +285,7 @@ async function claimCertificate(ctx) {
   await algosdk.waitForConfirmation(algodClient, txId, 3)
 
   await strapi.services.nfts.update({ id: compensation.compensation_nft.id }, { status: 'claimed' })
-  const compensationUpdated = await strapi.services.compensations.update({ id }, { status: 'claimed' })
+  const compensationUpdated = await strapi.services.compensations.update({ id }, { state: 'claimed' })
 
   return sanitizeEntity(compensationUpdated, { model: strapi.models.compensations })
 }
