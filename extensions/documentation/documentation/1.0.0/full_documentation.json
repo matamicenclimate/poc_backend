@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "06/20/2022 2:54:07 PM"
+    "x-generation-date": "07/05/2022 12:42:13 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -11967,6 +11967,9 @@
               "owner_address": {
                 "type": "string"
               },
+              "burnWillTimeoutOn": {
+                "type": "number"
+              },
               "supply": {
                 "type": "integer"
               },
@@ -12798,6 +12801,9 @@
               "owner_address": {
                 "type": "string"
               },
+              "burnWillTimeoutOn": {
+                "type": "number"
+              },
               "supply": {
                 "type": "integer"
               },
@@ -12856,6 +12862,9 @@
               },
               "owner_address": {
                 "type": "string"
+              },
+              "burnWillTimeoutOn": {
+                "type": "number"
               },
               "supply": {
                 "type": "integer"
@@ -13044,6 +13053,9 @@
                 },
                 "owner_address": {
                   "type": "string"
+                },
+                "burnWillTimeoutOn": {
+                  "type": "number"
                 },
                 "supply": {
                   "type": "integer"
@@ -13343,6 +13355,9 @@
               "owner_address": {
                 "type": "string"
               },
+              "burnWillTimeoutOn": {
+                "type": "number"
+              },
               "supply": {
                 "type": "integer"
               },
@@ -13407,6 +13422,9 @@
               },
               "owner_address": {
                 "type": "string"
+              },
+              "burnWillTimeoutOn": {
+                "type": "number"
               },
               "supply": {
                 "type": "integer"
@@ -13692,6 +13710,9 @@
           "owner_address": {
             "type": "string"
           },
+          "burnWillTimeoutOn": {
+            "type": "number"
+          },
           "supply": {
             "type": "integer"
           },
@@ -13741,6 +13762,9 @@
           },
           "owner_address": {
             "type": "string"
+          },
+          "burnWillTimeoutOn": {
+            "type": "number"
           },
           "supply": {
             "type": "integer"

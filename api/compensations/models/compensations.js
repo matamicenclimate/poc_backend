@@ -19,21 +19,20 @@ module.exports = {
         user: result.user.id,
         date: new Date(),
       })
-
       const burnReceipt = {}
       let amountToBurn = result.amount
       const promises = result.nfts.map(async (nft) => {
-        const nftFound = await strapi.services['nfts'].find({ id: nft.id })[0]
-        if (nftFound) {
+        const nftFound = await strapi.services.nfts.findOne({id: nft.id})
+        if (nftFound.id === nft.id) {
           if (amountToBurn >= nftFound.supply_remaining) {
             burnReceipt[nftFound.asa_id] = nftFound.supply_remaining
             amountToBurn -= nftFound.supply_remaining
-            return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
+            return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0, burnWillTimeoutOn: Date.now() })
           }
-  
+
           burnReceipt[nftFound.asa_id] = amountToBurn
           const finalSupply = nftFound.supply_remaining - amountToBurn
-          return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply })
+          return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply, burnWillTimeoutOn: Date.now() })
         } else {
           const collectionName = 'compensations'
           const applicationUid = strapi.api[collectionName].models[collectionName].uid

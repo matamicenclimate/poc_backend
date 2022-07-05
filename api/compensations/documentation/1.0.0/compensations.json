@@ -1019,6 +1019,9 @@
                 "owner_address": {
                   "type": "string"
                 },
+                "burnWillTimeoutOn": {
+                  "type": "number"
+                },
                 "supply": {
                   "type": "integer"
                 },
@@ -1317,6 +1320,9 @@
               "owner_address": {
                 "type": "string"
               },
+              "burnWillTimeoutOn": {
+                "type": "number"
+              },
               "supply": {
                 "type": "integer"
               },
@@ -1381,6 +1387,9 @@
               },
               "owner_address": {
                 "type": "string"
+              },
+              "burnWillTimeoutOn": {
+                "type": "number"
               },
               "supply": {
                 "type": "integer"
