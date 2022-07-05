@@ -39,6 +39,9 @@
     "owner_address": {
       "type": "string"
     },
+    "burnWillTimeoutOn": {
+      "type": "number"
+    },
     "supply": {
       "type": "biginteger"
     },

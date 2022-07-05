@@ -23,17 +23,25 @@ module.exports = {
       const burnReceipt = {}
       let amountToBurn = result.amount
       const promises = result.nfts.map(async (nft) => {
-        const nftFound = await strapi.services['nfts'].findOne({ id: nft.id })
-
-        if (amountToBurn >= nftFound.supply_remaining) {
-          burnReceipt[nftFound.asa_id] = nftFound.supply_remaining
-          amountToBurn -= nftFound.supply_remaining
-          return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
+        const nftFound = await strapi.services['nfts'].find({ id: nft.id })[0]
+        if (nftFound) {
+          if (amountToBurn >= nftFound.supply_remaining) {
+            burnReceipt[nftFound.asa_id] = nftFound.supply_remaining
+            amountToBurn -= nftFound.supply_remaining
+            return strapi.services.nfts.update({ id: nft.id }, { status: 'burned', supply_remaining: 0 })
+          }
+  
+          burnReceipt[nftFound.asa_id] = amountToBurn
+          const finalSupply = nftFound.supply_remaining - amountToBurn
+          return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply })
+        } else {
+          const collectionName = 'compensations'
+          const applicationUid = strapi.api[collectionName].models[collectionName].uid
+          const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${result.id}`
+          const mailContent = `Compensation cannot finished(${url}). Nft ${nft.id} not found`
+          await mailer.send('Compensation Failed', mailContent)
+          throw new Error(`Nft with id ${nft.id} Not Found`)
         }
-
-        burnReceipt[nftFound.asa_id] = amountToBurn
-        const finalSupply = nftFound.supply_remaining - amountToBurn
-        return strapi.services.nfts.update({ id: nft.id }, { supply_remaining: finalSupply })
       })
       await Promise.all(promises)
 

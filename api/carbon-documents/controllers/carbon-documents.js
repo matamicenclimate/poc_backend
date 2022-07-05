@@ -184,6 +184,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
 
 async function mint(ctx) {
   const { id } = ctx.params
+  // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['completed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been reviewed")
@@ -215,6 +216,7 @@ async function mint(ctx) {
 
 async function claim(ctx) {
   const { id } = ctx.params
+  // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['minted'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been minted")
@@ -272,6 +274,7 @@ async function claimNft(algodclient, indexerClient, creator, assetId, developerP
 async function prepareSwap(ctx) {
   const { id } = ctx.params
   const user = ctx.state.user
+  // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
@@ -327,6 +330,7 @@ async function prepareSwap(ctx) {
 async function swap(ctx) {
   const { id } = ctx.params
   const { signedTxn } = ctx.request.body
+  // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")

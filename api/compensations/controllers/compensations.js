@@ -24,6 +24,9 @@ async function calculate(ctx) {
   if (!nftsToBurn.length) {
     throw new Error('There are no nfts to burn')
   }
+  for (const nftBurning of nftsToBurn) {
+    await strapi.services.nfts.update({ id: nftBurning.id }, { burnWillTimeoutOn: Date.now() + (60000 * process.env.MAX_MINUTES_TO_BURN) })
+  }
   const algodclient = algoClient()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
@@ -142,6 +145,7 @@ async function create(ctx) {
 async function prepareClaimReceipt(ctx) {
   const { id } = ctx.params
   const user = ctx.state.user
+  // TODO Use indexer to has updated fields
   const compensation = await strapi.services['compensations'].findOne({ id })
 
   if (compensation.user.id !== user.id) {
@@ -153,7 +157,7 @@ async function prepareClaimReceipt(ctx) {
 
   suggestedParams.flatFee = true
   suggestedParams.fee = 2 * algosdk.ALGORAND_MIN_TX_FEE
-
+// TODO Use indexer to has updated fields
   const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
 
   const receiptNftOptinTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
@@ -198,6 +202,7 @@ async function claimReceipt(ctx) {
   const { id } = ctx.params
   const { signedTxn } = ctx.request.body
   const user = ctx.state.user
+  // TODO Use indexer to has updated fields
   const compensation = await strapi.services.compensations.findOne({ id })
 
   if (!signedTxn) throw new Error('Txn is missing in request body')
@@ -217,6 +222,7 @@ async function claimReceipt(ctx) {
 async function prepareClaimCertificate(ctx) {
   const { id } = ctx.params
   const user = ctx.state.user
+  // TODO Use indexer to has updated fields
   const compensation = await strapi.services['compensations'].findOne({ id })
 
   if (compensation.user.id !== user.id) throw new Error('Unauthorized')
@@ -228,7 +234,7 @@ async function prepareClaimCertificate(ctx) {
 
   suggestedParams.flatFee = true
   suggestedParams.fee = 2 * algosdk.ALGORAND_MIN_TX_FEE
-
+// TODO Use indexer to has updated fields
   const compensationNft = await strapi.services.nfts.findOne({ id: compensation.compensation_nft })
   const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
 
@@ -274,6 +280,7 @@ async function claimCertificate(ctx) {
   const { id } = ctx.params
   const { signedTxn } = ctx.request.body
   const user = ctx.state.user
+  // TODO Use indexer to has updated fields
   const compensation = await strapi.services.compensations.findOne({ id })
 
   if (!signedTxn) throw new Error('Txn is missing in request body')
@@ -292,6 +299,7 @@ async function claimCertificate(ctx) {
 
 async function me(ctx) {
   const user = ctx.state.user.id
+  // TODO Use indexer to has updated fields
   const activities = await strapi.services.compensations.find({ user: user, ...ctx.query })
 
   return activities
@@ -299,6 +307,7 @@ async function me(ctx) {
 
 async function mint(ctx) {
   const { id } = ctx.params
+  // TODO Use indexer to has updated fields
   const compensation = await strapi.services['compensations'].findOne({ id })
   if (!['received_certificates'].includes(compensation.state)) {
     return ctx.badRequest("Compensation hasn't been reviewed")
@@ -398,6 +407,7 @@ module.exports = {
 }
 
 async function getNFTsToBurn(amount) {
+  // TODO Use indexer to has updated fields
   const carbonDocuments = await strapi.services['carbon-documents'].find({
     status: 'swapped',
     _sort: 'credit_start:desc',
@@ -409,7 +419,7 @@ async function getNFTsToBurn(amount) {
   let totalAmountBurned = 0
   let nftsToBurn = []
   nfts.forEach((nft) => {
-    if (amount > totalAmountBurned) {
+    if (amount > totalAmountBurned && nft.burnWillTimeoutOn < Date.now()) {
       totalAmountBurned += nft.supply_remaining
       nftsToBurn.push(nft)
     }

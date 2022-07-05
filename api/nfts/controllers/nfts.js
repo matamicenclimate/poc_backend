@@ -6,6 +6,7 @@
 
 async function burn (ctx) {
   try {
+    // TODO Use indexer to has updated fields
     const nft = await strapi.services['nfts'].findOne({ id: ctx.params.id })
     if (nft.status === 'swapped') {
       return await strapi.services['nfts'].update({ id: ctx.params.id }, { status: 'burned' })

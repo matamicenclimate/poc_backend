@@ -7,6 +7,7 @@
 
 async function me(ctx) {
   const user = ctx.state.user.id
+  // TODO Use indexer to has updated fields
   const activities = await strapi.services.activities.find({ user: user, ...ctx.query })
 
   return activities

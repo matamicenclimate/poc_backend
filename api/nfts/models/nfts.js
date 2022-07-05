@@ -9,6 +9,7 @@ module.exports = {
   lifecycles: {
     // Called before an entry is created
     beforeCreate: async function (data) {
+      data.burnWillTimeoutOn = Date.now()
       data.supply_remaining = data.supply
     },
   },
