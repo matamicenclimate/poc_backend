@@ -45,7 +45,8 @@
     "strapi-provider-email-mailgun": "^3.6.8",
     "strapi-provider-upload-climate": "file:providers/strapi-provider-upload-climate",
     "strapi-provider-upload-minio": "file:providers/strapi-provider-upload-minio",
-    "strapi-utils": "3.6.8"
+    "strapi-utils": "3.6.8",
+    "xstate": "^4.32.1"
   },
   "author": {
     "name": "Deka"

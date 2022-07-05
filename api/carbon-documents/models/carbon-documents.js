@@ -1,5 +1,5 @@
 'use strict'
-
+const xstate = require('xstate')
 const mailer = require(`${process.cwd()}/utils/mailer`)
 const registryConfig = require('config').registry
 
@@ -11,26 +11,87 @@ function makeEnum(statuses) {
   return enumObject
 }
 
+const carbonStateMachine = xstate.createMachine({
+  id: 'carbon-state',
+  initial: 'pending',
+  states: {
+    pending: {
+      on: {
+        ACCEPT: 'accepted',
+        REJECT: 'rejected',
+      },
+    },
+    accepted: {
+      on: {
+        APPROVE: 'waitingForCredits',
+        REJECT: 'rejected',
+      },
+    },
+    waitingForCredits: {
+      on: {
+        COMPLETE: 'completed',
+        REJECT: 'rejected',
+      },
+    },
+    completed: {
+      on: {
+        MINT: 'minted',
+      },
+    },
+    minted: {
+      on: {
+        CLAIM: 'claimed',
+      },
+    },
+    claimed: {
+      on: {
+        SWAP: 'swapped',
+      },
+    },
+    swapped: {
+      type: 'final',
+    },
+    rejected: {
+      type: 'final',
+    },
+  },
+})
+
+function tryRecoverState(status) {
+  try {
+    return xstate.interpret(carbonStateMachine).start(status)
+  } catch (err) {
+    throw strapi.errors.badRequest(`State "${status}" is not valid! Caused by: ${err}`)
+  }
+}
+
 function statusLogic(currentStatus, newStatus) {
-  const statusesEnum = getStatuses()
-  if (currentStatus === newStatus) {
+  const state = tryRecoverState(currentStatus)
+  const result = state.send({ type: newStatus })
+  if (result.changed) {
     return true
+  } else {
+    throw strapi.errors.badRequest(`Status "${currentStatus}" does not accept ${newStatus} event.`)
   }
+  // const statusesEnum = getStatuses()
+  // if (currentStatus === newStatus) {
+  //   return true
+  // }
 
-  // left: current state | right: possible new states
-  const stateTransition = {
-    [statusesEnum.PENDING]: [statusesEnum.ACCEPTED, statusesEnum.REJECTED],
-    [statusesEnum.ACCEPTED]: [statusesEnum.WAITING_FOR_CREDITS, statusesEnum.REJECTED],
-    [statusesEnum.WAITING_FOR_CREDITS]: [statusesEnum.COMPLETED, statusesEnum.REJECTED],
-    [statusesEnum.COMPLETED]: [statusesEnum.MINTED],
-    [statusesEnum.MINTED]: [statusesEnum.CLAIMED],
-    [statusesEnum.CLAIMED]: [statusesEnum.SWAPPED],
-    [statusesEnum.REJECTED]: [statusesEnum.ACCEPTED],
-  }
+  // // left: current state | right: possible new states
+  // const stateTransition = {
+  //   [statusesEnum.PENDING]: [statusesEnum.ACCEPTED, statusesEnum.REJECTED],
+  //   [statusesEnum.ACCEPTED]: [statusesEnum.WAITING_FOR_CREDITS, statusesEnum.REJECTED],
+  //   [statusesEnum.WAITING_FOR_CREDITS]: [statusesEnum.COMPLETED, statusesEnum.REJECTED],
+  //   [statusesEnum.COMPLETED]: [statusesEnum.MINTED],
+  //   [statusesEnum.MINTED]: [statusesEnum.CLAIMED],
+  //   [statusesEnum.CLAIMED]: [statusesEnum.SWAPPED],
+  //   [statusesEnum.REJECTED]: [statusesEnum.ACCEPTED],
+  // }
 
-  if (currentStatus === statusesEnum.SWAPPED || !stateTransition[currentStatus].includes(newStatus)) {
-    throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
-  }
+  // if (currentStatus === statusesEnum.SWAPPED || !stateTransition[currentStatus].includes(newStatus)) {
+  //   throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
+  // }
 }
 
 function getStatuses() {
