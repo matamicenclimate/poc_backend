@@ -16,7 +16,6 @@ module.exports = ({ env }) => {
       },
     }
   }
-
   return {
     email,
     upload: {
@@ -35,7 +34,9 @@ module.exports = ({ env }) => {
     sentry: {
       enabled: true,
       config: {
-        dsn: env('DSN'),
+        dsn: process.env.SENTRY_DSN,
+        sendMetadata: true,
+
       },
     },
   }

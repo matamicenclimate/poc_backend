@@ -19,13 +19,11 @@ function isStrapiUser(user) {
   if (!user) {
     return
   }
-
   return user.username === ENUMS.ROLE_TYPES.ADMIN || user.username === ENUMS.ROLE_TYPES.EDITOR
 }
 
 async function checkIssuer(ctx) {
   const magic = new Magic(process.env.MAGIC_KEY)
-
   if (!ctx.state.user || !ctx.state.user.provider || ctx.state.user.provider !== ENUMS.USERS_PROVIDERS.MAGIC) {
     if (isStrapiUser(ctx.state.user)) {
       return
