@@ -12,9 +12,9 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
   
   ```
   DATABASE_PORT=270127
-  DATABASE_NAME=climatecoin
-  DATABASE_USERNAME=strapi
-  DATABASE_PASSWORD=strapi
+  DATABASE_NAME=project
+  DATABASE_USERNAME=guest
+  DATABASE_PASSWORD=guest
   ```
 
 * Then you can install project requeriments:
