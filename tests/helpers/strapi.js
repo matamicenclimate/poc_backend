@@ -15,8 +15,6 @@ async function setupStrapi() {
       .use(instance.router.allowedMethods()); // populate KOA methods
 
     instance.server = http.createServer(instance.app.callback());
-
-    
   }
   return instance;
 }
