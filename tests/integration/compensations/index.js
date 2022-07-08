@@ -4,6 +4,7 @@ const path = require('path')
 const Controller = require('../../../api/compensations/controllers/compensations')
 var { ObjectId } = require('mongodb')
 let user
+
 describe('Compensations', () => {
   beforeAll(async () => {
     user = (await strapi.query('user', 'users-permissions').find({ username: 'pepe' }))[0]
