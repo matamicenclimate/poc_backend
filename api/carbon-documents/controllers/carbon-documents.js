@@ -282,10 +282,7 @@ async function prepareSwap(ctx) {
   const algodclient = algoClient()
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-  suggestedParams.fee = suggestedParams.fee * 3
-
-  // TODO: convert bson Long to a js number
-  const nftAsaId = carbonDocument.developer_nft?.asa_id.low_
+  const nftAsaId = carbonDocument.developer_nft?.asa_id.toInt()
   if (!nftAsaId) ctx.badRequest('Missing developer nft')
 
   const climatecoinVaultAppId = Number(process.env.APP_ID)
@@ -300,12 +297,14 @@ async function prepareSwap(ctx) {
     suggestedParams,
   })
 
+  unfreezeTxn.fee += 1*algosdk.ALGORAND_MIN_TX_FEE
+
   const transferTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: user.publicAddress,
     // the atc appends the assets to the foreignAssets and passes the index of the asses in the appArgs
     assetIndex: nftAsaId,
     to: algosdk.getApplicationAddress(climatecoinVaultAppId),
-    amount: carbonDocument.developer_nft.supply.low_,
+    amount: carbonDocument.developer_nft.supply.toInt(),
     suggestedParams,
   })
 
@@ -318,6 +317,8 @@ async function prepareSwap(ctx) {
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
+
+  swapTxn.fee += 1*algosdk.ALGORAND_MIN_TX_FEE
 
   const swapGroupTxn = [unfreezeTxn, transferTxn, swapTxn]
   const [unfreeze, transfer, swap] = algosdk.assignGroupID(swapGroupTxn)

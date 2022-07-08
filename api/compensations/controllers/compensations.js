@@ -30,10 +30,6 @@ async function calculate(ctx) {
   const algodclient = algoClient()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
-  //suggestedParams.fee = suggestedParams.minFee * 4
-
-  suggestedParams.flatFee = true
-  suggestedParams.fee = 2 * algosdk.ALGORAND_MIN_TX_FEE
 
   const assetsToCompensateFrom = nftsToBurn.map((item) => Number(item.asa_id))
   const nftIds = nftsToBurn.map((item) => item.id)
@@ -67,6 +63,8 @@ async function calculate(ctx) {
     suggestedParams,
   })
 
+  burnTxn.fee += (5 + (4*assetsToCompensateFrom.length))*algosdk.ALGORAND_MIN_TX_FEE
+
   const mintReceiptTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
     appIndex: Number(process.env.APP_ID),
@@ -76,6 +74,8 @@ async function calculate(ctx) {
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
+
+  mintReceiptTxn.fee += 4*algosdk.ALGORAND_MIN_TX_FEE
 
   const burnGroupTxn = [climatecoinTransferTxn, burnParametersTxn, burnTxn, mintReceiptTxn]
   const [transfer, params, burn, mint] = algosdk.assignGroupID(burnGroupTxn)
@@ -155,8 +155,6 @@ async function prepareClaimReceipt(ctx) {
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-  suggestedParams.flatFee = true
-  suggestedParams.fee = 2 * algosdk.ALGORAND_MIN_TX_FEE
 // TODO Use indexer to has updated fields
   const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
 
@@ -184,6 +182,8 @@ async function prepareClaimReceipt(ctx) {
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
+
+  receiptNftTransferTxn.fee += 4*algosdk.ALGORAND_MIN_TX_FEE
 
   const receiptClaimGroupTxn = [receiptNftOptinTxn, receiptNftTransferTxn]
   const [optin, transfer] = algosdk.assignGroupID(receiptClaimGroupTxn)
@@ -232,8 +232,6 @@ async function prepareClaimCertificate(ctx) {
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-  suggestedParams.flatFee = true
-  suggestedParams.fee = 2 * algosdk.ALGORAND_MIN_TX_FEE
 // TODO Use indexer to has updated fields
   const compensationNft = await strapi.services.nfts.findOne({ id: compensation.compensation_nft })
   const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
@@ -262,6 +260,8 @@ async function prepareClaimCertificate(ctx) {
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
+
+  compensationNftExchangeTxn.fee += 5*algosdk.ALGORAND_MIN_TX_FEE
 
   const compensationClaimGroupTxn = [compensationNftOptinTxn, compensationNftExchangeTxn]
   const [optin, exchange] = algosdk.assignGroupID(compensationClaimGroupTxn)
@@ -420,10 +420,11 @@ async function getNFTsToBurn(amount) {
   let nftsToBurn = []
   nfts.forEach((nft) => {
     if (amount > totalAmountBurned && nft.burnWillTimeoutOn < Date.now()) {
-      totalAmountBurned += nft.supply_remaining
+      totalAmountBurned += nft.supply_remaining.toInt()
       nftsToBurn.push(nft)
     }
   })
+  if (amount > totalAmountBurned) throw new Error("Not enough NFTs to burn")
   return nftsToBurn
 }
 
