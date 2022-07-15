@@ -16,3 +16,6 @@ exports
 *.cache
 build
 public/*
+
+# Other artifacts
+.mail-queue.db

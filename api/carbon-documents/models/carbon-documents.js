@@ -1,147 +1,20 @@
 'use strict'
-const xstate = require('xstate')
-const mailer = require(`${process.cwd()}/utils/mailer`)
-const registryConfig = require('config').registry
-
-function makeEnum(statuses) {
-  const enumObject = {}
-  for (const status of statuses) {
-    enumObject[status.toUpperCase()] = status
-  }
-  return enumObject
-}
-
-const carbonStateMachine = xstate.createMachine({
-  id: 'carbon-state',
-  initial: 'pending',
-  states: {
-    pending: {
-      on: {
-        ACCEPT: 'accepted',
-        REJECT: 'rejected',
-      },
-    },
-    accepted: {
-      on: {
-        APPROVE: 'waitingForCredits',
-        REJECT: 'rejected',
-      },
-    },
-    waitingForCredits: {
-      on: {
-        COMPLETE: 'completed',
-        REJECT: 'rejected',
-      },
-    },
-    completed: {
-      on: {
-        MINT: 'minted',
-      },
-    },
-    minted: {
-      on: {
-        CLAIM: 'claimed',
-      },
-    },
-    claimed: {
-      on: {
-        SWAP: 'swapped',
-      },
-    },
-    swapped: {
-      type: 'final',
-    },
-    rejected: {
-      type: 'final',
-    },
-  },
-})
-
-function tryRecoverState(status) {
-  try {
-    return xstate.interpret(carbonStateMachine).start(status)
-  } catch (err) {
-    throw strapi.errors.badRequest(`State "${status}" is not valid! Caused by: ${err}`)
-  }
-}
-
-function statusLogic(currentStatus, newStatus) {
-  const state = tryRecoverState(currentStatus)
-  const result = state.send({ type: newStatus })
-  if (result.changed) {
-    return true
-  } else {
-    throw strapi.errors.badRequest(`Status "${currentStatus}" does not accept ${newStatus} event.`)
-  }
-  // const statusesEnum = getStatuses()
-  // if (currentStatus === newStatus) {
-  //   return true
-  // }
-
-  // // left: current state | right: possible new states
-  // const stateTransition = {
-  //   [statusesEnum.PENDING]: [statusesEnum.ACCEPTED, statusesEnum.REJECTED],
-  //   [statusesEnum.ACCEPTED]: [statusesEnum.WAITING_FOR_CREDITS, statusesEnum.REJECTED],
-  //   [statusesEnum.WAITING_FOR_CREDITS]: [statusesEnum.COMPLETED, statusesEnum.REJECTED],
-  //   [statusesEnum.COMPLETED]: [statusesEnum.MINTED],
-  //   [statusesEnum.MINTED]: [statusesEnum.CLAIMED],
-  //   [statusesEnum.CLAIMED]: [statusesEnum.SWAPPED],
-  //   [statusesEnum.REJECTED]: [statusesEnum.ACCEPTED],
-  // }
-
-  // if (currentStatus === statusesEnum.SWAPPED || !stateTransition[currentStatus].includes(newStatus)) {
-  //   throw strapi.errors.badRequest(`Cannot change status from ${currentStatus} to ${newStatus}`)
-  // }
-}
-
-function getStatuses() {
-  const statuses = strapi.models['carbon-documents'].__schema__.attributes.status.enum
-  return makeEnum(statuses)
-}
+const { StateProvider, ActivityUpdate } = require('../lib')
 
 module.exports = {
   lifecycles: {
-    beforeUpdate: async function (params, newDocument) {
+    async beforeUpdate(params, newDocument) {
       const { _id } = params
       const oldCarbonDocument = await strapi.services['carbon-documents'].findOne({ _id })
-      statusLogic(oldCarbonDocument.status, newDocument.status)
+      const state = StateProvider.recover(oldCarbonDocument)
+      state.next(newDocument.status)
       newDocument.oldStatus = oldCarbonDocument.status
     },
-    afterUpdate: async function (result, params, data) {
-      const statuses = getStatuses()
-      if (data.oldStatus !== result.status) {
-        const userEmail = result.created_by_user
-        if (result.status === statuses.ACCEPTED) {
-          const registryInstructions = result.registry.instructions ?? registryConfig.defaultInstructions
-          mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENDING, userEmail)
-          await mailer.send('Document status changed to accepted', registryInstructions, userEmail)
-          mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
-          await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
-        } else if (result.status === statuses.COMPLETED) {
-          mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENDING, userEmail)
-          await mailer.send(
-            'Credits received',
-            `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`,
-            userEmail,
-          )
-          mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
-        }
-
-        const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
-          email: result.created_by_user,
-        })
-        await strapi.services.notifications.create({
-          title: `Carbon document ${result.status}`,
-          description: `Carbon document status changed to ${result.status}`,
-          model: 'carbon-documents',
-          model_id: result.id,
-          user: userDb.id,
-        })
-
-        // Add activity when carbon document status is "swapped"
-        if (result.status === 'swapped') {
-          await strapi.services.activities.add(userDb, result.developer_nft)
-        }
+    async afterUpdate(result, _params, _data) {
+      await ActivityUpdate.updateActivity(result)
+      // Add activity when carbon document status is "swapped"
+      if (await ActivityUpdate.shouldAddActivity(result)) {
+        await ActivityUpdate.addActivity(result)
       }
     },
   },

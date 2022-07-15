@@ -28,6 +28,7 @@
     "lodash": "^4.17.21",
     "minio": "^7.0.28",
     "nft.storage": "^3.0.1",
+    "node-persistent-queue": "^1.0.3",
     "npm": "^8.12.2",
     "puppeteer": "^14.2.0",
     "standard-version": "^9.5.0",
