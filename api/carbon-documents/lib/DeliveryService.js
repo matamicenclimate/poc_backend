@@ -2,6 +2,7 @@
 const mailer = require(`${process.cwd()}/utils/mailer`)
 const registryConfig = require('config').registry
 const Queue = require('node-persistent-queue')
+const Statuses = require('./Statuses')
 
 const queue = new Queue('./.mail-queue.db')
 queue.open().then(() => queue.start())
@@ -15,20 +16,20 @@ class QueueHandler {
    * @param {string} registryInstructions
    */
   async handleAccepted(userEmail, registryInstructions) {
-    mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENDING, userEmail)
+    mailer.logMailAction('carbon-documents', Statuses.enum.ACCEPTED, mailer.MAIL_ACTIONS.SENDING, userEmail)
     await mailer.send('Document status changed to accepted', registryInstructions, userEmail)
-    mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
-    await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
+    mailer.logMailAction('carbon-documents', Statuses.enum.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
+    await strapi.services['carbon-documents'].update({ id: result._id }, { status: Statuses.enum.WAITING_FOR_CREDITS })
   }
 
   async handleCompleted() {
-    mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENDING, userEmail)
+    mailer.logMailAction('carbon-documents', Statuses.enum.COMPLETED, mailer.MAIL_ACTIONS.SENDING, userEmail)
     await mailer.send(
       'Credits received',
       `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`,
       userEmail,
     )
-    mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
+    mailer.logMailAction('carbon-documents', Statuses.enum.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
   }
 
   /**

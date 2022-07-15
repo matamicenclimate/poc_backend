@@ -1,9 +1,13 @@
 'use strict'
-const { StateProvider, ActivityUpdate } = require('../lib')
+const { StateProvider, ActivityUpdate, Statuses } = require('../lib')
 
 module.exports = {
   lifecycles: {
     async beforeUpdate(params, newDocument) {
+      console.log('CALLING ON ELVIS')
+      await new Promise((r) => setTimeout(r))
+      console.log(Statuses.enum)
+      throw new Error(`FOO`)
       const { _id } = params
       const oldCarbonDocument = await strapi.services['carbon-documents'].findOne({ _id })
       const state = StateProvider.recover(oldCarbonDocument)
