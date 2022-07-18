@@ -25,7 +25,10 @@ async function calculate(ctx) {
     throw new Error('There are no nfts to burn')
   }
   for (const nftBurning of nftsToBurn) {
-    await strapi.services.nfts.update({ id: nftBurning.id }, { burnWillTimeoutOn: Date.now() + (60000 * process.env.MAX_MINUTES_TO_BURN) })
+    await strapi.services.nfts.update(
+      { id: nftBurning.id },
+      { burnWillTimeoutOn: Date.now() + 60000 * process.env.MAX_MINUTES_TO_BURN },
+    )
   }
   const algodclient = algoClient()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
@@ -63,7 +66,7 @@ async function calculate(ctx) {
     suggestedParams,
   })
 
-  burnTxn.fee += (5 + (4*assetsToCompensateFrom.length))*algosdk.ALGORAND_MIN_TX_FEE
+  burnTxn.fee += (5 + 4 * assetsToCompensateFrom.length) * algosdk.ALGORAND_MIN_TX_FEE
 
   const mintReceiptTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
@@ -75,7 +78,7 @@ async function calculate(ctx) {
     suggestedParams,
   })
 
-  mintReceiptTxn.fee += 4*algosdk.ALGORAND_MIN_TX_FEE
+  mintReceiptTxn.fee += 4 * algosdk.ALGORAND_MIN_TX_FEE
 
   const burnGroupTxn = [climatecoinTransferTxn, burnParametersTxn, burnTxn, mintReceiptTxn]
   const [transfer, params, burn, mint] = algosdk.assignGroupID(burnGroupTxn)
@@ -155,7 +158,7 @@ async function prepareClaimReceipt(ctx) {
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-// TODO Use indexer to has updated fields
+  // TODO Use indexer to has updated fields
   const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
 
   const receiptNftOptinTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
@@ -183,7 +186,7 @@ async function prepareClaimReceipt(ctx) {
     suggestedParams,
   })
 
-  receiptNftTransferTxn.fee += 4*algosdk.ALGORAND_MIN_TX_FEE
+  receiptNftTransferTxn.fee += 4 * algosdk.ALGORAND_MIN_TX_FEE
 
   const receiptClaimGroupTxn = [receiptNftOptinTxn, receiptNftTransferTxn]
   const [optin, transfer] = algosdk.assignGroupID(receiptClaimGroupTxn)
@@ -232,7 +235,7 @@ async function prepareClaimCertificate(ctx) {
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
   const suggestedParams = await algodclient.getTransactionParams().do()
 
-// TODO Use indexer to has updated fields
+  // TODO Use indexer to has updated fields
   const compensationNft = await strapi.services.nfts.findOne({ id: compensation.compensation_nft })
   const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
 
@@ -261,7 +264,7 @@ async function prepareClaimCertificate(ctx) {
     suggestedParams,
   })
 
-  compensationNftExchangeTxn.fee += 5*algosdk.ALGORAND_MIN_TX_FEE
+  compensationNftExchangeTxn.fee += 5 * algosdk.ALGORAND_MIN_TX_FEE
 
   const compensationClaimGroupTxn = [compensationNftOptinTxn, compensationNftExchangeTxn]
   const [optin, exchange] = algosdk.assignGroupID(compensationClaimGroupTxn)
@@ -319,7 +322,7 @@ async function mint(ctx) {
 
   try {
     const filePath = `${compensation.id}.pdf`
-    const html = generateCompensationPDF(compensation.txn_id, ipfsCIDs, compensation.nfts, compensation.burn_receipt)
+    const html = generateCompensationPDF(ipfsCIDs, compensation)
     const consolidationPdfBuffer = await createPDF(html, filePath)
 
     // const pdfBuffer = await readFileFromUploads(filePath)
@@ -410,7 +413,7 @@ async function getNFTsToBurn(amount) {
   // TODO Use indexer to has updated fields
   const carbonDocuments = await strapi.services['carbon-documents'].find({
     status: 'swapped',
-    _sort: 'credit_start:desc',
+    _sort: 'credit_start:asc',
     // swapped status means that the are ready to be used for burning and they have supply remaining
     'developer_nft.status': 'swapped',
   })
@@ -424,7 +427,7 @@ async function getNFTsToBurn(amount) {
       nftsToBurn.push(nft)
     }
   })
-  if (amount > totalAmountBurned) throw new Error("Not enough NFTs to burn")
+  if (amount > totalAmountBurned) throw new Error('Not enough NFTs to burn')
   return nftsToBurn
 }
 
