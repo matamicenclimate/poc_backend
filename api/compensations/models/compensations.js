@@ -6,9 +6,53 @@
  */
 
 const mailer = require(`${process.cwd()}/utils/mailer`)
+const algosdk = require("algosdk");
+const {algoClient} = require("../../../config/algorand");
+const algorandUtils = require("../../../utils/algorand");
+
+async function rejectCompensation(compensation) {
+  const algodClient = algoClient()
+  const suggestedParams = await algodClient.getTransactionParams().do()
+  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
+
+  const nfts = compensation.nfts.map((nft) => Number(nft.asa_id))
+
+  const rejectBurnTxn = algosdk.makeApplicationCallTxnFromObject({
+    from: creator.addr,
+    appIndex: Number(process.env.APP_ID),
+    appArgs: [
+      algorandUtils.getMethodByName('reject_burn').getSelector(),
+      algosdk.encodeUint64(1),
+    ],
+    foreignAssets: [...nfts ,Number(process.env.CLIMATECOIN_ASA_ID)],
+    accounts: [algosdk.getApplicationAddress(Number(process.env.DUMP_APP_ID)), compensation.user.publicAddress],
+    foreignApps: [Number(compensation.contract_id), Number(process.env.DUMP_APP_ID)],
+    onComplete: algosdk.OnApplicationComplete.NoOpOC,
+    suggestedParams,
+  })
+
+  rejectBurnTxn.fee += (3+nfts.length)*algosdk.ALGORAND_MIN_TX_FEE
+
+  const signedTxn = rejectBurnTxn.signTxn(creator.sk)
+  const txId = rejectBurnTxn.txID().toString()
+
+  await algodClient.sendRawTransaction(signedTxn).do()
+  await algosdk.waitForConfirmation(algodClient, txId, 4)
+}
 
 module.exports = {
   lifecycles: {
+    beforeUpdate: async function (params, newCompensation) {
+      const { _id } = params
+      const oldCompensation = await strapi.services.compensations.findOne({ _id })
+      if (oldCompensation.id !== _id) throw new Error(`Compensation not found with id: ${_id}`)
+      if (newCompensation.state !== oldCompensation.state) {
+        if (newCompensation.state === "rejected") {
+          if (["minted", "claimed"].includes(oldCompensation.state)) throw strapi.errors.badRequest(`Cannot reject compensation that has already been approved`)
+          await rejectCompensation(oldCompensation)
+        }else if (oldCompensation.state === "rejected") throw strapi.errors.badRequest(`Cannot edit compensation that has already been rejected`)
+      }
+    },
     afterCreate: async function (result) {
       await strapi.services.activities.create({
         type: 'burn',

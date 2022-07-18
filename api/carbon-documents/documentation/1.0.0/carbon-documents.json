@@ -1551,8 +1551,7 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation",
-                  "compensation_receipt"
+                  "compensation"
                 ]
               },
               "asa_id": {
@@ -1562,7 +1561,7 @@
                 "type": "string"
               },
               "burnWillTimeoutOn": {
-                "type": "number"
+                "type": "integer"
               },
               "supply": {
                 "type": "integer"
@@ -1613,8 +1612,7 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation",
-                  "compensation_receipt"
+                  "compensation"
                 ]
               },
               "asa_id": {
@@ -1624,7 +1622,7 @@
                 "type": "string"
               },
               "burnWillTimeoutOn": {
-                "type": "number"
+                "type": "integer"
               },
               "supply": {
                 "type": "integer"

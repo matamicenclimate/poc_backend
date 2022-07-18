@@ -74,22 +74,6 @@
     },
     {
       "method": "GET",
-      "path": "/compensations/:id/claim/receipt",
-      "handler": "compensations.prepareClaimReceipt",
-      "config": {
-        "policies": []
-      }
-    },
-    {
-      "method": "POST",
-      "path": "/compensations/:id/claim/receipt",
-      "handler": "compensations.claimReceipt",
-      "config": {
-        "policies": []
-      }
-    },
-    {
-      "method": "GET",
       "path": "/compensations/:id/claim/certificate",
       "handler": "compensations.prepareClaimCertificate",
       "config": {

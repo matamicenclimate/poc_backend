@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "07/05/2022 12:42:13 PM"
+    "x-generation-date": "07/13/2022 6:03:57 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -2044,143 +2044,6 @@
       }
     },
     "/compensations/{id}/mint": {
-      "post": {
-        "deprecated": false,
-        "description": "Create a new compensations record",
-        "responses": {
-          "200": {
-            "description": "Retrieve compensations document(s)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Compensations"
-        ],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "foo": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/compensations/{id}/claim/receipt": {
-      "get": {
-        "deprecated": false,
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "Retrieve compensations document(s)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Compensations"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      },
       "post": {
         "deprecated": false,
         "description": "Create a new compensations record",
@@ -11957,8 +11820,7 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation",
-                  "compensation_receipt"
+                  "compensation"
                 ]
               },
               "asa_id": {
@@ -11968,7 +11830,7 @@
                 "type": "string"
               },
               "burnWillTimeoutOn": {
-                "type": "number"
+                "type": "integer"
               },
               "supply": {
                 "type": "integer"
@@ -12791,8 +12653,7 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation",
-                  "compensation_receipt"
+                  "compensation"
                 ]
               },
               "asa_id": {
@@ -12802,7 +12663,7 @@
                 "type": "string"
               },
               "burnWillTimeoutOn": {
-                "type": "number"
+                "type": "integer"
               },
               "supply": {
                 "type": "integer"
@@ -12853,8 +12714,7 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation",
-                  "compensation_receipt"
+                  "compensation"
                 ]
               },
               "asa_id": {
@@ -12864,7 +12724,7 @@
                 "type": "string"
               },
               "burnWillTimeoutOn": {
-                "type": "number"
+                "type": "integer"
               },
               "supply": {
                 "type": "integer"
@@ -13044,8 +12904,7 @@
                   "enum": [
                     "fee",
                     "developer",
-                    "compensation",
-                    "compensation_receipt"
+                    "compensation"
                   ]
                 },
                 "asa_id": {
@@ -13055,7 +12914,7 @@
                   "type": "string"
                 },
                 "burnWillTimeoutOn": {
-                  "type": "number"
+                  "type": "integer"
                 },
                 "supply": {
                   "type": "integer"
@@ -13178,6 +13037,7 @@
               "pending_notification",
               "pending_certificates",
               "received_certificates",
+              "rejected",
               "minted",
               "claimed"
             ]
@@ -13345,8 +13205,7 @@
                 "enum": [
                   "fee",
                   "developer",
-                  "compensation",
-                  "compensation_receipt"
+                  "compensation"
                 ]
               },
               "asa_id": {
@@ -13356,7 +13215,7 @@
                 "type": "string"
               },
               "burnWillTimeoutOn": {
-                "type": "number"
+                "type": "integer"
               },
               "supply": {
                 "type": "integer"
@@ -13387,71 +13246,8 @@
           "burn_receipt": {
             "type": "object"
           },
-          "compensation_receipt_nft": {
-            "required": [
-              "id",
-              "status"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "group_id": {
-                "type": "string"
-              },
-              "asa_txn_id": {
-                "type": "string"
-              },
-              "metadata": {
-                "type": "object"
-              },
-              "last_config_txn": {
-                "type": "string"
-              },
-              "nft_type": {
-                "type": "string",
-                "enum": [
-                  "fee",
-                  "developer",
-                  "compensation",
-                  "compensation_receipt"
-                ]
-              },
-              "asa_id": {
-                "type": "integer"
-              },
-              "owner_address": {
-                "type": "string"
-              },
-              "burnWillTimeoutOn": {
-                "type": "number"
-              },
-              "supply": {
-                "type": "integer"
-              },
-              "status": {
-                "type": "string",
-                "enum": [
-                  "created",
-                  "claimed",
-                  "swapped",
-                  "burned"
-                ]
-              },
-              "supply_remaining": {
-                "type": "integer"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "receipt_claimed": {
-            "type": "boolean",
-            "default": false
+          "contract_id": {
+            "type": "integer"
           }
         }
       },
@@ -13480,6 +13276,7 @@
               "pending_notification",
               "pending_certificates",
               "received_certificates",
+              "rejected",
               "minted",
               "claimed"
             ]
@@ -13493,12 +13290,8 @@
           "burn_receipt": {
             "type": "object"
           },
-          "compensation_receipt_nft": {
-            "type": "string"
-          },
-          "receipt_claimed": {
-            "type": "boolean",
-            "default": false
+          "contract_id": {
+            "type": "integer"
           },
           "created_by": {
             "type": "string"
@@ -13700,8 +13493,7 @@
             "enum": [
               "fee",
               "developer",
-              "compensation",
-              "compensation_receipt"
+              "compensation"
             ]
           },
           "asa_id": {
@@ -13711,7 +13503,7 @@
             "type": "string"
           },
           "burnWillTimeoutOn": {
-            "type": "number"
+            "type": "integer"
           },
           "supply": {
             "type": "integer"
@@ -13753,8 +13545,7 @@
             "enum": [
               "fee",
               "developer",
-              "compensation",
-              "compensation_receipt"
+              "compensation"
             ]
           },
           "asa_id": {
@@ -13764,7 +13555,7 @@
             "type": "string"
           },
           "burnWillTimeoutOn": {
-            "type": "number"
+            "type": "integer"
           },
           "supply": {
             "type": "integer"

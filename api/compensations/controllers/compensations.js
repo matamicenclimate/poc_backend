@@ -11,6 +11,7 @@ const { createPDF, generateCompensationPDF } = require('../../../utils/pdf')
 const { uploadFileToIPFS } = require('../../../utils/ipfs')
 const { parseMultipartData, sanitizeEntity } = require('strapi-utils')
 const { algoIndexer } = require('../../../config/algorand')
+const {burn} = require("../../nfts/controllers/nfts");
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
@@ -45,6 +46,13 @@ async function calculate(ctx) {
     suggestedParams,
   })
 
+  const requiredFundsPaymentTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    from: creator.addr,
+    to: algosdk.getApplicationAddress(Number(process.env.APP_ID)),
+    amount: algosdk.algosToMicroalgos((2+assetsToCompensateFrom.length)*0.1),
+    suggestedParams: suggestedParams,
+  })
+
   const burnParametersTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
     appIndex: Number(process.env.APP_ID),
@@ -60,43 +68,32 @@ async function calculate(ctx) {
     from: user.publicAddress,
     appIndex: Number(process.env.APP_ID),
     appArgs: [algorandUtils.getMethodByName('burn_climatecoins').getSelector()],
-    foreignAssets: assetsToCompensateFrom,
+    foreignAssets: [...assetsToCompensateFrom, Number(process.env.CLIMATECOIN_ASA_ID)],
     accounts: [algosdk.getApplicationAddress(Number(process.env.DUMP_APP_ID))],
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    suggestedParams,
-  })
-
-  burnTxn.fee += (5 + 4 * assetsToCompensateFrom.length) * algosdk.ALGORAND_MIN_TX_FEE
-
-  const mintReceiptTxn = algosdk.makeApplicationCallTxnFromObject({
-    from: creator.addr,
-    appIndex: Number(process.env.APP_ID),
-    // the atc appends the assets to the foreignAssets and passes the index of the asses in the appArgs
-    appArgs: [algorandUtils.getMethodByName('mint_unverified_compensation_nft').getSelector(), algosdk.encodeUint64(0)],
     foreignApps: [Number(process.env.DUMP_APP_ID)],
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
 
-  mintReceiptTxn.fee += 4 * algosdk.ALGORAND_MIN_TX_FEE
+  burnTxn.fee += (5 + (4*assetsToCompensateFrom.length))*algosdk.ALGORAND_MIN_TX_FEE
 
-  const burnGroupTxn = [climatecoinTransferTxn, burnParametersTxn, burnTxn, mintReceiptTxn]
-  const [transfer, params, burn, mint] = algosdk.assignGroupID(burnGroupTxn)
+  const burnGroupTxn = [climatecoinTransferTxn, requiredFundsPaymentTxn, burnParametersTxn, burnTxn]
+  const [transfer, funds, params, burn] = algosdk.assignGroupID(burnGroupTxn)
 
   const encodedTransferTxn = algosdk.encodeUnsignedTransaction(transfer)
   const encodedBurnTxn = algosdk.encodeUnsignedTransaction(burn)
 
+  const signedFundsTxn = await funds.signTxn(creator.sk)
   const signedParamsTxn = await params.signTxn(creator.sk)
-  const signedMintTxn = await mint.signTxn(creator.sk)
 
   return {
     amount: Number(amount),
     assets: assetsToCompensateFrom,
     nftIds,
     signedParamsTxn,
+    signedFundsTxn,
     encodedTransferTxn,
     encodedBurnTxn,
-    signedMintTxn,
   }
 }
 
@@ -110,116 +107,28 @@ async function create(ctx) {
   const txnBlob = [
     Buffer.from(Object.values(signedTxn[0])),
     Buffer.from(signedTxn[1].data),
-    Buffer.from(Object.values(signedTxn[2])),
-    Buffer.from(signedTxn[3].data),
+    Buffer.from(signedTxn[2].data),
+    Buffer.from(Object.values(signedTxn[3])),
   ]
   const { txId } = await algodClient.sendRawTransaction(txnBlob).do()
-  const result = await algosdk.waitForConfirmation(algodClient, txId, 3)
+  const result = await algosdk.waitForConfirmation(algodClient, txId, 4)
 
   const indexerClient = algoIndexer()
   const groupId = Buffer.from(result.txn.txn.grp).toString('base64')
   const block = await indexerClient.lookupBlock(result['confirmed-round']).do()
 
   const grpTxns = block.transactions.filter((transaction) => transaction?.group === groupId)
-  const assetCreatorTxn = grpTxns.filter(
+  const appCreatorTxn = grpTxns.filter(
     (transaction) =>
-      transaction.hasOwnProperty('inner-txns') && transaction['inner-txns'][0].hasOwnProperty('created-asset-index'),
+      transaction.hasOwnProperty('inner-txns') && transaction['inner-txns'][0].hasOwnProperty('created-application-index'),
   )
 
-  const nftId = assetCreatorTxn[0]['inner-txns'][0]['created-asset-index']
+  const burnContractId = appCreatorTxn[0]['inner-txns'][0]['created-application-index']
 
-  const nftDb = await strapi.services.nfts.create({
-    group_id: groupId,
-    last_config_txn: null,
-    nft_type: ALGORAND_ENUMS.NFT_TYPES.COMPENSATION_RECEIPT,
-    metadata: {},
-    asa_id: nftId,
-    asa_txn_id: assetCreatorTxn[0].id,
-    owner_address: user.publicAddress,
-    supply: 1,
-  })
-
-  const newCompensation = { ...compensationData, txn_id: groupId, user: user.id, compensation_receipt_nft: nftDb.id }
+  const newCompensation = { ...compensationData, txn_id: groupId, user: user.id, contract_id: burnContractId }
 
   const newDocument = await strapi.services.compensations.create(newCompensation)
   return sanitizeEntity(newDocument, { model: strapi.models.compensations })
-}
-
-async function prepareClaimReceipt(ctx) {
-  const { id } = ctx.params
-  const user = ctx.state.user
-  // TODO Use indexer to has updated fields
-  const compensation = await strapi.services['compensations'].findOne({ id })
-
-  if (compensation.user.id !== user.id) {
-    throw new Error('Unauthorized')
-  }
-  const algodclient = algoClient()
-  const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
-  const suggestedParams = await algodclient.getTransactionParams().do()
-
-  // TODO Use indexer to has updated fields
-  const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
-
-  const receiptNftOptinTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-    from: user.publicAddress,
-    assetIndex: Number(receiptNft.asa_id),
-    to: user.publicAddress,
-    amount: Number(0),
-    suggestedParams,
-  })
-
-  const receiptNftTransferTxn = algosdk.makeApplicationCallTxnFromObject({
-    from: creator.addr,
-    appIndex: Number(process.env.APP_ID),
-    // the atc appends the assets to the foreignAssets and passes the index of the asses in the appArgs
-    appArgs: [
-      algorandUtils.getMethodByName('move').getSelector(),
-      algosdk.encodeUint64(0),
-      algosdk.encodeUint64(1),
-      algosdk.encodeUint64(2),
-      algosdk.encodeUint64(1),
-    ],
-    foreignAssets: [Number(receiptNft.asa_id)],
-    accounts: [algosdk.getApplicationAddress(Number(process.env.APP_ID)), user.publicAddress],
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    suggestedParams,
-  })
-
-  receiptNftTransferTxn.fee += 4 * algosdk.ALGORAND_MIN_TX_FEE
-
-  const receiptClaimGroupTxn = [receiptNftOptinTxn, receiptNftTransferTxn]
-  const [optin, transfer] = algosdk.assignGroupID(receiptClaimGroupTxn)
-
-  const encodedOptinTxn = algosdk.encodeUnsignedTransaction(optin)
-  const signedTransferTxn = await transfer.signTxn(creator.sk)
-
-  return {
-    compensationId: id,
-    encodedOptinTxn,
-    signedTransferTxn,
-  }
-}
-
-async function claimReceipt(ctx) {
-  const { id } = ctx.params
-  const { signedTxn } = ctx.request.body
-  const user = ctx.state.user
-  // TODO Use indexer to has updated fields
-  const compensation = await strapi.services.compensations.findOne({ id })
-
-  if (!signedTxn) throw new Error('Txn is missing in request body')
-  if (compensation.user.id !== user.id) throw new Error('Unauthorized')
-
-  const algodClient = algoClient()
-  const txnBlob = [Buffer.from(Object.values(signedTxn[0])), Buffer.from(signedTxn[1].data)]
-  const { txId } = await algodClient.sendRawTransaction(txnBlob).do()
-  await algosdk.waitForConfirmation(algodClient, txId, 3)
-
-  await strapi.services.nfts.update({ id: compensation.compensation_receipt_nft.id }, { state: 'claimed' })
-  const compensationUpdated = await strapi.services.compensations.update({ id }, { receipt_claimed: true })
-
-  return sanitizeEntity(compensationUpdated, { model: strapi.models.compensations })
 }
 
 async function prepareClaimCertificate(ctx) {
@@ -237,7 +146,7 @@ async function prepareClaimCertificate(ctx) {
 
   // TODO Use indexer to has updated fields
   const compensationNft = await strapi.services.nfts.findOne({ id: compensation.compensation_nft })
-  const receiptNft = await strapi.services.nfts.findOne({ id: compensation.compensation_receipt_nft })
+  const nftsToBurn = compensation.nfts.map((nft) => Number(nft.asa_id))
 
   const compensationNftOptinTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: user.publicAddress,
@@ -247,35 +156,33 @@ async function prepareClaimCertificate(ctx) {
     suggestedParams,
   })
 
-  const compensationNftExchangeTxn = algosdk.makeApplicationCallTxnFromObject({
+  const approveBurnTxn = algosdk.makeApplicationCallTxnFromObject({
     from: creator.addr,
     appIndex: Number(process.env.APP_ID),
     appArgs: [
-      algorandUtils.getMethodByName('verify_compensation_nft').getSelector(),
+      algorandUtils.getMethodByName('approve_burn').getSelector(),
+      algosdk.encodeUint64(1),
       algosdk.encodeUint64(0),
-      algosdk.encodeUint64(1),
-      algosdk.encodeUint64(1),
-      algosdk.encodeUint64(2),
     ],
-    foreignAssets: [Number(receiptNft.asa_id), Number(compensationNft.asa_id)],
-    accounts: [user.publicAddress, algosdk.getApplicationAddress(Number(process.env.DUMP_APP_ID))],
-    foreignApps: [Number(process.env.DUMP_APP_ID)],
+    foreignAssets: [Number(compensationNft.asa_id), ...nftsToBurn ,Number(process.env.CLIMATECOIN_ASA_ID)],
+    accounts: [algosdk.getApplicationAddress(Number(process.env.DUMP_APP_ID)), user.publicAddress],
+    foreignApps: [Number(compensation.contract_id), Number(process.env.DUMP_APP_ID)],
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
 
-  compensationNftExchangeTxn.fee += 5 * algosdk.ALGORAND_MIN_TX_FEE
+  approveBurnTxn.fee += (6+nftsToBurn.length)*algosdk.ALGORAND_MIN_TX_FEE
 
-  const compensationClaimGroupTxn = [compensationNftOptinTxn, compensationNftExchangeTxn]
-  const [optin, exchange] = algosdk.assignGroupID(compensationClaimGroupTxn)
+  const compensationClaimGroupTxn = [compensationNftOptinTxn, approveBurnTxn]
+  const [optin, approve] = algosdk.assignGroupID(compensationClaimGroupTxn)
 
   const encodedOptinTxn = algosdk.encodeUnsignedTransaction(optin)
-  const signedExchangeTxn = await exchange.signTxn(creator.sk)
+  const signedApproveTxn = await approve.signTxn(creator.sk)
 
   return {
     compensationId: id,
     encodedOptinTxn,
-    signedExchangeTxn,
+    signedApproveTxn,
   }
 }
 
@@ -292,7 +199,7 @@ async function claimCertificate(ctx) {
   const algodClient = algoClient()
   const txnBlob = [Buffer.from(Object.values(signedTxn[0])), Buffer.from(signedTxn[1].data)]
   const { txId } = await algodClient.sendRawTransaction(txnBlob).do()
-  await algosdk.waitForConfirmation(algodClient, txId, 3)
+  await algosdk.waitForConfirmation(algodClient, txId, 4)
 
   await strapi.services.nfts.update({ id: compensation.compensation_nft.id }, { status: 'claimed' })
   const compensationUpdated = await strapi.services.compensations.update({ id }, { state: 'claimed' })
@@ -403,8 +310,6 @@ module.exports = {
   mint,
   algoFn,
   create,
-  prepareClaimReceipt,
-  claimReceipt,
   prepareClaimCertificate,
   claimCertificate,
 }
