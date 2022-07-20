@@ -19,7 +19,7 @@ const path = require('path')
 async function createPDF(html, filePath) {
   // launch a new chrome instance
   const browser = await puppeteer.launch({
-    // executablePath: '/usr/bin/chromium-browser',
+    executablePath: '/usr/bin/chromium-browser',
     args: ['--no-sandbox'],
   })
 
@@ -111,7 +111,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
           <p style="max-width: 80%; height: min-content; font-size: 20px; color: #fcfcfd;">
             You have compensate <strong>${
               compensation.burn_receipt[nft.asa_id.toInt()]
-            } t</strong> of <strong>CO2</strong> 
+            } t</strong> of <strong>CO2</strong>
             for this project from ClimateCoin.
             This certificate is official, created and validated by Climatecoin.
           </p>
@@ -142,7 +142,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
                     Total Climatecoins
                   </dt>
                   <dd style="margin-bottom: 5px; margin-left:0px; color: #00db7d; font-weight: 500;">
-                    ${totalClimatecoins(compensation.burn_receipt[nft.asa_id.toInt()])} 
+                    ${totalClimatecoins(compensation.burn_receipt[nft.asa_id.toInt()])}
                   </dd>
                 </div>
               </div>
