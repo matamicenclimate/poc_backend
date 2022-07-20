@@ -35,6 +35,10 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
 
 Create the volume on the server and mount it in `/opt/public/uploads`
 
+# User wallet creation
+>The backend will send 0.1 Algos to the user's wallet when they register on the app using Magiclink.
+>This will enable their wallets to be able to use them in algorand blockchain
+
 # Carbon-Document Workflow
 
 ## Creating the request
