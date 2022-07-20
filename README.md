@@ -109,6 +109,7 @@ sequenceDiagram
 
 ## Swap for Climatecoins
 >The user swaps the project NFT to get Climatecoins
+>>In this step, the frontend will automatically opt the user in to climatecoin if they have not opted-in already
 ```mermaid
 sequenceDiagram
     participant User as User
