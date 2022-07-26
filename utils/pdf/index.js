@@ -94,21 +94,21 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
   function renderBurnedNft() {
     return compensation.nfts.map(
       (nft) => `
-        <div style="width: 100%; padding: 60px; display: flex; flex-direction:column; background-color: #364237">
+        <div style="width: 100%; padding: 60px; display: flex; flex-direction:column; background-color: #364237; page-break-before: always;" >
           <div style="width: 100%; height: min-content; margin-bottom:15px; display: flex; flex-direction: row; justify-content: space-between; align-items:center">
             <div>
               <img src="${Logo}" alt="Climatecoin logo" style="width: 150px;"/>
             </div>
-            <div style="font-size: 16px; text-align:left; display:flex; flex-direction: column;">
+            <div style="font-size: 14px; text-align:left; display:flex; flex-direction: column;">
               <p style="color: #fcfcfd; margin:0px 0px 5px 0px">${today}</p>
               <p style="color: #b1b5c3; margin:0px 0px 5px 0px">#${nft.id}</p>
             </div>
           </div>
-          <hr style="width: 100%; margin-top:15px"/>
-          <h1 style="max-width: 50%; height: min-content; font-size: 60px; color: #00db7d;">
+          <hr style="width: 100%; margin-top:30px"/>
+          <h1 style="max-width: 50%; height: min-content; font-size: 52px; color: #00db7d;">
             ${title(nft)} compensation certificate
           </h1>
-          <p style="max-width: 80%; height: min-content; font-size: 20px; color: #fcfcfd;">
+          <p style="max-width: 80%; height: min-content; font-size: 17px; color: #fcfcfd;">
             You have compensate <strong>${
               compensation.burn_receipt[nft.asa_id.toInt()]
             } t</strong> of <strong>CO2</strong>
@@ -116,9 +116,9 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
             This certificate is official, created and validated by Climatecoin.
           </p>
         </div>
-        <div style="width: 100%; padding: 60px;">
+        <div style="width: 100%; padding: 50px;">
           <div style="width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; gap: 36px;">
-            <dl style="grid-column: 1 / 4; grid-row: 1 ; border: 1px #e6e8ec solid; border-radius: 15px; padding: 20px; margin:0px;">
+            <dl style="grid-column: 1 / 4; grid-row: 1 ; border: 1px #e6e8ec solid; border-radius: 8px; padding: 16px; margin:0px; font-size:9px;   gap: 10.7px;">
               <dt style="margin-bottom: 5px; line-height: 1.71; text-align: left; color: #777e90;">
                 Project
               </dt>
@@ -147,7 +147,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
                 </div>
               </div>
               <hr />
-              <div style=" display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr">
                 <div>
                   <dt style="margin-bottom:5px; line-height: 1.71; text-align: left; color: #777e90;">
                     ID project
@@ -184,11 +184,11 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
               </div>
             </dl>
           </div>
-          <div style="width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 50px;">
+          <div style="width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 57px;">
             <div>
-              <img src="${Sign}" alt="Signed document" style="width: 250px;"/>
+              <img src="${Sign}" alt="Signed document" style="width: 205px;"/>
             </div>
-            <div style="text-align:right; grid-column: 4/6; font-size:15px ;">
+            <div style="text-align:right; grid-column: 4/6; font-size:10px ;">
               <p style="color:#777e90">If you have any questions or suggestions about this certificate, please write to us at:</p>
               <p style="color:#00db7d">certificates@climatecoin.io</p>
             </div>
@@ -201,7 +201,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
 
   return `
   <html>
-  <body style="max-width: 780px; max-height: 1123px; margin:0px; top: 0; left:0; page-break-before: always;">
+  <body style="font-family: 'neue-montreal', 'Neue Montreal', sans-serif; max-width: 793px; max-height: 1122px; margin:0px; top: 0; left:0; ">
     ${renderBurnedNft()}
   </body>
   </html>
