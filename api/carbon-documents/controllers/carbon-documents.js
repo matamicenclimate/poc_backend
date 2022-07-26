@@ -9,7 +9,6 @@ const utils = require(`${process.cwd()}/utils`)
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
-const mailContent = require(`./project-email.html`)
 
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
