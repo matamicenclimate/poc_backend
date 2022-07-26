@@ -9,6 +9,7 @@ const utils = require(`${process.cwd()}/utils`)
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
+const mailContent = require(`./project-email.html`)
 
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
@@ -40,7 +41,8 @@ async function create(ctx) {
   }
 
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
-  const mailContent = `User ${ctx.state.user.email} sent a new document.<br>Available here: ${url}`
+  // const mailContent = `User ${ctx.state.user.email} sent a new document.<br>Available here: ${url}`
+
   await mailer.send('New document', mailContent)
   return createdDocument
 }
@@ -297,7 +299,7 @@ async function prepareSwap(ctx) {
     suggestedParams,
   })
 
-  unfreezeTxn.fee += 1*algosdk.ALGORAND_MIN_TX_FEE
+  unfreezeTxn.fee += 1 * algosdk.ALGORAND_MIN_TX_FEE
 
   const transferTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: user.publicAddress,
@@ -318,7 +320,7 @@ async function prepareSwap(ctx) {
     suggestedParams,
   })
 
-  swapTxn.fee += 1*algosdk.ALGORAND_MIN_TX_FEE
+  swapTxn.fee += 1 * algosdk.ALGORAND_MIN_TX_FEE
 
   const swapGroupTxn = [unfreezeTxn, transferTxn, swapTxn]
   const [unfreeze, transfer, swap] = algosdk.assignGroupID(swapGroupTxn)
