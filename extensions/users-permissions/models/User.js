@@ -33,7 +33,7 @@ module.exports = {
         } catch (e) {
           if (e.status !== 404) throw e
           console.log("Funding new user")
-          await fundUser(newUser, 0.1)
+          await fundUser(newUser, Number(process.env.ALGOS_TO_NEW_USER))
         }
       }
     },
