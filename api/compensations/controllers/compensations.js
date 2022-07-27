@@ -17,6 +17,17 @@ const {burn} = require("../../nfts/controllers/nfts");
  * to customize this controller
  */
 
+async function findOne(ctx) {
+  const {id} = ctx.params
+  const user = ctx.state.user
+  const compensation = await strapi.services.compensations.findOne({ id })
+
+  if (!compensation || compensation.id !== id) return ctx.badRequest('Not found')
+  if (compensation.user.id !== user.id) return ctx.badRequest('Unauthorized')
+
+  return compensation
+}
+
 async function calculate(ctx) {
   const { amount } = ctx.request.query
   const user = ctx.state.user
@@ -137,7 +148,7 @@ async function prepareClaimCertificate(ctx) {
   // TODO Use indexer to has updated fields
   const compensation = await strapi.services['compensations'].findOne({ id })
 
-  if (compensation.user.id !== user.id) throw new Error('Unauthorized')
+  if (compensation.user.id !== user.id) return ctx.badRequest('Unauthorized')
   if (compensation.compensation_nft === undefined) throw new Error('Compensation NFT not minted yet')
 
   const algodclient = algoClient()
@@ -194,7 +205,7 @@ async function claimCertificate(ctx) {
   const compensation = await strapi.services.compensations.findOne({ id })
 
   if (!signedTxn) throw new Error('Txn is missing in request body')
-  if (compensation.user.id !== user.id) throw new Error('Unauthorized')
+  if (compensation.user.id !== user.id) return ctx.badRequest('Unauthorized')
 
   const algodClient = algoClient()
   const txnBlob = [Buffer.from(Object.values(signedTxn[0])), Buffer.from(signedTxn[1].data)]
@@ -312,6 +323,7 @@ module.exports = {
   create,
   prepareClaimCertificate,
   claimCertificate,
+  findOne
 }
 
 async function getNFTsToBurn(amount) {

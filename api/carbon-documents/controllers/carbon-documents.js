@@ -22,6 +22,25 @@ function formatBodyArrays(collectionTypeAtts, requestBody) {
   return requestBody
 }
 
+async function findOne(ctx) {
+  const {id} = ctx.params
+  const user = ctx.state.user
+  const document = await strapi.services['carbon-documents'].findOne({ id })
+
+  if (!document || document.id !== id) return ctx.badRequest('Not found')
+  if (document.created_by_user !== user.email) return ctx.badRequest('Unauthorized')
+
+  return document
+}
+
+async function find(ctx) {
+  const user = ctx.state.user
+  const query = ctx.query
+  query.created_by_user = user.email
+
+  return await strapi.services['carbon-documents'].find({ ...ctx.query })
+}
+
 async function create(ctx) {
   const collectionName = ctx.originalUrl.substring(1)
   const applicationUid = strapi.api[collectionName].models[collectionName].uid
@@ -851,6 +870,8 @@ async function claim(ctx) {
   const { id } = ctx.params
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
+
+  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest("Unauthorized")
   if (!['minted'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been minted")
   }
@@ -909,6 +930,8 @@ async function prepareSwap(ctx) {
   const user = ctx.state.user
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
+  if (carbonDocument.id !== id) throw new Error("NFT not found on Strapi")
+  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest("Unauthorized")
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
@@ -966,6 +989,8 @@ async function swap(ctx) {
   const { signedTxn } = ctx.request.body
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
+  if (carbonDocument.id !== id) throw new Error("NFT not found on Strapi")
+  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest("Unauthorized")
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
@@ -996,4 +1021,6 @@ module.exports = {
   claim,
   swap,
   prepareSwap,
+  find,
+  findOne
 }
