@@ -10,6 +10,15 @@ const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
 
+var Module = require('module')
+var fs = require('fs')
+
+Module._extensions['.png'] = function (module, fn) {
+  var base64 = fs.readFileSync(fn).toString('base64')
+  module._compile('module.exports="data:Logo/jpg;base64,' + base64 + '"', fn)
+}
+var Logo = require('../../../admin/src/assets/images/logo-light.png')
+
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
     const incomingAttData = requestBody[key]
@@ -59,640 +68,753 @@ async function create(ctx) {
   }
 
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
+  const title = `${createdDocument.title.slice(0, 10)}`
+  const credits = `${createdDocument.credits}`
   // const mailContent = `User ${ctx.state.user.email} sent a new document.<br>Available here: ${url}`
-  const mailContent = `<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-<head>
-   <xml>
-      <o:OfficeDocumentSettings>
-         <o:AllowPNG/>
-         <o:PixelsPerInch>96</o:PixelsPerInch>
-      </o:OfficeDocumentSettings>
-   </xml>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <style type="text/css">
-      p{
-      margin:10px 0;
-      padding:0;
-      }
-      table{
-      border-collapse:collapse;
-      }
-      h1,h2,h3,h4,h5,h6{
-      display:block;
-      margin:0;
-      padding:0;
-      }
-      img,a img{
-      border:0;
-      height:auto;
-      outline:none;
-      text-decoration:none;
-      }
-      body,#bodyTable,#bodyCell{
-      height:100%;
-      margin:0;
-      padding:0;
-      width:100%;
-      }
-      .mcnPreviewText{
-      display:none !important;
-      }
-      #outlook a{
-      padding:0;
-      }
-      img{
-      -ms-interpolation-mode:bicubic;
-      }
-      table{
-      mso-table-lspace:0pt;
-      mso-table-rspace:0pt;
-      }
-      .ReadMsgBody{
-      width:100%;
-      }
-      .ExternalClass{
-      width:100%;
-      }
-      p,a,li,td,blockquote{
-      mso-line-height-rule:exactly;
-      }
-      a[href^=tel],a[href^=sms]{
-      color:inherit;
-      cursor:default;
-      text-decoration:none;
-      }
-      p,a,li,td,body,table,blockquote{
-      -ms-text-size-adjust:100%;
-      -webkit-text-size-adjust:100%;
-      }
-      .ExternalClass,.ExternalClass p,.ExternalClass td,.ExternalClass div,.ExternalClass span,.ExternalClass font{
-      line-height:100%;
-      }
-      a[x-apple-data-detectors]{
-      color:inherit !important;
-      text-decoration:none !important;
-      font-size:inherit !important;
-      font-family:inherit !important;
-      font-weight:inherit !important;
-      line-height:inherit !important;
-      }
-      #bodyCell{
-      padding:10px;
-      }
-      .templateContainer{
-      max-width:900px !important;
-      }
-      a.mcnButton{
-      display:block;
-      }
-      .mcnImage,.mcnRetinaImage{
-      vertical-align:bottom;
-      }
-      .mcnTextContent{
-      word-break:break-word;
-      }
-      .mcnTextContent img{
-      height:auto !important;
-      }
-      .mcnDividerBlock{
-      table-layout:fixed !important;
-      }
-      /*
-      @tab Page
-      @section Background Style
-      @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
-      */
-      body,#bodyTable{
-      /*@editable*/background-color:#f4f5f6;
-      }
-      /*
-      @tab Page
-      @section Background Style
-      @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
-      */
-      #bodyCell{
-      /*@editable*/border-top:0;
-      }
-      /*
-      @tab Page
-      @section Email Border
-      @tip Set the border for your email.
-      */
-      .templateContainer{
-      /*@editable*/border:0;
-      }
-      #templatePreheader{
-      /*@editable*/background-color:#FAFAFA;
-      /*@editable*/background-image:none;
-      /*@editable*/background-repeat:no-repeat;
-      /*@editable*/background-position:center;
-      /*@editable*/background-size:cover;
-      /*@editable*/border-top:0;
-      /*@editable*/border-bottom:0;
-      /*@editable*/padding-top:9px;
-      /*@editable*/padding-bottom:9px;
-      }
-      /*
-      @tab Preheader
-      @section Preheader Text
-      @tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
-      */
-      #templatePreheader .mcnTextContent,#templatePreheader .mcnTextContent p{
-      /*@editable*/color:#656565;
-      /*@editable*/font-family:Helvetica;
-      /*@editable*/font-size:12px;
-      /*@editable*/line-height:150%;
-      /*@editable*/text-align:left;
-      }
-      /*
-      @tab Preheader
-      @section Preheader Link
-      @tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
-      */
-      #templatePreheader .mcnTextContent a,#templatePreheader .mcnTextContent p a{
-      /*@editable*/color:#656565;
-      /*@editable*/font-weight:normal;
-      /*@editable*/text-decoration:underline;
-      }
-      /*
-      @tab Header
-      @section Header Style
-      @tip Set the background color and borders for your email's header area.
-      */
-      #templateHeader{
-      /*@editable*/background-color:#FFFFFF;
-      /*@editable*/background-image:none;
-      /*@editable*/background-repeat:no-repeat;
-      /*@editable*/background-position:center;
-      /*@editable*/background-size:cover;
-      /*@editable*/border-top:0;
-      /*@editable*/border-bottom:0;
-      /*@editable*/padding-top:0px;
-      /*@editable*/padding-bottom:0;
-      }
-      /*
-      @tab Header
-      @section Header Text
-      @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
-      */
-      #templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
-      /*@editable*/color:#202020;
-      /*@editable*/font-family:Helvetica;
-      /*@editable*/font-size:16px;
-      /*@editable*/line-height:150%;
-      /*@editable*/text-align:left;
-      }
-      /*
-      @tab Header
-      @section Header Link
-      @tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
-      */
-      #templateHeader .mcnTextContent a,#templateHeader .mcnTextContent p a{
-      /*@editable*/color:#007C89;
-      /*@editable*/font-weight:normal;
-      /*@editable*/text-decoration:underline;
-      }
-      /*
-      @tab Body
-      @section Body Style
-      @tip Set the background color and borders for your email's body area.
-      */
-      #templateBody{
-      /*@editable*/background-color:#ffffff;
-      /*@editable*/background-image:none;
-      /*@editable*/background-repeat:no-repeat;
-      /*@editable*/background-position:center;
-      /*@editable*/background-size:cover;
-      /*@editable*/border-top:0;
-      /*@editable*/border-bottom:2px solid #EAEAEA;
-      /*@editable*/padding-top:0;
-      /*@editable*/padding-bottom:9px;
-      }
-      /*
-      @tab Body
-      @section Body Text
-      @tip Set the styling for your email's body text. Choose a size and color that is easy to read.
-      */
-      #templateBody .mcnTextContent,#templateBody .mcnTextContent p{
-      /*@editable*/color:#202020;
-      /*@editable*/font-family:Helvetica;
-      /*@editable*/font-size:16px;
-      /*@editable*/line-height:150%;
-      /*@editable*/text-align:left;
-      }
-      /*
-      @tab Body
-      @section Body Link
-      @tip Set the styling for your email's body links. Choose a color that helps them stand out from your text.
-      */
-      #templateBody .mcnTextContent a,#templateBody .mcnTextContent p a{
-      /*@editable*/color:#007C89;
-      /*@editable*/font-weight:normal;
-      /*@editable*/text-decoration:underline;
-      }
-      /*
-      @tab Footer
-      @section Footer Style
-      @tip Set the background color and borders for your email's footer area.
-      */
-      #templateFooter{
-      /*@editable*/background-color:#FAFAFA;
-      /*@editable*/background-image:none;
-      /*@editable*/background-repeat:no-repeat;
-      /*@editable*/background-position:center;
-      /*@editable*/background-size:cover;
-      /*@editable*/border-top:0;
-      /*@editable*/border-bottom:0;
-      /*@editable*/padding-top:9px;
-      /*@editable*/padding-bottom:9px;
-      }
-      /*
-      @tab Footer
-      @section Footer Text
-      @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
-      */
-      #templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
-      /*@editable*/color:#656565;
-      /*@editable*/font-family:Helvetica;
-      /*@editable*/font-size:12px;
-      /*@editable*/line-height:150%;
-      /*@editable*/text-align:center;
-      }
-      /*
-      @tab Footer
-      @section Footer Link
-      @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
-      */
-      #templateFooter .mcnTextContent a,#templateFooter .mcnTextContent p a{
-      /*@editable*/color:#656565;
-      /*@editable*/font-weight:normal;
-      /*@editable*/text-decoration:underline;
-      }
-      @media only screen and (max-width:768px){
-      .templateContainer{
-      width:600px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      body,table,td,p,a,li,blockquote{
-      -webkit-text-size-adjust:none !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      body{
-      width:100% !important;
-      min-width:100% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnRetinaImage{
-      max-width:100% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImage{
-      width:100% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnCartContainer,.mcnCaptionTopContent,.mcnRecContentContainer,.mcnCaptionBottomContent,.mcnTextContentContainer,.mcnBoxedTextContentContainer,.mcnImageGroupContentContainer,.mcnCaptionLeftTextContentContainer,.mcnCaptionRightTextContentContainer,.mcnCaptionLeftImageContentContainer,.mcnCaptionRightImageContentContainer,.mcnImageCardLeftTextContentContainer,.mcnImageCardRightTextContentContainer,.mcnImageCardLeftImageContentContainer,.mcnImageCardRightImageContentContainer{
-      max-width:100% !important;
-      width:100% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnBoxedTextContentContainer{
-      min-width:100% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImageGroupContent{
-      padding:9px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnCaptionLeftContentOuter .mcnTextContent,.mcnCaptionRightContentOuter .mcnTextContent{
-      padding-top:9px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImageCardTopImageContent,.mcnCaptionBottomContent:last-child .mcnCaptionBottomImageContent,.mcnCaptionBlockInner .mcnCaptionTopContent:last-child .mcnTextContent{
-      padding-top:18px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImageCardBottomImageContent{
-      padding-bottom:9px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImageGroupBlockInner{
-      padding-top:0 !important;
-      padding-bottom:0 !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImageGroupBlockOuter{
-      padding-top:9px !important;
-      padding-bottom:9px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnTextContent,.mcnBoxedTextContentColumn{
-      padding-right:18px !important;
-      padding-left:18px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcnImageCardLeftImageContent,.mcnImageCardRightImageContent{
-      padding-right:18px !important;
-      padding-bottom:0 !important;
-      padding-left:18px !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      .mcpreview-image-uploader{
-      display:none !important;
-      width:100% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Heading 1
-      @tip Make the first-level headings larger in size for better readability on small screens.
-      */
-      h1{
-      /*@editable*/font-size:22px !important;
-      /*@editable*/line-height:125% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Heading 2
-      @tip Make the second-level headings larger in size for better readability on small screens.
-      */
-      h2{
-      /*@editable*/font-size:20px !important;
-      /*@editable*/line-height:125% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Heading 3
-      @tip Make the third-level headings larger in size for better readability on small screens.
-      */
-      h3{
-      /*@editable*/font-size:18px !important;
-      /*@editable*/line-height:125% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Heading 4
-      @tip Make the fourth-level headings larger in size for better readability on small screens.
-      */
-      h4{
-      /*@editable*/font-size:16px !important;
-      /*@editable*/line-height:150% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Boxed Text
-      @tip Make the boxed text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-      */
-      .mcnBoxedTextContentContainer .mcnTextContent,.mcnBoxedTextContentContainer .mcnTextContent p{
-      /*@editable*/font-size:14px !important;
-      /*@editable*/line-height:150% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Preheader Visibility
-      @tip Set the visibility of the email's preheader on small screens. You can hide it to save space.
-      */
-      #templatePreheader{
-      /*@editable*/display:block !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Preheader Text
-      @tip Make the preheader text larger in size for better readability on small screens.
-      */
-      #templatePreheader .mcnTextContent,#templatePreheader .mcnTextContent p{
-      /*@editable*/font-size:14px !important;
-      /*@editable*/line-height:150% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Header Text
-      @tip Make the header text larger in size for better readability on small screens.
-      */
-      #templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
-      /*@editable*/font-size:16px !important;
-      /*@editable*/line-height:150% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Body Text
-      @tip Make the body text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-      */
-      #templateBody .mcnTextContent,#templateBody .mcnTextContent p{
-      /*@editable*/font-size:16px !important;
-      /*@editable*/line-height:150% !important;
-      }
-      }	@media only screen and (max-width: 480px){
-      /*
-      @tab Mobile Styles
-      @section Footer Text
-      @tip Make the footer content text larger in size for better readability on small screens.
-      */
-      #templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
-      /*@editable*/font-size:14px !important;
-      /*@editable*/line-height:150% !important;}  
-      }
-   </style>
-</head>
-<body>
-   <span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span>
-   <center>
-      <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
-      <tr>
-         <td align="center" valign="top" id="bodyCell">
-            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
-      <tr>
-         <td align="center" valign="top" width="600" style="width:600px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+  const mailContent = `       
+      <html
+         xmlns="http://www.w3.org/1999/xhtml"
+         xmlns:v="urn:schemas-microsoft-com:vml"
+         xmlns:o="urn:schemas-microsoft-com:office:office"
+         >
+         <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title></title>
+            <style type="text/css">
+               /* CSS styles */
+               p {
+               margin: 10px 0;
+               padding: 0;
+               }
+               table {
+               border-collapse: collapse;
+               }
+               body,
+               #bodyTable,
+               #bodyCell {
+               height: 100%;
+               margin: 0;
+               padding: 0;
+               width: 100%;
+               font-family: 'neue-montreal', 'Neue Montreal';
+               }
+               .mcnPreviewText {
+               display: none !important;
+               }
+               #outlook a {
+               padding: 0;
+               }
+               table {
+               mso-table-lspace: 0pt;
+               mso-table-rspace: 0pt;
+               }
+               .ReadMsgBody {
+               width: 100%;
+               }
+               .ExternalClass {
+               width: 100%;
+               }
+               p,
+               a,
+               li,
+               td,
+               blockquote {
+               mso-line-height-rule: exactly;
+               }
+               a[href^=tel],
+               a[href^=sms] {
+               color: inherit;
+               cursor: default;
+               text-decoration: none;
+               }
+               p,
+               a,
+               li,
+               td,
+               body,
+               table,
+               blockquote {
+               -ms-text-size-adjust: 100%;
+               -webkit-text-size-adjust: 100%;
+               }
+               .ExternalClass,
+               .ExternalClass p,
+               .ExternalClass td,
+               .ExternalClass div,
+               .ExternalClass span,
+               .ExternalClass font {
+               line-height: 100%;
+               }
+               a[x-apple-data-detectors] {
+               color: inherit !important;
+               text-decoration: none !important;
+               font-size: inherit !important;
+               font-family: inherit !important;
+               font-weight: inherit !important;
+               line-height: inherit !important;
+               }
+               #bodyCell {
+               padding: 10px;
+               }
+               /*
+               Background Style
+               */
+               body,
+               #bodyTable {
+               background-color: #f4f5f6;
+               }
+               #bodyCell {
+               border-top: 0;
+               }
+               /*
+               Email Border
+               */
+               .templateContainer {
+               border: 0;
+               }
+               #templatePreheader {
+               background-color: #FAFAFA;
+               background-image: none;
+               background-repeat: no-repeat;
+               background-position: center;
+               background-size: cover;
+               border-top: 0;
+               border-bottom: 0;
+               padding-top: 9px;
+               padding-bottom: 9px;
+               }
+               /*
+               Header Style
+               */
+               #templateHeader {
+               background-color: #FFFFFF;
+               background-image: none;
+               background-repeat: no-repeat;
+               background-position: center;
+               background-size: cover;
+               border-top: 0;
+               border-bottom: 0;
+               padding-top: 0px;
+               padding-bottom: 0;
+               }
+               /*
+               Body Style
+               */
+               #templateBody {
+               background-color: #ffffff;
+               background-image: none;
+               background-repeat: no-repeat;
+               background-position: center;
+               background-size: cover;
+               border-top: 0;
+               border-bottom: 2px solid #EAEAEA;
+               padding-top: 0;
+               padding-bottom: 77px;
+               }
+               /*
+               Footer Text
+               */
+               #templateFooter .mcnTextContent,
+               #templateFooter .mcnTextContent p {
+               color: #656565;
+               font-size: 12px;
+               line-height: 150%;
+               text-align: center;
+               }
+               /* Classes */
+               .templateContainer {
+               max-width: 900px !important;
+               }
+               a.mcnButton {
+               display: block;
+               }
+               .mcnTextContent {
+               word-break: break-word;
+               }
+               .mcnTextContent img {
+               height: auto !important;
+               }
+               .mcnTextContent span {
+               height: auto !important;
+               }
+               .mcnDividerBlock {
+               table-layout: fixed !important;
+               }
+               .mcnButtonContentContainer {
+               border-collapse: separate !important;
+               border-radius: 50px;
+               background-color: #364237;
+               width: 330px;
+               font-size: 25px;
+               padding: 18px;
+               }
+               .mcnButton {
+               line-height: 100%;
+               text-align: center;
+               text-decoration: none;
+               }
+               .mcnButtonBlockInner{
+               padding-top: 0;
+               padding-right: 18px;
+               padding-bottom: 32px;
+               padding-left: 18px;
+               }
+               .mcnTextParagraph {
+               font-size: 20px;
+               padding: 72px;
+               }
+               .mcnTextTitle {
+               padding: 72px;
+               color: #00db7d;
+               font-size: 78px;
+               font-weight: normal;
+               line-height: 100%;
+               text-align: left;
+               }
+               .mcnTextClaim {
+               padding: 0px 150px 137px 72px;
+               padding-right: 150px;
+               color: #fcfcfd;
+               text-align: left;
+               font-size: 26px
+               }
+               .mcnLogo{
+                  width:220px;
+               }
+               .mcnFooterText{
+               text-align: right; 
+               color:#b1b5c3; 
+               font-size:16px;
+               }
+               .mcnFooterText a{
+               color:#b1b5c3;
+               }
+               
+               @media only screen and (max-width:1022px) {
+               .templateContainer {
+               width: 700px !important;
+               }
+               .mcnButtonContentContainer {
+               width: 280px;
+               font-size: 22px;
+               padding: 15px;
+               }
+               .mcnTextParagraph {
+               font-size: 18px;
+               padding: 60px;
+               }           
+               .mcnTextTitle {
+               padding: 60px;
+               font-size: 72px;
+               }
+               .mcnTextClaim {
+               padding: 0px 150px 100px 60px;                     
+               font-size: 22px;
+               }
+               .mcnLogo{
+                  width:200px;
+               }
+               }
+               @media only screen and (max-width:768px) {
+               .templateContainer {
+               width: 450px !important;
+               }
+               .mcnButtonContentContainer {
+               width: 280px;
+               font-size: 22px;
+               padding: 15px;
+               }
+               .mcnTextParagraph {
+               font-size: 18px;
+               padding: 50px;
+               }           
+               .mcnTextTitle {
+               padding: 50px;
+               font-size: 60px;
+               }
+               .mcnTextClaim {
+               padding: 0px 100px 90px 50px;                     
+               font-size: 20px;
+               }               
+               .mcnButtonBlockInner{
+               padding-bottom: 10px;
+               }
+               .mcnLogo{
+                  width:150px;
+               }
+               .mcnFooterText{
+               font-size:14px;
+               }
+            
+               }
+               @media only screen and (max-width: 480px) {
+               /* Classes */
+               .templateContainer {
+               width: 300px !important;
+               }
+               .mcnTextContentContainer {
+               max-width: 100% !important;
+               width: 100% !important;
+               }
+               .mcnButtonBlockInner{
+               padding-left: 0px;
+               }
+               .mcnTextContent {
+               padding-right: 18px !important;
+               padding-left: 18px !important;
+               }
+               .mcnButtonContentContainer {
+               width: 200px;
+               font-size: 18px;
+               padding: 15px;
+               }
+               .mcnTextParagraph {
+               font-size: 16px;
+               padding: 40px;
+               }
+               .mcnTextTitle {
+               padding: 40px;
+               font-size: 42px;
+               }
+               .mcnTextClaim {
+               padding: 0px 80px 60px 50px;                               
+               font-size: 18px;
+               }
+               .mcnLogo{
+                  width:100px;
+               }
+               .mcnFooterText{
+               font-size:10px;
+               }
+               #templateBody {
+               padding-bottom: 40px;
+               }
+               /* Boxed text */
+               .mcnBoxedTextContentContainer .mcnTextContent,
+               .mcnBoxedTextContentContainer .mcnTextContent p {
+               font-size: 14px !important;
+               line-height: 150% !important;
+               }
+               /* PreHeader */
+               #templatePreheader {
+               display: block !important;
+               }
+               #templatePreheader .mcnTextContent,
+               #templatePreheader .mcnTextContent p {
+               font-size: 14px !important;
+               line-height: 150% !important;
+               }
+               /* Header */
+               #templateHeader .mcnTextContent,
+               #templateHeader .mcnTextContent p {
+               font-size: 16px !important;
+               line-height: 150% !important;
+               }
+               }
+            </style>
+         </head>
+         <body>
+            <span
+               class="mcnPreviewText"
+               style="
+               display: none;
+               font-size: 0px;
+               line-height: 0px;
+               max-height: 0px;
+               max-width: 0px;
+               opacity: 0;
+               overflow: hidden;
+               visibility: hidden;
+               mso-hide: all;
+               "
+               ></span>
+            <center>
+               <table
+                  align="center"
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  height="100%"
+                  width="100%"
+                  id="bodyTable"
+                  style="border-collapse: collapse"
+                  >
                <tr>
-                  <td valign="top" id="templatePreheader" style="background-color: transparent;">
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-                        <tbody class="mcnTextBlockOuter">
-                           <tr>
-                              <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                                 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <td align="center" valign="top" id="bodyCell">
+                     <table align="center" border="0" cellspacing="0" cellpadding="0" >
+               <tr>
+                  <td align="center" valign="top" >
+                     <table
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        width="100%"
+                        class="templateContainer"
+                        >
+                        <tr>
+                           <td valign="top" id="templatePreheader" style="background-color: transparent">
+                              <table
+                                 border="0"
+                                 cellpadding="0"
+                                 cellspacing="0"
+                                 width="100%"
+                                 class="mcnTextBlock"
+                                 style="min-width: 100%;  border-collapse: collapse"
+                                 >
+                                 <tbody class="mcnTextBlockOuter">
                                     <tr>
-                                       <td valign="top" width="600" style="width:600px;">
-                                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                                             <tbody>
-                                                <tr>
-                                                   <td valign="top" class="mcnTextContent" style="padding: 60px 18px 9px; color: #353945; text-align: center;   font-size: 18px;">                        
-                                                      If you can't read this email <a href="https://climatetrade.com/es/inicio/?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLV2SgJulDrvx7HqpdYvE3jOWqpbPmw3uC5w_I6hiscEHInEOe1s00IaAtlkEALw_wcB" style="color: #353945;" target="_blank">click here</a>
-                                                   </td>
-                                                </tr>
-                                             </tbody>
+                                       <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px">
+                                          <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                                             <tr>
+                                                <td valign="top" >
+                                                   <table
+                                                      align="left"
+                                                      border="0"
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      style="max-width: 100%; min-width: 100%; border-collapse: collapse;"
+                                                      width="100%"
+                                                      class="mcnTextContentContainer"
+                                                      >
+                                                      <tbody>
+                                                         <tr>
+                                                            <td
+                                                               valign="top"
+                                                               class="mcnTextContent"
+                                                               style="
+                                                               padding: 0px 18px 9px;
+                                                               color: #353945;
+                                                               text-align: center;
+                                                               font-size: 18px;
+                                                               "
+                                                               >
+                                                               If you can't read this email
+                                                               <a
+                                                                  href="https://climatetrade.com/es/inicio/?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLV2SgJulDrvx7HqpdYvE3jOWqpbPmw3uC5w_I6hiscEHInEOe1s00IaAtlkEALw_wcB"
+                                                                  style="color: #353945"
+                                                                  target="_blank"
+                                                                  >click here</a
+                                                                  >
+                                                            </td>
+                                                         </tr>
+                                                      </tbody>
+                                                   </table>
+                                                </td>
+                                             </tr>
                                           </table>
                                        </td>
                                     </tr>
-                                 </table>
-                              </td>
-                           </tr>
-                        </tbody>
-                     </table>
-                  </td>
-               </tr>
-               <tr>
-                  <td valign="top" id="templateHeader">
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnBoxedTextBlock" style="min-width:100%;">
-                        <table align="center" border="0" cellspacing="0" cellpadding="0" width="100%">
-                           <tbody class="mcnBoxedTextBlockOuter">
-                              <tr>
-                                 <td valign="top" class="mcnBoxedTextBlockInner">
-                                 <td align="center" valign="top" ">
-                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;" class="mcnBoxedTextContentContainer">
-                                       <tbody>
-                                          <tr>
-                                             <td>
-                                                <table border="0" cellspacing="0" class="mcnTextContentContainer" width="100%" style="min-width: 100% !important;background-color: #404040;">
-                                                   <tbody>
-                                                      <tr>
-                                                         <td valign="top" class="mcnTextContent" style="padding: 72px;color: #00DB7D;font-family: Helvetica;font-size: 78px;font-weight: normal;line-height: 100%;text-align: left;">
-                                                            <span style="font-size:78px">Your project has been confirmed.</span>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                             </td>
-                                          </tr>
-                                       </tbody>
-                                       <tbody>
-                                          <tr>
-                                             <td>
-                                                <table border="0" cellspacing="0" class="mcnTextContentContainer" width="100%" style="min-width: 100% !important;background-color: #404040; max-width:678px">
-                                                   <tbody>
-                                                      <tr>
-                                                         <td valign="top" class="mcnTextContent" style="padding: 0px 150px 137px 72px; padding-right:150px; color: #fcfcfd; text-align: left; font-size:26px ">
-                                                            <span>Your project {name} to offset 5,657 t of CO2 has been confirmed in Climatecoin.</span>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                             </td>
-                                          </tr>
-                                       </tbody>
-                                    </table>
-                                 </td>
-                              </tr>
-                        </table>
-                        </td>
+                                 </tbody>
+                              </table>
+                           </td>
                         </tr>
-                        </tbody>
-                     </table>
-                  </td>
-               </tr>
-               <tr>
-                  <td valign="top" id="templateBody" style="padding-bottom:100px">
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-                        <tbody class="mcnTextBlockOuter">
-                           <tr>
-                              <td valign="top" class="mcnTextBlockInner" style="padding: 64px 72px;">
-                                 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                        <tr>
+                           <td valign="top" id="templateHeader">
+                              <table
+                                 border="0"
+                                 cellpadding="0"
+                                 cellspacing="0"
+                                 width="100%"
+                                 class="mcnBoxedTextBlock"
+                                 style="min-width: 100%; border-collapse: collapse;"
+                                 >
+                                 <table align="center" border="0" cellspacing="0" cellpadding="0" width="100%">
+                                    <tbody class="mcnBoxedTextBlockOuter">
+                                       <tr>
+                                          <td valign="top" class="mcnBoxedTextBlockInner">
+                                          <td align="center" valign="top" ">
+                                             <table
+                                                align="left"
+                                                border="0"
+                                                cellpadding="0"
+                                                cellspacing="0"
+                                                width="100%"
+                                                style="min-width: 100%; border-collapse: collapse;"
+                                                class="mcnBoxedTextContentContainer"
+                                                >
+                                                <tbody>
+                                                   <tr>
+                                                      <td>
+                                                         <table
+                                                            border="0"
+                                                            cellspacing="0"
+                                                            class="mcnTextContentContainer"
+                                                            width="100%"
+                                                            style="min-width: 100% !important; background-color: #404040; border-collapse: collapse;"
+                                                            >
+                                                            <tbody>
+                                                               <tr>
+                                                                  <td
+                                                                     valign="top"
+                                                                     class="mcnTextTitle"
+                                                                     >
+                                                                     <span 
+                                                                        >Your project has been confirmed.</span
+                                                                        >
+                                                                  </td>
+                                                               </tr>
+                                                            </tbody>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                                <tbody>
+                                                   <tr>
+                                                      <td>
+                                                         <table
+                                                            border="0"
+                                                            cellspacing="0"
+                                                            class="mcnTextContentContainer"
+                                                            width="100%"
+                                                            style="min-width: 100% !important; background-color: #404040; border-collapse: collapse;"
+                                                            >
+                                                            <tbody>
+                                                               <tr>
+                                                                  <td
+                                                                     valign="top"
+                                                                     class="mcnTextClaim"
+                                                                     >
+                                                                     <span
+                                                                        >Your project ${title} to offset ${credits} t of CO2 has been
+                                                                     confirmed in Climatecoin.</span
+                                                                        >
+                                                                  </td>
+                                                               </tr>
+                                                            </tbody>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                             </table>
+                                          </td>
+                                       </tr>
+                                 </table>
+                                 </td>
+                                 </tr>
+                                 </tbody>
+                              </table>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td valign="top" id="templateBody">
+                              <table
+                                 border="0"
+                                 cellpadding="0"
+                                 cellspacing="0"
+                                 width="100%"
+                                 class="mcnTextBlock"
+                                 style="min-width: 100%; border-collapse: collapse;"
+                                 >
+                                 <tbody class="mcnTextBlockOuter">
                                     <tr>
-                                       <td valign="top" width="600" style="width:600px;">
-                                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                                       <td valign="top" class="mcnTextBlockInner" >
+                                          <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                                             <tr>
+                                                <td valign="top" width="600" style="width:600px;">
+                                                   <table
+                                                      align="left"
+                                                      border="0"
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      style="max-width: 100%; min-width: 100%; border-collapse: collapse;"
+                                                      width="100%"
+                                                      class="mcnTextContentContainer"
+                                                      >
+                                                      <tbody>
+                                                         <tr>
+                                                            <td
+                                                               class="mcnTextParagraph"
+                                                               valign="top"
+                                                               class="mcnTextContent"
+                                                               style="color: #777e90;"
+                                                               >
+                                                               Congratulations. Your project $${title} has been approved for listing
+                                                               on Climatecoin now you can share it with your friends so they can
+                                                               start offsetting their carbon footprint.
+                                                            </td>
+                                                         </tr>
+                                                      </tbody>
+                                                   </table>
+                                                </td>
+                                             </tr>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                              <table
+                                 border="0"
+                                 cellpadding="0"
+                                 cellspacing="0"
+                                 width="100%"
+                                 class="mcnButtonBlock"
+                                 style="min-width: 100%; border-collapse: collapse;"
+                                 >
+                                 <tbody class="mcnButtonBlockOuter">
+                                    <tr>
+                                       <td
+                                          valign="top"
+                                          align="center"
+                                          class="mcnButtonBlockInner"
+                                          >
+                                          <table
+                                             border="0"
+                                             cellpadding="0"
+                                             cellspacing="0"
+                                             class="mcnButtonContentContainer"
+                                             style="
+                                             background-color: #f4f5f6;
+                                             "
+                                             >
                                              <tbody>
                                                 <tr>
-                                                   <td valign="top" class="mcnTextContent" style="color: #777E90;font-size: 20px;">                                                    Congratulations. Your project {name} has been approved for listing on Climatecoin now you can share it with your friends so they can start offsetting their carbon footprint.
+                                                   <td
+                                                      align="center"
+                                                      valign="middle"
+                                                      class="mcnButtonContent"
+                                                      >
+                                                      <a
+                                                         class="mcnButton"
+                                                         title="View project"
+                                                         href="${url}"
+                                                         target="_blank"   
+                                                         style="color: #777E90;"
+                                                         >View project</a
+                                                         >
                                                    </td>
                                                 </tr>
                                              </tbody>
                                           </table>
                                        </td>
                                     </tr>
-                                 </table>
-                              </td>
-                           </tr>
-                        </tbody>
-                     </table>
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
-                        <tbody class="mcnButtonBlockOuter">
-                           <tr>
-                              <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
-                                 <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 50px;background-color: #F4F5F6;">
-                                    <tbody>
-                                       <tr>
-                                          <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 18px;">
-                                             <a class="mcnButton " title="View project" href="${url}" target="_blank" style="font-weight: normal;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #777E90; font-size:25px">View project</a>
-                                          </td>
-                                       </tr>
-                                    </tbody>
-                                 </table>
-                              </td>
-                           </tr>
-                        </tbody>
-                     </table>
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
-                        <tbody class="mcnButtonBlockOuter">
-                           <tr>
-                              <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
-                                 <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 50px;background-color: #364237;">
-                                    <tbody>
-                                       <tr>
-                                          <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 18px;">
-                                             <a class="mcnButton " title="Share project" href="${url}" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FCFCFD; font-size:25px">Share project</a>
-                                          </td>
-                                       </tr>
-                                    </tbody>
-                                 </table>
-                              </td>
-                           </tr>
-                        </tbody>
-                     </table>
-                  </td>
-               </tr>
-               <tr>
-                  <td valign="top" id="templateFooter">
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-                        <tbody class="mcnTextBlockOuter">
-                           <tr>
-                              <td valign="top" class="mcnTextBlockInner" style="padding-top:9px; width:100%">
-                                 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                                 </tbody>
+                              </table>
+                              <table
+                                 border="0"
+                                 cellpadding="0"
+                                 cellspacing="0"
+                                 width="100%"
+                                 class="mcnButtonBlock"
+                                 style="min-width: 100%; border-collapse: collapse;"
+                                 >
+                                 <tbody class="mcnButtonBlockOuter">
                                     <tr>
-                                       <td valign="top" width="300" style="width:300px;">
-                                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:300px;" width="100%" class="mcnTextContentContainer">
+                                       <td
+                                          valign="top"
+                                          align="center"
+                                          class="mcnButtonBlockInner"
+                                          >
+                                          <table
+                                             border="0"
+                                             cellpadding="0"
+                                             cellspacing="0"
+                                             class="mcnButtonContentContainer"
+                                             >
                                              <tbody>
                                                 <tr>
-                                                   <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; text-align: left;">
-                                                      <em>LOGO</em>
-                                                   </td>
-                                                </tr>
-                                             </tbody>
-                                          </table>
-                                       </td>
-                                       <td valign="top" width="300" style="width:300px;">
-                                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:300px;" width="100%" class="mcnTextContentContainer">
-                                             <tbody>
-                                                <tr>
-                                                   <td valign="top" class="mcnTextContent" style="text-align: right;">
-                                                      <div style="text-align: right; font-size:16px">ClimateCoin © 2022. All rights reserved.<br>
-                                                         I don't want to receive these emails anymore
-                                                      </div>
+                                                   <td
+                                                      align="center"
+                                                      valign="middle"
+                                                      class="mcnButtonContent"
+                                                      >
+                                                      <a
+                                                         class="mcnButton"
+                                                         title="Share project"
+                                                         href="${url}"
+                                                         target="_blank"
+                                                         style="color: #FCFCFD;"
+                                                         >Share project</a
+                                                         >
                                                    </td>
                                                 </tr>
                                              </tbody>
                                           </table>
                                        </td>
                                     </tr>
-                                    </tbody>
-                                 </table>
-                              </td>
-                           </tr>
+                                 </tbody>
+                              </table>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td valign="top" id="templateFooter">
+                              <table
+                                 border="0"
+                                 cellpadding="0"
+                                 cellspacing="0"
+                                 width="100%"
+                                 class="mcnTextBlock"
+                                 style="min-width: 100%; border-collapse: collapse;"
+                                 >
+                                 <tbody class="mcnTextBlockOuter">
+                                    <tr>
+                                       <td valign="top" class="mcnTextBlockInner" style="padding-top: 36px">
+                                          <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                                             <tr>
+                                                <td valign="top">
+                                                   <table
+                                                      align="left"
+                                                      border="0"
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      style="border-collapse: collapse;"
+                                                      width="100%"
+                                                      class="mcnTextContentContainer"
+                                                      >
+                                                      <tbody>
+                                                         <tr>
+                                                            <td
+                                                               valign="top"
+                                                               class="mcnTextContent"
+                                                               style="text-align: left"
+                                                               >
+                                                                  <img class="mcnLogo" src="${Logo}" alt="Climatecoin Logo"/>
+                                                            </td>
+                                                         </tr>
+                                                      </tbody>
+                                                   </table>
+                                                </td>
+                                                <td valign="top" >
+                                                   <table
+                                                      align="left"
+                                                      border="0"
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      style="border-collapse: collapse;"
+                                                      width="100%"
+                                                      class="mcnTextContentContainer"
+                                                      >
+                                                      <tbody>
+                                                         <tr>
+                                                            <td
+                                                               valign="top"
+                                                               class="mcnTextContent"
+                                                               >
+                                                               <div class="mcnFooterText" >
+                                                                  ClimateCoin © 2022. All rights reserved.</br>
+                                                                     <a
+                                                                  href="https://climatetrade.com/es/inicio/?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLV2SgJulDrvx7HqpdYvE3jOWqpbPmw3uC5w_I6hiscEHInEOe1s00IaAtlkEALw_wcB"
+                                                                  target="_blank">I don't want to receive these emails anymore</a>
+                                                               </div>
+                                                            </td>
+                                                         </tr>
+                                                      </tbody>
+                                                   </table>
+                                                </td>
+                                             </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                              </table>
+                           </td>
+                        </tr>
                      </table>
-                  </td>
-               </tr>
-            </table>
-   </center>
-</body>
-</html>`
+            </center>
+         </body>
+      </html>
+  `
   await mailer.send('New document', mailContent)
   return createdDocument
 }
