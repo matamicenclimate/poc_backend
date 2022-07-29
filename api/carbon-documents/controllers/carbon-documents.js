@@ -32,7 +32,7 @@ function formatBodyArrays(collectionTypeAtts, requestBody) {
 }
 
 async function findOne(ctx) {
-  const {id} = ctx.params
+  const { id } = ctx.params
   const user = ctx.state.user
   const document = await strapi.services['carbon-documents'].findOne({ id })
 
@@ -70,7 +70,7 @@ async function create(ctx) {
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
   const title = `${createdDocument.title.slice(0, 10)}`
   const credits = `${createdDocument.credits}`
-  // const mailContent = `User ${ctx.state.user.email} sent a new document.<br>Available here: ${url}`
+
   const mailContent = `       
       <html
          xmlns="http://www.w3.org/1999/xhtml"
@@ -577,7 +577,7 @@ async function create(ctx) {
                                                                      class="mcnTextClaim"
                                                                      >
                                                                      <span
-                                                                        >Your project ${title} to offset ${credits} t of CO2 has been
+                                                                        >Your project <strong>'${title}'</strong> to offset <strong>${credits} t</strong> of CO2 has been
                                                                      confirmed in Climatecoin.</span
                                                                         >
                                                                   </td>
@@ -630,7 +630,7 @@ async function create(ctx) {
                                                                class="mcnTextContent"
                                                                style="color: #777e90;"
                                                                >
-                                                               Congratulations. Your project $${title} has been approved for listing
+                                                               Congratulations. Your project <strong>'${title}'</strong> has been approved for listing
                                                                on Climatecoin now you can share it with your friends so they can
                                                                start offsetting their carbon footprint.
                                                             </td>
@@ -993,7 +993,7 @@ async function claim(ctx) {
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
 
-  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest("Unauthorized")
+  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest('Unauthorized')
   if (!['minted'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been minted")
   }
@@ -1052,8 +1052,8 @@ async function prepareSwap(ctx) {
   const user = ctx.state.user
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
-  if (carbonDocument.id !== id) throw new Error("NFT not found on Strapi")
-  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest("Unauthorized")
+  if (carbonDocument.id !== id) throw new Error('NFT not found on Strapi')
+  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest('Unauthorized')
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
@@ -1111,8 +1111,8 @@ async function swap(ctx) {
   const { signedTxn } = ctx.request.body
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
-  if (carbonDocument.id !== id) throw new Error("NFT not found on Strapi")
-  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest("Unauthorized")
+  if (carbonDocument.id !== id) throw new Error('NFT not found on Strapi')
+  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.badRequest('Unauthorized')
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
@@ -1144,5 +1144,5 @@ module.exports = {
   swap,
   prepareSwap,
   find,
-  findOne
+  findOne,
 }
