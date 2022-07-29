@@ -1,6 +1,8 @@
 'use strict'
 
 const mailer = require(`${process.cwd()}/utils/mailer`)
+const {algoIndexer} = require("../../../config/algorand");
+const algosdk = require("algosdk");
 const registryConfig = require('config').registry
 
 function makeEnum(statuses) {
@@ -42,9 +44,28 @@ module.exports = {
   lifecycles: {
     beforeUpdate: async function (params, newDocument) {
       const { _id } = params
-      const oldCarbonDocument = await strapi.services['carbon-documents'].findOne({ _id })
+      const oldCarbonDocument = await strapi.services['carbon-documents'].findOne({ _id }, [])
       statusLogic(oldCarbonDocument.status, newDocument.status)
+
+      const changeListKeys = Object.keys(newDocument)
+      // Only allow to update the status and the developer and fee nfts internally
+      for (const key of changeListKeys) {
+        const isStatusChange = key === "status"
+        const isDeveloperNftChange = key === "developer_nft"
+        const isFeeNftChange = key === "fee_nft"
+        const wasPreviouslyUndefined = oldCarbonDocument[key] === null
+        const currentStateAllowsChanges = ["pending", "accepted"].includes(oldCarbonDocument.status)
+
+        if (isStatusChange) continue;
+        if (isDeveloperNftChange && wasPreviouslyUndefined) continue;
+        if (isFeeNftChange && wasPreviouslyUndefined) continue;
+
+        // Allow changes if state is pending or accepted, otherwise deny any change
+        if (!currentStateAllowsChanges) delete newDocument[key]
+      }
+
       newDocument.oldStatus = oldCarbonDocument.status
+
     },
     afterUpdate: async function (result, params, data) {
       const statuses = getStatuses()
