@@ -1,8 +1,6 @@
 'use strict'
 
 const mailer = require(`${process.cwd()}/utils/mailer`)
-const {algoIndexer} = require("../../../config/algorand");
-const algosdk = require("algosdk");
 const registryConfig = require('config').registry
 
 function makeEnum(statuses) {
@@ -50,40 +48,59 @@ module.exports = {
       const changeListKeys = Object.keys(newDocument)
       // Only allow to update the status and the developer and fee nfts internally
       for (const key of changeListKeys) {
-        const isStatusChange = key === "status"
-        const isDeveloperNftChange = key === "developer_nft"
-        const isFeeNftChange = key === "fee_nft"
+        const isStatusChange = key === 'status'
+        const isDeveloperNftChange = key === 'developer_nft'
+        const isFeeNftChange = key === 'fee_nft'
         const wasPreviouslyUndefined = !oldCarbonDocument[key]
-        const currentStateAllowsChanges = ["pending", "accepted"].includes(oldCarbonDocument.status)
+        const currentStateAllowsChanges = ['pending', 'accepted'].includes(oldCarbonDocument.status)
 
-        if (isStatusChange) continue;
-        if (isDeveloperNftChange && wasPreviouslyUndefined) continue;
-        if (isFeeNftChange && wasPreviouslyUndefined) continue;
+        if (isStatusChange) continue
+        if (isDeveloperNftChange && wasPreviouslyUndefined) continue
+        if (isFeeNftChange && wasPreviouslyUndefined) continue
 
         // Allow changes if state is pending or accepted, otherwise deny any change
         if (!currentStateAllowsChanges) delete newDocument[key]
       }
 
       newDocument.oldStatus = oldCarbonDocument.status
-
     },
     afterUpdate: async function (result, params, data) {
       const statuses = getStatuses()
       if (data.oldStatus !== result.status) {
         const userEmail = result.created_by_user
         if (result.status === statuses.ACCEPTED) {
-          const registryInstructions = result.registry.instructions ?? registryConfig.defaultInstructions
+          const title = `${result.title.slice(0, 10)}`
+          const credits = `${result.credits}`
           mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENDING, userEmail)
-          await mailer.send('Document status changed to accepted', registryInstructions, userEmail)
+          const mailContent_accepted = {
+            title: 'Your project has been confirmed.',
+            claim: `Your project <strong>'${title}'</strong> to offset <strong>${credits} t</strong> of CO2 has been
+            confirmed in Climatecoin.`,
+            text: `Congratulations. Your project <strong>'${title}'</strong> has been approved for listing
+            on Climatecoin now you can share it with your friends so they can
+            start offsetting their carbon footprint.`,
+            button_1: {
+              label: 'View project',
+              href: `${process.env.FRONTEND_BASE_URL}/documents/${result.id}`,
+            },
+          }
+          const acceptedMail = generateMailHtml(mailContent_accepted)
+          await mailer.send('Document accepted', acceptedMail, userEmail)
           mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
           await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
         } else if (result.status === statuses.COMPLETED) {
           mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENDING, userEmail)
-          await mailer.send(
-            'Credits received',
-            `We have received your credits.<br>You will receive your tokens in a cooldown of 48 hours.`,
-            userEmail,
-          )
+          const mailContent_completed = {
+            title: 'Credits received.',
+            claim: `We have received the credits.`,
+            text: `We have received your credits. You will receive your tokens in a cooldown of 48 hours.`,
+            button_1: {
+              label: 'View project',
+              href: `${process.env.FRONTEND_BASE_URL}/documents/${result.id}`,
+            },
+          }
+          const completedMail = generateMailHtml(mailContent_completed)
+          await mailer.send('Credits received', completedMail, userEmail)
           mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
         }
 
