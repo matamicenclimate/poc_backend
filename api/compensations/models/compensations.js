@@ -72,6 +72,27 @@ module.exports = {
         // Do not allow any other change
         delete newCompensation[key]
       }
+
+      const changeListKeys = Object.keys(newCompensation)
+      for (const key of changeListKeys) {
+        const isStateChange = key === "state"
+        const isBurnReceiptChange = key === "burn_receipt"
+        const isCompensationNftChange = key === "compensation_nft"
+        const isConsolidationCertificateChange = key === "consolidation_certificate_ipfs_cid"
+        const isRegistryCertificatesChange = key === "registry_certificates"
+        const wasPreviouslyUndefined = !oldCompensation[key]
+        const isNextStateMinted = newCompensation.state === "minted"
+        const currentStateAllowsRegistryCertificatesChanges = !["minted", "claimed", "rejected"].includes(oldCompensation.state)
+
+        if (isStateChange) continue;
+        if (isBurnReceiptChange && wasPreviouslyUndefined) continue;
+        if (isCompensationNftChange && wasPreviouslyUndefined && isNextStateMinted) continue;
+        if (isConsolidationCertificateChange && wasPreviouslyUndefined && isNextStateMinted) continue;
+        if (isRegistryCertificatesChange && currentStateAllowsRegistryCertificatesChanges) continue;
+
+        // Do not allow any other change
+        delete newCompensation[key]
+      }
     },
     afterCreate: async function (result) {
       await strapi.services.activities.create({

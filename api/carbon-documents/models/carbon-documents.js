@@ -53,7 +53,7 @@ module.exports = {
         const isStatusChange = key === "status"
         const isDeveloperNftChange = key === "developer_nft"
         const isFeeNftChange = key === "fee_nft"
-        const wasPreviouslyUndefined = oldCarbonDocument[key] === null
+        const wasPreviouslyUndefined = !oldCarbonDocument[key]
         const currentStateAllowsChanges = ["pending", "accepted"].includes(oldCarbonDocument.status)
 
         if (isStatusChange) continue;

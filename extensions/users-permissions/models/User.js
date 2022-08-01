@@ -26,7 +26,7 @@ module.exports = {
       const { _id } = params
       const oldUser = await strapi.db.query('plugins::users-permissions.user').findOne({_id})
       if (oldUser.id !== _id) throw new Error(`User not found with id: ${_id}`)
-      if (oldUser.publicAddress !== newUser.publicAddress) {
+      if (newUser.publicAddress && oldUser.publicAddress !== newUser.publicAddress) {
         const indexerClient = algoIndexer()
         try {
           const userAddress = await indexerClient.lookupAccountByID(newUser.publicAddress).do()
