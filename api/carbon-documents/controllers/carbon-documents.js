@@ -71,7 +71,7 @@ async function create(ctx) {
       href: `${process.env.FRONTEND_BASE_URL}/documents/${createdDocument.id}`,
     },
   }
-  const pendingMail = generateMailHtml(mailContent_pending)
+  const pendingMail = mailer.generateMailHtml(mailContent_pending)
 
   await mailer.send('Credits received', pendingMail, createdDocument.created_by_user)
   return createdDocument

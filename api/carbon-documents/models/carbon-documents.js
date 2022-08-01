@@ -84,7 +84,7 @@ module.exports = {
               href: `${process.env.FRONTEND_BASE_URL}/documents/${result.id}`,
             },
           }
-          const acceptedMail = generateMailHtml(mailContent_accepted)
+          const acceptedMail = mailer.generateMailHtml(mailContent_accepted)
           await mailer.send('Document accepted', acceptedMail, userEmail)
           mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
           await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
@@ -99,7 +99,7 @@ module.exports = {
               href: `${process.env.FRONTEND_BASE_URL}/documents/${result.id}`,
             },
           }
-          const completedMail = generateMailHtml(mailContent_completed)
+          const completedMail = mailer.generateMailHtml(mailContent_completed)
           await mailer.send('Credits received', completedMail, userEmail)
           mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
         }

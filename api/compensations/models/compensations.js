@@ -84,10 +84,12 @@ module.exports = {
         //const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${result.id}`
         const amount = result.amount
         const certificate = result.consolidation_certificate_ipfs_cid
+        const explorerURL = 'https://testnet.algoexplorer.io/'
+        const txnGroupId = encodeURIComponent(data.txn_id)
         if (result.state === 'minted') {
           const mailContent_confirmed = {
             title: 'Compensation confirmed.',
-            claim: `You have compensate <strong>${amount}</strong> t of <strong>CO2</strong>, thank you!`,
+            claim: `You have compensated <strong>${amount}</strong> t of <strong>CO2</strong>, thank you!`,
             text: `Thank you for clearing with us. Your transaction has been successfully completed on the blockchain network. You can view the transaction or download the certificate.`,
             button_1: {
               label: 'View transaction',
@@ -96,7 +98,7 @@ module.exports = {
             button_2: { label: 'Download certificate', href: `${process.env.IPFS_BASE_URL}${certificate}` },
           }
 
-          const confirmedMail = generateMailHtml(mailContent_confirmed)
+          const confirmedMail = mailer.generateMailHtml(mailContent_confirmed)
           await mailer.send('Compensation confirmed', confirmedMail, user.email)
         } else if (result.state === 'rejected') {
           const mailContent_confirmed = {
@@ -109,7 +111,7 @@ module.exports = {
             },
           }
 
-          const confirmedMail = generateMailHtml(mailContent_confirmed)
+          const confirmedMail = mailer.generateMailHtml(mailContent_confirmed)
           await mailer.send('Compensation rejected', confirmedMail, user.email)
         }
 
@@ -184,7 +186,7 @@ module.exports = {
         },
       }
 
-      const creationMail = generateMailHtml(mailContent_pending)
+      const creationMail = mailer.generateMailHtml(mailContent_pending)
 
       await mailer.send('New compensation', creationMail, result.user.email)
     },
