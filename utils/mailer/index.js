@@ -10,7 +10,9 @@ const MAIL_ACTIONS = {
 async function sendMail(subject, content, mailTo) {
   try {
     await strapi.plugins['email'].services.email.send({
-      to: mailTo ?? process.env.MAILGUN_EMAIL_TO,
+      //to: mailTo ?? process.env.MAILGUN_EMAIL_TO,
+      // TODO: CUENTA DE CORREOS ES DE TIPO SANDBOX, SOLO SE PUEDE ENVIAR A CUENTAS DETERMINADAS
+      to: process.env.MAILGUN_EMAIL_TO,
       from: process.env.MAILGUN_EMAIL,
       replyTo: process.env.MAILGUN_EMAIL,
       subject,
