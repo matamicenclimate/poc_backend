@@ -1,8 +1,10 @@
 'use strict'
 
+const { getHTMLTemplate } = require('./mail_template')
+
 const MAIL_ACTIONS = {
   SENT: 'sent',
-  SENDING: 'sending'
+  SENDING: 'sending',
 }
 
 async function sendMail(subject, content, mailTo) {
@@ -26,8 +28,13 @@ function logMailAction(collection, status, action, user) {
   strapi.log.info(`[ ${collection} status ${status} ] mail ${action} to ${user}`)
 }
 
+function generateMailHtml(mailContent) {
+  return getHTMLTemplate(mailContent)
+}
+
 module.exports = {
   send: sendMail,
   MAIL_ACTIONS,
   logMailAction,
+  generateMailHtml,
 }
