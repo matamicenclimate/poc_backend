@@ -8,7 +8,8 @@ Module._extensions['.png'] = function (module, fn) {
 var Logo = require('../../admin/src/assets/images/logo-light.png')
 
 const getButton = (button, color) => {
-  return `<table
+  if (button !== undefined) {
+    return `<table
     border="0"
     cellpadding="0"
     cellspacing="0"
@@ -55,6 +56,8 @@ const getButton = (button, color) => {
             </tr>
         </tbody>
     </table>`
+  }
+  return ''
 }
 
 function getHTMLTemplate(mailContent) {
@@ -625,8 +628,8 @@ function getHTMLTemplate(mailContent) {
                                   </tr>
                                </tbody>
                             </table>
-                            ${mailContent.button_1 && getButton(mailContent.button_1, '#777E90')}
-                            ${mailContent.button_2 && getButton(mailContent.button_2, '#FCFCFD')}
+                            ${getButton(mailContent.button_1, '#777E90')}
+                            ${getButton(mailContent.button_2, '#FCFCFD')}
                             </td>
                       </tr>
                       <tr>
