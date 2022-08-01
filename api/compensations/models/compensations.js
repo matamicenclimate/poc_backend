@@ -72,27 +72,6 @@ module.exports = {
         // Do not allow any other change
         delete newCompensation[key]
       }
-
-      const changeListKeys = Object.keys(newCompensation)
-      for (const key of changeListKeys) {
-        const isStateChange = key === "state"
-        const isBurnReceiptChange = key === "burn_receipt"
-        const isCompensationNftChange = key === "compensation_nft"
-        const isConsolidationCertificateChange = key === "consolidation_certificate_ipfs_cid"
-        const isRegistryCertificatesChange = key === "registry_certificates"
-        const wasPreviouslyUndefined = !oldCompensation[key]
-        const isNextStateMinted = newCompensation.state === "minted"
-        const currentStateAllowsRegistryCertificatesChanges = !["minted", "claimed", "rejected"].includes(oldCompensation.state)
-
-        if (isStateChange) continue;
-        if (isBurnReceiptChange && wasPreviouslyUndefined) continue;
-        if (isCompensationNftChange && wasPreviouslyUndefined && isNextStateMinted) continue;
-        if (isConsolidationCertificateChange && wasPreviouslyUndefined && isNextStateMinted) continue;
-        if (isRegistryCertificatesChange && currentStateAllowsRegistryCertificatesChanges) continue;
-
-        // Do not allow any other change
-        delete newCompensation[key]
-      }
     },
     afterCreate: async function (result) {
       await strapi.services.activities.create({
@@ -362,14 +341,14 @@ module.exports = {
                   width:220px;
                }
                .mcnFooterText{
-               text-align: right; 
-               color:#b1b5c3; 
+               text-align: right;
+               color:#b1b5c3;
                font-size:16px;
                }
                .mcnFooterText a{
                color:#b1b5c3;
                }
-               
+
                @media only screen and (max-width:1022px) {
                .templateContainer {
                width: 700px !important;
@@ -382,13 +361,13 @@ module.exports = {
                .mcnTextParagraph {
                font-size: 18px;
                padding: 60px;
-               }           
+               }
                .mcnTextTitle {
                padding: 60px;
                font-size: 72px;
                }
                .mcnTextClaim {
-               padding: 0px 150px 100px 60px;                     
+               padding: 0px 150px 100px 60px;
                font-size: 22px;
                }
                .mcnLogo{
@@ -407,15 +386,15 @@ module.exports = {
                .mcnTextParagraph {
                font-size: 18px;
                padding: 50px;
-               }           
+               }
                .mcnTextTitle {
                padding: 50px;
                font-size: 60px;
                }
                .mcnTextClaim {
-               padding: 0px 100px 90px 50px;                     
+               padding: 0px 100px 90px 50px;
                font-size: 20px;
-               }               
+               }
                .mcnButtonBlockInner{
                padding-bottom: 10px;
                }
@@ -425,7 +404,7 @@ module.exports = {
                .mcnFooterText{
                font-size:14px;
                }
-            
+
                }
                @media only screen and (max-width: 480px) {
                /* Classes */
@@ -457,7 +436,7 @@ module.exports = {
                font-size: 42px;
                }
                .mcnTextClaim {
-               padding: 0px 80px 60px 50px;                               
+               padding: 0px 80px 60px 50px;
                font-size: 18px;
                }
                .mcnLogo{
@@ -704,7 +683,7 @@ module.exports = {
                                                                class="mcnTextContent"
                                                                style="color: #777e90;"
                                                                >
-                                                               Thank you for clearing with us. Your transaction has been successfully completed on the blockchain 
+                                                               Thank you for clearing with us. Your transaction has been successfully completed on the blockchain
                                                                network. You can view the transaction or download the certificate.
                                                           </td>
                                                          </tr>
@@ -752,7 +731,7 @@ module.exports = {
                                                          class="mcnButton"
                                                          title="View transaction"
                                                          href="${explorerURL}tx/group/${txnGroupId}"
-                                                         target="_blank"   
+                                                         target="_blank"
                                                          style="color: #777E90;"
                                                          >View project
                                                       </a>
@@ -889,7 +868,7 @@ module.exports = {
                      </table>
             </center>
          </body>
-      </html>      
+      </html>
       `
       await mailer.send('New compensation', mailContent)
     },
