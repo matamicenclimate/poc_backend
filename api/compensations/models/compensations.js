@@ -174,7 +174,7 @@ module.exports = {
        * Handle compensation request notification email
        */
       const explorerURL = 'https://testnet.algoexplorer.io/'
-      const txnGroupId = encodeURIComponent(result.data?.txn_id)
+      const txnGroupId = encodeURIComponent(result.txn_id)
 
       const mailContent_pending = {
         title: 'Compensation pending.',
@@ -187,8 +187,15 @@ module.exports = {
       }
 
       const creationMail = mailer.generateMailHtml(mailContent_pending)
-
       await mailer.send('New compensation', creationMail, result.user.email)
+
+      await strapi.services.notifications.create({
+        title: `Compensation ${result.state}`,
+        description: `Compensation status changed to ${result.state}`,
+        model: 'compensations',
+        model_id: result.id,
+        user: result.user.id,
+      })
     },
   },
 }
