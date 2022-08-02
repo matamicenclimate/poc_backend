@@ -2,7 +2,7 @@ var fs = require('fs')
 const path = require('path')
 const puppeteer = require('puppeteer')
 
-function readPng(file){
+function readPng(file) {
   return `data:image/png;base64,${fs.readFileSync(path.join(__dirname, file)).toString('base64')}`
 }
 
@@ -11,12 +11,13 @@ var Sign = readPng('./assets/sign.png')
 
 async function createPDF(html, filePath) {
   // launch a new chrome instance
-  const puppeteerParams = { args: ['--no-sandbox'] };
-  if (process.env.NODE_ENV !== 'development') {
-    puppeteerParams.executablePath = '/usr/bin/chromium-browser';
+  const puppeteerParams = { args: ['--no-sandbox'] }
+  // TODO: Detectar aqui si estamos en producción...
+  if (process.env.BASE_URL.includes('staging')) {
+    puppeteerParams.executablePath = '/usr/bin/chromium-browser'
   }
 
-  const browser = await puppeteer.launch(puppeteerParams);
+  const browser = await puppeteer.launch(puppeteerParams)
 
   // create a new page
   const page = await browser.newPage()
@@ -205,5 +206,5 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
 module.exports = {
   createPDF,
   generateCompensationPDF,
-  Logo
+  Logo,
 }
