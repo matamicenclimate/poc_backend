@@ -85,7 +85,7 @@ module.exports = {
         const amount = result.amount
         const certificate = result.consolidation_certificate_ipfs_cid
         const explorerURL = 'https://testnet.algoexplorer.io/'
-        const txnGroupId = encodeURIComponent(data.txn_id)
+        const txnGroupId = encodeURIComponent(result.txn_id)
         if (result.state === 'minted') {
           const mailContent_confirmed = {
             title: 'Compensation confirmed.',
