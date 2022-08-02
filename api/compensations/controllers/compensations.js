@@ -11,19 +11,19 @@ const { createPDF, generateCompensationPDF } = require('../../../utils/pdf')
 const { uploadFileToIPFS } = require('../../../utils/ipfs')
 const { parseMultipartData, sanitizeEntity } = require('strapi-utils')
 const { algoIndexer } = require('../../../config/algorand')
-const {burn} = require("../../nfts/controllers/nfts");
+const { burn } = require('../../nfts/controllers/nfts')
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
 
 async function findOne(ctx) {
-  const {id} = ctx.params
+  const { id } = ctx.params
   const user = ctx.state.user
   const compensation = await strapi.services.compensations.findOne({ id })
 
   if (!compensation || compensation.id !== id) return ctx.badRequest('Not found')
-  if (compensation.user.id !== user.id) return ctx.badRequest('Unauthorized')
+  if (compensation.user.id !== user.id) return ctx.unauthorized()
 
   return compensation
 }
@@ -60,7 +60,7 @@ async function calculate(ctx) {
   const requiredFundsPaymentTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: creator.addr,
     to: algosdk.getApplicationAddress(Number(process.env.APP_ID)),
-    amount: algosdk.algosToMicroalgos((2+assetsToCompensateFrom.length)*0.1),
+    amount: algosdk.algosToMicroalgos((2 + assetsToCompensateFrom.length) * 0.1),
     suggestedParams: suggestedParams,
   })
 
@@ -86,7 +86,7 @@ async function calculate(ctx) {
     suggestedParams,
   })
 
-  burnTxn.fee += (5 + (4*assetsToCompensateFrom.length))*algosdk.ALGORAND_MIN_TX_FEE
+  burnTxn.fee += (5 + 4 * assetsToCompensateFrom.length) * algosdk.ALGORAND_MIN_TX_FEE
 
   const burnGroupTxn = [climatecoinTransferTxn, requiredFundsPaymentTxn, burnParametersTxn, burnTxn]
   const [transfer, funds, params, burn] = algosdk.assignGroupID(burnGroupTxn)
@@ -131,7 +131,8 @@ async function create(ctx) {
   const grpTxns = block.transactions.filter((transaction) => transaction?.group === groupId)
   const appCreatorTxn = grpTxns.filter(
     (transaction) =>
-      transaction.hasOwnProperty('inner-txns') && transaction['inner-txns'][0].hasOwnProperty('created-application-index'),
+      transaction.hasOwnProperty('inner-txns') &&
+      transaction['inner-txns'][0].hasOwnProperty('created-application-index'),
   )
 
   const burnContractId = appCreatorTxn[0]['inner-txns'][0]['created-application-index']
@@ -148,7 +149,7 @@ async function prepareClaimCertificate(ctx) {
   // TODO Use indexer to has updated fields
   const compensation = await strapi.services['compensations'].findOne({ id })
 
-  if (compensation.user.id !== user.id) return ctx.badRequest('Unauthorized')
+  if (compensation.user.id !== user.id) return ctx.unauthorized()
   if (compensation.compensation_nft === undefined) throw new Error('Compensation NFT not minted yet')
 
   const algodclient = algoClient()
@@ -175,14 +176,14 @@ async function prepareClaimCertificate(ctx) {
       algosdk.encodeUint64(1),
       algosdk.encodeUint64(0),
     ],
-    foreignAssets: [Number(compensationNft.asa_id), ...nftsToBurn ,Number(process.env.CLIMATECOIN_ASA_ID)],
+    foreignAssets: [Number(compensationNft.asa_id), ...nftsToBurn, Number(process.env.CLIMATECOIN_ASA_ID)],
     accounts: [algosdk.getApplicationAddress(Number(process.env.DUMP_APP_ID)), user.publicAddress],
     foreignApps: [Number(compensation.contract_id), Number(process.env.DUMP_APP_ID)],
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
     suggestedParams,
   })
 
-  approveBurnTxn.fee += (6+nftsToBurn.length)*algosdk.ALGORAND_MIN_TX_FEE
+  approveBurnTxn.fee += (6 + nftsToBurn.length) * algosdk.ALGORAND_MIN_TX_FEE
 
   const compensationClaimGroupTxn = [compensationNftOptinTxn, approveBurnTxn]
   const [optin, approve] = algosdk.assignGroupID(compensationClaimGroupTxn)
@@ -205,7 +206,7 @@ async function claimCertificate(ctx) {
   const compensation = await strapi.services.compensations.findOne({ id })
 
   if (!signedTxn) throw new Error('Txn is missing in request body')
-  if (compensation.user.id !== user.id) return ctx.badRequest('Unauthorized')
+  if (compensation.user.id !== user.id) return ctx.unauthorized()
 
   const algodClient = algoClient()
   const txnBlob = [Buffer.from(Object.values(signedTxn[0])), Buffer.from(signedTxn[1].data)]
@@ -323,7 +324,7 @@ module.exports = {
   create,
   prepareClaimCertificate,
   claimCertificate,
-  findOne
+  findOne,
 }
 
 async function getNFTsToBurn(amount) {

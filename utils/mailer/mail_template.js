@@ -1,11 +1,6 @@
 var Module = require('module')
 var fs = require('fs')
-
-Module._extensions['.png'] = function (module, fn) {
-  var base64 = fs.readFileSync(fn).toString('base64')
-  module._compile('module.exports="data:Logo/jpg;base64,' + base64 + '"', fn)
-}
-var Logo = require('../../admin/src/assets/images/logo-light.png')
+const {Logo} = require('../pdf/index')
 
 const getButton = (button, color) => {
   if (button !== undefined) {
@@ -44,7 +39,7 @@ const getButton = (button, color) => {
                                     class="mcnButton"
                                     title="View transaction"
                                     href=${button.href}
-                                    target="_blank"   
+                                    target="_blank"
                                     style="color: ${color};"
                                     >${button.label}
                                 </a>
@@ -274,14 +269,14 @@ function getHTMLTemplate(mailContent) {
                 width:220px;
              }
              .mcnFooterText{
-             text-align: right; 
-             color:#b1b5c3; 
+             text-align: right;
+             color:#b1b5c3;
              font-size:16px;
              }
              .mcnFooterText a{
              color:#b1b5c3;
              }
-             
+
              @media only screen and (max-width:1022px) {
              .templateContainer {
              width: 700px !important;
@@ -294,13 +289,13 @@ function getHTMLTemplate(mailContent) {
              .mcnTextParagraph {
              font-size: 18px;
              padding: 60px;
-             }           
+             }
              .mcnTextTitle {
              padding: 60px;
              font-size: 72px;
              }
              .mcnTextClaim {
-             padding: 0px 150px 100px 60px;                     
+             padding: 0px 150px 100px 60px;
              font-size: 22px;
              }
              .mcnLogo{
@@ -319,15 +314,15 @@ function getHTMLTemplate(mailContent) {
              .mcnTextParagraph {
              font-size: 18px;
              padding: 50px;
-             }           
+             }
              .mcnTextTitle {
              padding: 50px;
              font-size: 60px;
              }
              .mcnTextClaim {
-             padding: 0px 100px 90px 50px;                     
+             padding: 0px 100px 90px 50px;
              font-size: 20px;
-             }               
+             }
              .mcnButtonBlockInner{
              padding-bottom: 10px;
              }
@@ -337,7 +332,7 @@ function getHTMLTemplate(mailContent) {
              .mcnFooterText{
              font-size:14px;
              }
-          
+
              }
              @media only screen and (max-width: 480px) {
              /* Classes */
@@ -369,7 +364,7 @@ function getHTMLTemplate(mailContent) {
              font-size: 42px;
              }
              .mcnTextClaim {
-             padding: 0px 80px 60px 50px;                               
+             padding: 0px 80px 60px 50px;
              font-size: 18px;
              }
              .mcnLogo{
@@ -710,7 +705,7 @@ function getHTMLTemplate(mailContent) {
                    </table>
           </center>
        </body>
-    </html>      
+    </html>
     `
 }
 
