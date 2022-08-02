@@ -11,10 +11,12 @@ var Sign = readPng('./assets/sign.png')
 
 async function createPDF(html, filePath) {
   // launch a new chrome instance
-  const browser = await puppeteer.launch({
-    //executablePath: '/usr/bin/chromium-browser',
-    args: ['--no-sandbox'],
-  })
+  const puppeteerParams = { args: ['--no-sandbox'] };
+  if (process.env.NODE_ENV !== 'development') {
+    puppeteerParams.executablePath = '/usr/bin/chromium-browser';
+  }
+
+  const browser = await puppeteer.launch(puppeteerParams);
 
   // create a new page
   const page = await browser.newPage()
