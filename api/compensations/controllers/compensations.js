@@ -245,7 +245,7 @@ async function mint(ctx) {
     const consolidationPdfBuffer = await createPDF(html, filePath)
 
     // const pdfBuffer = await readFileFromUploads(filePath)
-    const consolidationPdfCid = await uploadFileToIPFS(consolidationPdfBuffer, 'application/pdf')
+    const consolidationPdfCid = await uploadFileToIPFS(consolidationPdfBuffer, 'application/pdf', compensation.id)
 
     const compensationNftId = await algoFn.mintCompensationNft(algodclient, creator, compensation, consolidationPdfCid)
 

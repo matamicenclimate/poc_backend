@@ -1,5 +1,5 @@
-const { NFTStorage, File, Blob } = require('nft.storage')
-class IpfsStorage {
+const { NFTStorage, Blob } = require('nft.storage')
+class IpfsNftStorage {
   constructor() {
     try {
       this.ipfsData = null
@@ -36,4 +36,4 @@ class IpfsStorage {
   }
 }
 
-module.exports = IpfsStorage
+module.exports = IpfsNftStorage
