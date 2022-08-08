@@ -26,8 +26,10 @@ module.exports = {
         const isStatusChange = key === "status"
         const isBurnTimeoutChange = key === "burnWillTimeoutOn"
         const isSupplyRemainingChange = key === "supply_remaining"
+        const isRegistryCertificateChange = key === 'registry_certificate'
+        const isRegistryCertificateCIDChange = key === 'registry_certificate_ipfs_cid'
 
-        if (isStatusChange || isBurnTimeoutChange) continue;
+        if (isStatusChange || isBurnTimeoutChange || isRegistryCertificateChange || isRegistryCertificateCIDChange) continue;
         // If the supply_remaining is updated, check if the change is correct in the blockchain
         if (isSupplyRemainingChange) {
           const indexerClient = algoIndexer()

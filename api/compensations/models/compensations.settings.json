@@ -48,17 +48,6 @@
       "required": false,
       "pluginOptions": {}
     },
-    "registry_certificates": {
-      "collection": "file",
-      "via": "related",
-      "allowedTypes": [
-        "files",
-        "images"
-      ],
-      "plugin": "upload",
-      "required": false,
-      "pluginOptions": {}
-    },
     "compensation_nft": {
       "model": "nfts"
     },

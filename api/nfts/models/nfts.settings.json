@@ -32,6 +32,21 @@
         "compensation"
       ]
     },
+    "registry_certificate": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files",
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "registry_certificate_ipfs_cid": {
+      "type": "string",
+      "required": false
+    },
     "asa_id": {
       "type": "biginteger"
     },

@@ -350,12 +350,19 @@ async function getNFTsToBurn(amount) {
 }
 
 async function uploadFilesToIPFS(compensation) {
+
   return new Promise(async (resolve, reject) => {
     try {
       const ipfsCIDs = []
-      for (const nft of compensation.registry_certificates) {
-        const file = await getFileFromS3(nft.url)
-        const result = await uploadFileToIPFS(file, nft.mime)
+      for (const nft of compensation.nfts) {
+        const file = await getFileFromS3(nft.registry_certificate[0].url)
+        const result = await uploadFileToIPFS(file, nft.registry_certificate[0].mime, nft.id)
+        await strapi.services['nfts'].update(
+          { id: nft.id },
+          {
+            registry_certificate_ipfs_cid: result,
+          },
+        )
         ipfsCIDs.push(result)
       }
       resolve(ipfsCIDs)
