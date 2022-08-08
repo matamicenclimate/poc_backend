@@ -56,6 +56,8 @@ Under Settings > USERS & PERMISSIONS PLUGIN > Roles > Authenticated you need to 
   * UTILS
     * chartbalanceme
 * USER-PERMISSIONS
+  * AUTH
+    * connect
   * USER
     * me
     * update
