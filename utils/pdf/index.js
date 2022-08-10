@@ -155,9 +155,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
                     External Url
                   </dt>
                   <dd style="margin-bottom: 5px; margin-left:0px">
-                    <a href="${
-                      nft.metadata.external_url
-                    }" target="_blank" style="text-decoration: none; color: #00db7d;">Open External Url</a>
+                    <a href="${`${process.env.IPFS_BASE_URL}${nft.registry_certificate_ipfs_cid}`}" target="_blank" style="text-decoration: none; color: #00db7d;">Open External Url</a>
                   </dd>
                 </div>
               </div>

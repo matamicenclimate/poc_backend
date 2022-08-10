@@ -1554,6 +1554,15 @@
                   "compensation"
                 ]
               },
+              "registry_certificate": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "registry_certificate_ipfs_cid": {
+                "type": "string"
+              },
               "asa_id": {
                 "type": "integer"
               },
@@ -1614,6 +1623,15 @@
                   "developer",
                   "compensation"
                 ]
+              },
+              "registry_certificate": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "registry_certificate_ipfs_cid": {
+                "type": "string"
               },
               "asa_id": {
                 "type": "integer"

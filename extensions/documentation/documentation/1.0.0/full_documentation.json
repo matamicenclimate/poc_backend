@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "07/13/2022 6:03:57 PM"
+    "x-generation-date": "08/10/2022 1:11:47 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -11823,6 +11823,15 @@
                   "compensation"
                 ]
               },
+              "registry_certificate": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "registry_certificate_ipfs_cid": {
+                "type": "string"
+              },
               "asa_id": {
                 "type": "integer"
               },
@@ -12656,6 +12665,15 @@
                   "compensation"
                 ]
               },
+              "registry_certificate": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "registry_certificate_ipfs_cid": {
+                "type": "string"
+              },
               "asa_id": {
                 "type": "integer"
               },
@@ -12716,6 +12734,15 @@
                   "developer",
                   "compensation"
                 ]
+              },
+              "registry_certificate": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "registry_certificate_ipfs_cid": {
+                "type": "string"
               },
               "asa_id": {
                 "type": "integer"
@@ -12906,6 +12933,15 @@
                     "developer",
                     "compensation"
                   ]
+                },
+                "registry_certificate": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "registry_certificate_ipfs_cid": {
+                  "type": "string"
                 },
                 "asa_id": {
                   "type": "integer"
@@ -13109,76 +13145,6 @@
               }
             }
           },
-          "registry_certificates": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id",
-                "name",
-                "hash",
-                "mime",
-                "size",
-                "url",
-                "provider"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "alternativeText": {
-                  "type": "string"
-                },
-                "caption": {
-                  "type": "string"
-                },
-                "width": {
-                  "type": "integer"
-                },
-                "height": {
-                  "type": "integer"
-                },
-                "formats": {
-                  "type": "object"
-                },
-                "hash": {
-                  "type": "string"
-                },
-                "ext": {
-                  "type": "string"
-                },
-                "mime": {
-                  "type": "string"
-                },
-                "size": {
-                  "type": "number"
-                },
-                "url": {
-                  "type": "string"
-                },
-                "previewUrl": {
-                  "type": "string"
-                },
-                "provider": {
-                  "type": "string"
-                },
-                "provider_metadata": {
-                  "type": "object"
-                },
-                "related": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "compensation_nft": {
             "required": [
               "id",
@@ -13207,6 +13173,15 @@
                   "developer",
                   "compensation"
                 ]
+              },
+              "registry_certificate": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "registry_certificate_ipfs_cid": {
+                "type": "string"
               },
               "asa_id": {
                 "type": "integer"
@@ -13496,6 +13471,79 @@
               "compensation"
             ]
           },
+          "registry_certificate": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id",
+                "name",
+                "hash",
+                "mime",
+                "size",
+                "url",
+                "provider"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "alternativeText": {
+                  "type": "string"
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                },
+                "formats": {
+                  "type": "object"
+                },
+                "hash": {
+                  "type": "string"
+                },
+                "ext": {
+                  "type": "string"
+                },
+                "mime": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "previewUrl": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "provider_metadata": {
+                  "type": "object"
+                },
+                "related": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "registry_certificate_ipfs_cid": {
+            "type": "string"
+          },
           "asa_id": {
             "type": "integer"
           },
@@ -13547,6 +13595,9 @@
               "developer",
               "compensation"
             ]
+          },
+          "registry_certificate_ipfs_cid": {
+            "type": "string"
           },
           "asa_id": {
             "type": "integer"
