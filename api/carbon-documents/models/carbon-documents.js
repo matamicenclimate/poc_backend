@@ -108,8 +108,8 @@ module.exports = {
           email: result.created_by_user,
         })
         await strapi.services.notifications.create({
-          title: `Carbon document ${result.status}`,
-          description: `Carbon document status changed to ${result.status}`,
+          title: `Carbon document status '${result.status.replace('_', ' ')}'`,
+          description: `Carbon document status changed to '${result.status.replace('_', ' ')}'`,
           model: 'carbon-documents',
           model_id: result.id,
           user: userDb.id,

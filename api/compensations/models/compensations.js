@@ -116,8 +116,8 @@ module.exports = {
         }
 
         await strapi.services.notifications.create({
-          title: `Compensation ${result.state}`,
-          description: `Compensation status changed to ${result.state}`,
+          title: `Compensation status '${result.state.replace('_', ' ')}'`,
+          description: `Compensation status changed to '${result.state.replace('_', ' ')}'`,
           model: 'compensations',
           model_id: result.id,
           user: user.id,
@@ -190,8 +190,8 @@ module.exports = {
       await mailer.send('New compensation', creationMail, result.user.email)
 
       await strapi.services.notifications.create({
-        title: `Compensation ${result.state}`,
-        description: `Compensation status changed to ${result.state}`,
+        title: `Compensation status '${result.state.replace('_', ' ')}'`,
+        description: `Compensation status changed to '${result.state.replace('_', ' ')}'`,
         model: 'compensations',
         model_id: result.id,
         user: result.user.id,
