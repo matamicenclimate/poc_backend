@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "08/16/2022 11:27:25 AM"
+    "x-generation-date": "08/11/2022 5:03:18 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -11688,6 +11688,145 @@
           }
         ]
       }
+    },
+    "/web3-auth/login": {
+      "post": {
+        "deprecated": false,
+        "description": "Login a user with the signed authentication transaction",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Unclassified"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "foo": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/web3-auth/challenge/{address}": {
+      "get": {
+        "deprecated": false,
+        "description": "Send an authentication transaction to a user",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Unclassified"
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -11708,7 +11847,6 @@
             "required": [
               "id",
               "username",
-              "email",
               "type"
             ],
             "properties": {
@@ -11933,7 +12071,6 @@
           "credits",
           "serial_number",
           "registry_url",
-          "created_by_user",
           "pdd",
           "verification_report"
         ],
@@ -12127,9 +12264,6 @@
               "claimed",
               "swapped"
             ]
-          },
-          "created_by_user": {
-            "type": "string"
           },
           "pdd": {
             "required": [
@@ -12775,6 +12909,91 @@
                 "type": "string"
               }
             }
+          },
+          "user": {
+            "required": [
+              "id",
+              "username",
+              "type"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "resetPasswordToken": {
+                "type": "string"
+              },
+              "confirmationToken": {
+                "type": "string"
+              },
+              "confirmed": {
+                "type": "boolean"
+              },
+              "blocked": {
+                "type": "boolean"
+              },
+              "role": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "buyer",
+                  "developer"
+                ]
+              },
+              "publicAddress": {
+                "type": "string"
+              },
+              "avatar": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "surname": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "bio": {
+                "type": "string"
+              },
+              "personal_URL": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "alias": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "swap_group_txn_id": {
+            "type": "string"
           }
         }
       },
@@ -12788,8 +13007,7 @@
           "credit_end",
           "credits",
           "serial_number",
-          "registry_url",
-          "created_by_user"
+          "registry_url"
         ],
         "properties": {
           "title": {
@@ -12845,9 +13063,6 @@
               "swapped"
             ]
           },
-          "created_by_user": {
-            "type": "string"
-          },
           "project_type": {
             "type": "string"
           },
@@ -12885,6 +13100,12 @@
             "type": "string"
           },
           "fee_nft": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "swap_group_txn_id": {
             "type": "string"
           },
           "created_by": {
@@ -12986,7 +13207,6 @@
             "required": [
               "id",
               "username",
-              "email",
               "type"
             ],
             "properties": {
@@ -13223,6 +13443,12 @@
           },
           "contract_id": {
             "type": "integer"
+          },
+          "approve_txn_id": {
+            "type": "string"
+          },
+          "claim_group_id": {
+            "type": "string"
           }
         }
       },
@@ -13267,6 +13493,12 @@
           },
           "contract_id": {
             "type": "integer"
+          },
+          "approve_txn_id": {
+            "type": "string"
+          },
+          "claim_group_id": {
+            "type": "string"
           },
           "created_by": {
             "type": "string"
@@ -13661,7 +13893,6 @@
             "required": [
               "id",
               "username",
-              "email",
               "type"
             ],
             "properties": {
@@ -14106,7 +14337,6 @@
               "required": [
                 "id",
                 "username",
-                "email",
                 "type"
               ],
               "properties": {
@@ -14227,7 +14457,6 @@
         "required": [
           "id",
           "username",
-          "email",
           "type"
         ],
         "properties": {
@@ -14291,6 +14520,9 @@
               }
             }
           },
+          "issuer": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "default": "buyer",
@@ -14298,6 +14530,9 @@
               "buyer",
               "developer"
             ]
+          },
+          "publicAddress": {
+            "type": "string"
           },
           "avatar": {
             "required": [
@@ -14413,7 +14648,6 @@
       "NewUsersPermissionsUser": {
         "required": [
           "username",
-          "email",
           "type"
         ],
         "properties": {

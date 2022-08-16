@@ -1,0 +1,35 @@
+{
+  "name": "strapi-plugin-web3-auth",
+  "version": "0.0.2",
+  "description": "Secure, simple and anonymous web3 authentication.",
+  "strapi": {
+    "name": "Web3 Authentication",
+    "icon": "key",
+    "description": "Secure, simple and anonymous web3 authentication."
+  },
+  "dependencies": {
+    "algorand-session-wallet": "https://github.com/fernando-deka/algorand-session-wallet#magic-link",
+    "algosdk": "^1.19.0",
+    "koa2-ratelimit": "^1.1.1",
+    "lodash": "^4.17.21",
+    "strapi-utils": "^3.6.10",
+    "tweetnacl": "^1.0.3"
+  },
+  "author": {
+    "name": "Fernando Pascual",
+    "email": "fernando.pascual@dekalabs.com",
+    "url": "https://github.com/fer112233"
+  },
+  "maintainers": [
+    {
+      "name": "Fernando Pascual",
+      "email": "fernando.pascual@dekalabs.com",
+      "url": "https://github.com/fer112233"
+    }
+  ],
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

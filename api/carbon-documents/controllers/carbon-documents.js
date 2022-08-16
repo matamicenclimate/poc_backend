@@ -28,7 +28,7 @@ async function findOne(ctx) {
   const document = await strapi.services['carbon-documents'].findOne({ id })
 
   if (!document || document.id !== id) return ctx.badRequest('Not found')
-  if (!user || document.created_by_user !== user.email) return ctx.unauthorized()
+  if (!user || document.user.id !== user.id) return ctx.unauthorized()
 
   return document
 }
@@ -37,12 +37,14 @@ async function find(ctx) {
   const user = ctx.state.user
   if (!user) return ctx.unauthorized()
   const query = ctx.query
-  query.created_by_user = user.email
+  query.user = user.id
 
   return await strapi.services['carbon-documents'].find({ ...ctx.query })
 }
 
 async function create(ctx) {
+  if (!ctx.state.user) return ctx.unauthorized()
+
   const collectionName = ctx.originalUrl.substring(1)
   const applicationUid = strapi.api[collectionName].models[collectionName].uid
   const pushFilesResponse = await fileUploader.pushFile(ctx)
@@ -54,6 +56,7 @@ async function create(ctx) {
   )
 
   ctx.request.body = formatBodyArrays(collectionTypeAtts, ctx.request.body)
+  ctx.request.body.user = ctx.state.user.id
   const createdDocument = await strapi.services[collectionName].create(ctx.request.body)
   if (process.env.NODE_ENV === 'test') {
     return createdDocument
@@ -74,7 +77,7 @@ async function create(ctx) {
   }
   const pendingMail = mailer.generateMailHtml(mailContent_pending)
 
-  await mailer.send('Credits received', pendingMail, createdDocument.created_by_user)
+  await mailer.send('Credits received', pendingMail, createdDocument.user.email)
   return createdDocument
 }
 
@@ -85,9 +88,7 @@ async function saveNft(data, ownerAddress) {
     carbon_document: data['carbon_document']._id,
     last_config_txn: null,
   }
-  const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
-    email: data['carbon_document'].created_by_user,
-  })
+  const user = data['carbon_document'].user
   const nftsData = [
     {
       ...defaultData,
@@ -95,7 +96,7 @@ async function saveNft(data, ownerAddress) {
       metadata: data.assetNftMetadata,
       asa_id: data.developerAsaId,
       asa_txn_id: data.txn,
-      owner_address: userDb.publicAddress,
+      owner_address: user.publicAddress,
       supply: data.developerSupply,
     },
     {
@@ -252,7 +253,7 @@ async function claim(ctx) {
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
 
-  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.unauthorized()
+  if (carbonDocument.user.id !== ctx.state.user.id) return ctx.unauthorized()
   if (!['minted'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been minted")
   }
@@ -261,10 +262,8 @@ async function claim(ctx) {
   const indexerClient = algoIndexer()
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
 
-  const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
-    email: carbonDocument.created_by_user,
-  })
-  const developerPublicAddress = userDb.publicAddress
+  const user = carbonDocument.user
+  const developerPublicAddress = user.publicAddress
 
   const developerNft = carbonDocument.developer_nft
   const assetId = Number(developerNft.asa_id)
@@ -312,7 +311,7 @@ async function prepareSwap(ctx) {
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (carbonDocument.id !== id) throw new Error('NFT not found on Strapi')
-  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.unauthorized()
+  if (carbonDocument.user.id !== ctx.state.user.id) return ctx.unauthorized()
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
@@ -359,6 +358,9 @@ async function prepareSwap(ctx) {
 
   const swapGroupTxn = [unfreezeTxn, transferTxn, swapTxn]
   const [unfreeze, transfer, swap] = algosdk.assignGroupID(swapGroupTxn)
+  const groupID = swap.group.toString('base64')
+
+  await strapi.services['carbon-documents'].update({ id }, { status: 'claimed', swap_group_txn_id: groupID })
 
   const encodedTxns = [unfreeze, transfer, swap].map((txn) => algosdk.encodeUnsignedTransaction(txn))
 
@@ -371,12 +373,24 @@ async function swap(ctx) {
   // TODO Use indexer to has updated fields
   const carbonDocument = await strapi.services['carbon-documents'].findOne({ id })
   if (carbonDocument.id !== id) throw new Error('NFT not found on Strapi')
-  if (carbonDocument.created_by_user !== ctx.state.user.email) return ctx.unauthorized()
+  if (carbonDocument.user.id !== ctx.state.user.id) return ctx.unauthorized()
   if (!['claimed'].includes(carbonDocument.status)) {
     return ctx.badRequest("Document hasn't been claimed")
   }
   const algodClient = algoClient()
   const txnBlob = signedTxn.map((txn) => Buffer.from(Object.values(txn)))
+
+  const signedTxns = txnBlob.map((stxn) => algosdk.decodeSignedTransaction(stxn))
+  const signedTxnsObject = signedTxns.map((stxn) => stxn.txn)
+
+  for (const stxn of signedTxnsObject) {
+    if (carbonDocument.swap_group_txn_id !== stxn.group.toString('base64'))
+      return ctx.badRequest('Transactions manipulated')
+    stxn.group = undefined
+  }
+
+  const computedGroupID = algosdk.computeGroupID(signedTxnsObject).toString('base64')
+  if (carbonDocument.swap_group_txn_id !== computedGroupID) return ctx.badRequest('Transactions manipulated')
 
   const { txId } = await algodClient.sendRawTransaction(txnBlob).do()
   const result = await algosdk.waitForConfirmation(algodClient, txId, 3)

@@ -528,7 +528,6 @@
               "required": [
                 "id",
                 "username",
-                "email",
                 "type"
               ],
               "properties": {

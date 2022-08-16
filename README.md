@@ -70,6 +70,49 @@ Under Settings > USERS & PERMISSIONS PLUGIN > Roles > Authenticated you need to 
 
 Create the volume on the server and mount it in `/opt/public/uploads`
 
+# User authentication
+>The authentication process for the users is handled by making them sign a challenge transaction and verifying it later.
+
+```mermaid
+sequenceDiagram
+participant Usr as User
+participant Front as Frontend <br> (WebApp)
+participant Back as Backend <br> (Strapi)
+autonumber
+
+    activate Usr
+    Usr->>+Front: Wallet selection<br>and connection
+    deactivate Usr
+
+    activate Front
+    Front->>+Back: Request challenge txn
+    deactivate Front
+
+    activate Back
+    note right of Back: A 16 byte Token is generated for the request<br>The token is put in a 0 Algos transaction note<br>The txn needs to be signed by the user
+    Back->>+Front: Send unsigned challenge txn
+    deactivate Back 
+    
+    activate Front
+    Front->>+Usr: Request txn sign
+    deactivate Front
+    
+    activate Usr
+    note left of Usr: Wait for user to sign
+    Usr->>+Front: Sign txn
+    deactivate Usr
+
+    activate Front
+    Front->>+Back: Send challenge txn signed
+    deactivate Front
+
+    activate Back
+    note right of Back: The transaction is decoded<br>The signature of the transaction is verified<br>The Token on the note is verified
+    note right of Back: A user is created if it does not exist already
+    Back->>+Front: Send JWT
+    deactivate Back 
+```
+
 # User wallet creation
 >The backend will send 1 Algos to the user's wallet when they register on the app using Magiclink.
 >This will enable their wallets to be able to use them in algorand blockchain.
@@ -211,7 +254,7 @@ sequenceDiagram
     deactivate Front
 
     activate Back
-    note right of Back: Create Group of Txns <br> Sign Creator Txns
+    note right of Back: Create Group of Txns <br> Save the group id
     Back->>+Front: Send Unsigned Txns
     deactivate Back 
 
@@ -221,6 +264,7 @@ sequenceDiagram
     deactivate Front
 
     activate Back
+    note right of Back: Verify group id and sign transactions
     note right of Back: Send Group Txns to Blockchain
     Back->>+BC: Transfer of CC from user add to Vault add
     Back->>+BC: Send Algos to cover burn contract opt ins
@@ -237,7 +281,9 @@ sequenceDiagram
 >2. Uploading the certificates to `registry_certificates`
 >3. Minting the NFT
 >
-> Once the compensation has been minted it cannot be undone
+>The moment the NFT is minted, the burn contract is closed and approved.
+>
+>Once the compensation has been minted it cannot be undone.
 ```mermaid
 sequenceDiagram
     participant CL as Climate

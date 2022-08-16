@@ -59,6 +59,8 @@ module.exports = {
         const isCompensationNftChange = key === 'compensation_nft'
         const isConsolidationCertificateChange = key === 'consolidation_certificate_ipfs_cid'
         const isRegistryCertificatesChange = key === 'registry_certificates'
+        const isApproveTxnIdChange = key === 'approve_txn_id'
+        const isClaimGroupIdChange = key === 'claim_group_id'
         const wasPreviouslyUndefined = !oldCompensation[key]
         const isNextStateMinted = newCompensation.state === 'minted'
         const currentStateAllowsRegistryCertificatesChanges = !['minted', 'claimed', 'rejected'].includes(
@@ -67,6 +69,8 @@ module.exports = {
 
         if (isStateChange) continue
         if (isBurnReceiptChange && wasPreviouslyUndefined) continue
+        if (isApproveTxnIdChange && wasPreviouslyUndefined) continue
+        if (isClaimGroupIdChange) continue
         if (isCompensationNftChange && wasPreviouslyUndefined && isNextStateMinted) continue
         if (isConsolidationCertificateChange && wasPreviouslyUndefined && isNextStateMinted) continue
         if (isRegistryCertificatesChange && currentStateAllowsRegistryCertificatesChanges) continue

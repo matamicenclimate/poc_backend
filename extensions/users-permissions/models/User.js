@@ -20,8 +20,22 @@ async function fundUser(user, amount) {
   await algosdk.waitForConfirmation(algodClient, txId, 3)
 }
 
+async function fundUserIfNew(user, amount=process.env.ALGOS_TO_NEW_USER) {
+  const indexerClient = algoIndexer()
+  try {
+    const userAddress = await indexerClient.lookupAccountByID(user.publicAddress).do()
+  } catch (e) {
+    if (e.status !== 404) throw e
+    console.log('Funding new user')
+    await fundUser(user, Number(amount))
+  }
+}
+
 module.exports = {
   lifecycles: {
+    beforeCreate: async function (user) {
+      if (user.publicAddress) await fundUserIfNew(user, process.env.ALGOS_TO_NEW_USER)
+    },
     beforeUpdate: async function (params, newUser) {
       const { _id } = params
       const oldUser = await strapi.db.query('plugins::users-permissions.user').findOne({ _id })
@@ -31,20 +45,12 @@ module.exports = {
       for (const key of changeListKeys) {
         const isPublicAddressChange = key === 'publicAddress'
         const isUsernameChange = key === 'username'
-        const isEmailChange = key === 'email'
 
         if (isPublicAddressChange && newUser.publicAddress && oldUser.publicAddress !== newUser.publicAddress) {
-          const indexerClient = algoIndexer()
-          try {
-            const userAddress = await indexerClient.lookupAccountByID(newUser.publicAddress).do()
-          } catch (e) {
-            if (e.status !== 404) throw e
-            console.log('Funding new user')
-            await fundUser(newUser, Number(process.env.ALGOS_TO_NEW_USER))
-          }
+          await fundUserIfNew(newUser, process.env.ALGOS_TO_NEW_USER)
           continue
         }
-        if (isEmailChange || isUsernameChange) delete newUser[key]
+        if (isUsernameChange) delete newUser[key]
       }
     },
   },

@@ -1,7 +1,27 @@
 const request = require('supertest')
 const path = require('path')
 
+let user
+let jwt
+
 describe('Carbon-documents', () => {
+  beforeAll(async () => {
+    user = (await strapi.query('user', 'users-permissions').find({ username: 'pepe' }))[0]
+    if (!user) {
+      const publicRole = await strapi.query('role', 'users-permissions').findOne({ type: 'public' })
+      user = await strapi.query('user', 'users-permissions').create({
+        username: 'pepe',
+        email: 'pepe@test.com',
+        type: 'developer',
+        role: publicRole,
+      })
+    }
+    jwt = await strapi.plugins['users-permissions'].services.jwt.issue({ id: user.id })
+  })
+  afterAll(async () => {
+    await strapi.query('user', 'users-permissions').delete({ id: user.id })
+  })
+
   let dataStub = {
     title: 'test1',
     description: 'test1',
@@ -13,7 +33,6 @@ describe('Carbon-documents', () => {
     credit_end: '2022-12-31',
     credits: 454545454,
     serial_number: 'serialNumber',
-    created_by_user: 'test@test.com',
     status: 'pending',
     registry_url: 'test1',
     pdd: {},
@@ -33,7 +52,6 @@ describe('Carbon-documents', () => {
       .field('credit_end', dataStub.credit_end)
       .field('credits', dataStub.credits)
       .field('serial_number', dataStub.serial_number)
-      .field('created_by_user', dataStub.created_by_user)
       .field('status', dataStub.status)
       .field('registry_url', dataStub.registry_url)
       .attach('pdd', path.resolve(__dirname, '../../helpers/test-file.txt'))
@@ -42,6 +60,7 @@ describe('Carbon-documents', () => {
       .attach('cover', path.resolve(__dirname, '../../helpers/test.png'))
       .expect(200)
       .expect('Content-Type', /json/)
+      .set('Authorization', 'Bearer ' + jwt)
       .then((response) => {
         expect(response.body).toBeDefined()
         expect(response.body.title).toBe(dataStub.title)
@@ -49,10 +68,10 @@ describe('Carbon-documents', () => {
       })
   })
 
-  // TODO: Auth the user
-  it.skip('GET /carbon-documents', async () => {
+  it('GET /carbon-documents', async () => {
     await request(strapi.server)
       .get(`/carbon-documents`)
+      .set('Authorization', 'Bearer ' + jwt)
       .expect(200)
       .expect('Content-Type', /json/)
       .then((response) => {
@@ -61,10 +80,10 @@ describe('Carbon-documents', () => {
       })
   })
 
-  // TODO: Auth the user
-  it.skip('GET /carbon-documents/{id}', async () => {
+  it('GET /carbon-documents/{id}', async () => {
     await request(strapi.server)
       .get(`/carbon-documents/${createdDocument.id}`)
+      .set('Authorization', 'Bearer ' + jwt)
       .expect(200)
       .expect('Content-Type', /json/)
       .then((response) => {

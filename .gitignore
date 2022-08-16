@@ -16,3 +16,5 @@ exports
 *.cache
 build
 public/*
+
+node_modules.nosync

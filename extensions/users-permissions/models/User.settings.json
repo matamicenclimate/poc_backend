@@ -20,8 +20,7 @@
     "email": {
       "type": "email",
       "minLength": 6,
-      "configurable": false,
-      "required": true
+      "configurable": false
     },
     "provider": {
       "type": "string",
@@ -62,7 +61,7 @@
     "issuer": {
       "type": "string",
       "configurable": false,
-      "private": true
+      "private": false
     },
     "type": {
       "type": "enumeration",
@@ -75,7 +74,7 @@
     },
     "publicAddress": {
       "type": "string",
-      "private": true
+      "private": false
     },
     "avatar": {
       "model": "file",

@@ -51,15 +51,18 @@ module.exports = {
         const isStatusChange = key === 'status'
         const isDeveloperNftChange = key === 'developer_nft'
         const isFeeNftChange = key === 'fee_nft'
+        const isSwapGroupTxnId = key === 'swap_group_txn_id'
         const wasPreviouslyUndefined = !oldCarbonDocument[key]
+        const isSwappedCurrentState = oldCarbonDocument.status === 'swapped'
         const currentStateAllowsChanges = ['pending', 'accepted'].includes(oldCarbonDocument.status)
 
         if (isStatusChange) continue
         if (isDeveloperNftChange && wasPreviouslyUndefined) continue
         if (isFeeNftChange && wasPreviouslyUndefined) continue
-
-        // Allow changes if state is pending or accepted, otherwise deny any change
-        if (!currentStateAllowsChanges) delete newDocument[key]
+        if (isSwapGroupTxnId && !isSwappedCurrentState) continue
+        if (!currentStateAllowsChanges)
+          // Allow changes if state is pending or accepted, otherwise deny any change
+          delete newDocument[key]
       }
 
       newDocument.oldStatus = oldCarbonDocument.status
@@ -67,7 +70,7 @@ module.exports = {
     afterUpdate: async function (result, params, data) {
       const statuses = getStatuses()
       if (data.oldStatus !== result.status) {
-        const userEmail = result.created_by_user
+        const userEmail = result.user?.email
         if (result.status === statuses.ACCEPTED) {
           const title = `${result.title.slice(0, 10)}`
           const credits = `${result.credits}`
@@ -104,20 +107,17 @@ module.exports = {
           mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
         }
 
-        const userDb = await strapi.plugins['users-permissions'].services.user.fetch({
-          email: result.created_by_user,
-        })
         await strapi.services.notifications.create({
           title: `Carbon document status '${result.status.replace('_', ' ')}'`,
           description: `Carbon document status changed to '${result.status.replace('_', ' ')}'`,
           model: 'carbon-documents',
           model_id: result.id,
-          user: userDb.id,
+          user: result.user.id,
         })
 
         // Add activity when carbon document status is "swapped"
         if (result.status === 'swapped') {
-          await strapi.services.activities.add(userDb, result.developer_nft)
+          await strapi.services.activities.add(result.user, result.developer_nft)
         }
       }
     },

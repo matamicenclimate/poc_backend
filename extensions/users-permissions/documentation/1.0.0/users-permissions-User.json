@@ -1188,7 +1188,6 @@
         "required": [
           "id",
           "username",
-          "email",
           "type"
         ],
         "properties": {
@@ -1252,6 +1251,9 @@
               }
             }
           },
+          "issuer": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "default": "buyer",
@@ -1259,6 +1261,9 @@
               "buyer",
               "developer"
             ]
+          },
+          "publicAddress": {
+            "type": "string"
           },
           "avatar": {
             "required": [
@@ -1374,7 +1379,6 @@
       "NewUsersPermissionsUser": {
         "required": [
           "username",
-          "email",
           "type"
         ],
         "properties": {

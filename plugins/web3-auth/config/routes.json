@@ -1,0 +1,62 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "web3-auth.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/settings",
+      "handler": "web3-auth.getSettings",
+      "config": {
+        "policies": [
+          [
+            "admin::hasPermissions",
+            [
+              "plugins::web3-auth.settings.read"
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/settings",
+      "handler": "web3-auth.updateSettings",
+      "config": {
+        "policies": [
+          [
+            "admin::hasPermissions",
+            [
+              "plugins::web3-auth.settings.update"
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/web3-auth/login",
+      "handler": "Auth.login",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "Login a user with the signed authentication transaction"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/web3-auth/challenge/:address",
+      "handler": "Auth.prepareChallenge",
+      "config": {
+        "policies": ["plugins::web3-auth.ratelimit"],
+        "prefix": "",
+        "description": "Send an authentication transaction to a user"
+      }
+    }
+  ]
+}

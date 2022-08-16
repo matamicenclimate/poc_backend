@@ -822,7 +822,6 @@
           "credits",
           "serial_number",
           "registry_url",
-          "created_by_user",
           "pdd",
           "verification_report"
         ],
@@ -1016,9 +1015,6 @@
               "claimed",
               "swapped"
             ]
-          },
-          "created_by_user": {
-            "type": "string"
           },
           "pdd": {
             "required": [
@@ -1664,6 +1660,91 @@
                 "type": "string"
               }
             }
+          },
+          "user": {
+            "required": [
+              "id",
+              "username",
+              "type"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "resetPasswordToken": {
+                "type": "string"
+              },
+              "confirmationToken": {
+                "type": "string"
+              },
+              "confirmed": {
+                "type": "boolean"
+              },
+              "blocked": {
+                "type": "boolean"
+              },
+              "role": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "buyer",
+                  "developer"
+                ]
+              },
+              "publicAddress": {
+                "type": "string"
+              },
+              "avatar": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "surname": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "bio": {
+                "type": "string"
+              },
+              "personal_URL": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "alias": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "swap_group_txn_id": {
+            "type": "string"
           }
         }
       },
@@ -1677,8 +1758,7 @@
           "credit_end",
           "credits",
           "serial_number",
-          "registry_url",
-          "created_by_user"
+          "registry_url"
         ],
         "properties": {
           "title": {
@@ -1734,9 +1814,6 @@
               "swapped"
             ]
           },
-          "created_by_user": {
-            "type": "string"
-          },
           "project_type": {
             "type": "string"
           },
@@ -1774,6 +1851,12 @@
             "type": "string"
           },
           "fee_nft": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "swap_group_txn_id": {
             "type": "string"
           },
           "created_by": {
