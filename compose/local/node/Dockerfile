@@ -3,6 +3,8 @@ FROM node:14-alpine AS BUILD_IMAGE
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 
+RUN apk add git
+
 WORKDIR /opt
 
 COPY . /opt
