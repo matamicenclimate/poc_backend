@@ -27,41 +27,6 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
 
 * If all it is correct, you could navigate to http://localhost:1337/admin/ to see your strapi in action!
 
-### Set up user permissions
-Under Settings > USERS & PERMISSIONS PLUGIN > Roles > Authenticated you need to allow these endpoints:
-* APPLICATION
-  * ACTIVITIES
-    * me
-  * CARBON-DOCUMENTS
-    * claim
-    * create
-    * find
-    * swap
-    * findone
-    * prepareswap
-  * COMPENSATIONS
-    * calculate
-    * findone
-    * claimcertificate
-    * create
-    * me
-    * prepareclaimcertificate
-  * CURRENCY
-    * find
-  * INFO
-    * find
-  * NOTIFICATIONS
-    * me
-    * markallasread
-  * UTILS
-    * chartbalanceme
-* USER-PERMISSIONS
-  * AUTH
-    * connect
-  * USER
-    * me
-    * update
-
 # Tests
 
 ```export DEBUG=nock.* && yarn test```
