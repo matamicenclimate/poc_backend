@@ -750,6 +750,11 @@
                 "type": "string"
               }
             }
+          },
+          "extended_message": {
+            "type": "string",
+            "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus pretium tellus, nec condimentum odio euismod quis. Nam ornare, turpis vel tempus vulputate, quam nunc dapibus mauris, sed porttitor ligula sapien ut velit. Aenean hendrerit facilisis lacus, accumsan lacinia mi dignissim ac. Mauris ut tortor sit amet libero finibus interdum. Curabitur ultrices tincidunt tincidunt. Quisque nec nibh sed neque aliquam luctus nec vel leo. Ut scelerisque, erat id commodo vestibulum, nibh turpis.",
+            "maxLength": 500
           }
         }
       },
@@ -776,6 +781,11 @@
           },
           "user": {
             "type": "string"
+          },
+          "extended_message": {
+            "type": "string",
+            "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus pretium tellus, nec condimentum odio euismod quis. Nam ornare, turpis vel tempus vulputate, quam nunc dapibus mauris, sed porttitor ligula sapien ut velit. Aenean hendrerit facilisis lacus, accumsan lacinia mi dignissim ac. Mauris ut tortor sit amet libero finibus interdum. Curabitur ultrices tincidunt tincidunt. Quisque nec nibh sed neque aliquam luctus nec vel leo. Ut scelerisque, erat id commodo vestibulum, nibh turpis.",
+            "maxLength": 500
           },
           "created_by": {
             "type": "string"
