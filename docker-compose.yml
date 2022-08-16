@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:5.0.10
     restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=guest
@@ -10,6 +10,9 @@ services:
       - MONGO_INITDB_DATABASE=project
     ports:
       - '27018:27017'
+    volumes:
+      - ./docker/mongo-data:/data/db
+      - ./docker/mongo-config:/data/configdb
 
   minio:
     container_name: Minio
@@ -24,9 +27,6 @@ services:
     volumes:
       - ./docker/minio:/data
     restart: unless-stopped
-
-volumes:
-  mongodb-data:
 
 networks:
   dev:
