@@ -268,6 +268,18 @@ async function me(ctx) {
   return activities
 }
 
+async function paginated(ctx) {
+  const user = ctx.state.user
+  const totalCountReq = strapi.services.compensations.count({ user: user.id, ...ctx.query })
+  const compensationsReq = strapi.services.compensations.find({ user: user.id, ...ctx.query })
+  const [totalCount, compensations] = await Promise.all([totalCountReq, compensationsReq])
+
+  return {
+    total: totalCount,
+    data: compensations,
+  }
+}
+
 async function mint(ctx) {
   const { id } = ctx.params
   // TODO Use indexer to has updated fields
@@ -394,6 +406,7 @@ const algoFn = {
 }
 module.exports = {
   me,
+  paginated,
   calculate,
   mint,
   algoFn,
