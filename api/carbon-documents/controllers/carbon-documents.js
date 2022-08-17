@@ -356,13 +356,31 @@ async function prepareSwap(ctx) {
 
   swapTxn.fee += 1 * algosdk.ALGORAND_MIN_TX_FEE
 
-  const swapGroupTxn = [unfreezeTxn, transferTxn, swapTxn]
-  const [unfreeze, transfer, swap] = algosdk.assignGroupID(swapGroupTxn)
-  const groupID = swap.group.toString('base64')
+  const indexerClient = algoIndexer()
+  const query = await indexerClient
+    .lookupAccountAssets(user.publicAddress)
+    .assetId(Number(process.env.CLIMATECOIN_ASA_ID))
+    .do()
+
+  let swapGroupTxn = [unfreezeTxn, transferTxn, swapTxn]
+
+  if (query?.assets?.length === 0) {
+    const optinTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: user.publicAddress,
+      assetIndex: Number(process.env.CLIMATECOIN_ASA_ID),
+      to: user.publicAddress,
+      amount: Number(0),
+      suggestedParams,
+    })
+
+    swapGroupTxn = [unfreezeTxn, transferTxn, optinTxn, swapTxn]
+  }
+  const txnGroup = algosdk.assignGroupID(swapGroupTxn)
+  const groupID = txnGroup[0].group.toString('base64')
 
   await strapi.services['carbon-documents'].update({ id }, { status: 'claimed', swap_group_txn_id: groupID })
 
-  const encodedTxns = [unfreeze, transfer, swap].map((txn) => algosdk.encodeUnsignedTransaction(txn))
+  const encodedTxns = txnGroup.map((txn) => algosdk.encodeUnsignedTransaction(txn))
 
   return encodedTxns
 }
