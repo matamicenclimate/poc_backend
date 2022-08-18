@@ -79,6 +79,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/carbon-documents/by-user/paginated",
+      "handler": "carbon-documents.paginated",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

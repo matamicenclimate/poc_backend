@@ -42,6 +42,19 @@ async function find(ctx) {
   return await strapi.services['carbon-documents'].find({ ...ctx.query })
 }
 
+async function paginated(ctx) {
+  const user = ctx.state.user
+  if (!user) return ctx.unauthorized()
+  const totalCountReq = strapi.services['carbon-documents'].count({ user: user.id, ...ctx.query })
+  const carbonDocumentsReq = strapi.services['carbon-documents'].find({ user: user.id, ...ctx.query })
+  const [totalCount, carbonDocuments] = await Promise.all([totalCountReq, carbonDocumentsReq])
+
+  return {
+    total: totalCount,
+    data: carbonDocuments,
+  }
+}
+
 async function create(ctx) {
   if (!ctx.state.user) return ctx.unauthorized()
 
@@ -436,4 +449,5 @@ module.exports = {
   prepareSwap,
   find,
   findOne,
+  paginated,
 }
