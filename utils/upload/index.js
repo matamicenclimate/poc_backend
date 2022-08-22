@@ -4,6 +4,7 @@ const mime = require('mime-types')
 const fs = require('fs/promises')
 const path = require('path')
 const { httpClient } = require('../httpClient')
+const fetch = require('node-fetch')
 
 async function pushFile(ctx) {
   const files = ctx.request.files
@@ -35,7 +36,7 @@ const readFileFromUploads = async (name) => {
  * @param fileUrl {string}
  */
 const getFileFromS3 = (fileUrl) => {
-  return httpClient.get(fileUrl).then((res) => res.data)
+  return fetch(fileUrl, { method: 'GET' })
 }
 
 module.exports = {

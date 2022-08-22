@@ -283,11 +283,13 @@ async function paginated(ctx) {
 async function mint(ctx) {
   const { id } = ctx.params
   // TODO Use indexer to has updated fields
-  const compensation = await strapi.services['compensations'].findOne({ id })
+  let compensation = await strapi.services['compensations'].findOne({ id })
   if (!['received_certificates'].includes(compensation.state)) {
     return ctx.badRequest("Compensation hasn't been reviewed")
   }
   const ipfsCIDs = await uploadFilesToIPFS(compensation)
+  compensation = await strapi.services['compensations'].findOne({ id })
+
   const algodclient = algoClient()
 
   const creator = algosdk.mnemonicToSecretKey(process.env.ALGO_MNEMONIC)
@@ -298,7 +300,11 @@ async function mint(ctx) {
     const consolidationPdfBuffer = await createPDF(html, filePath)
 
     // const pdfBuffer = await readFileFromUploads(filePath)
-    const consolidationPdfCid = await uploadFileToIPFS(consolidationPdfBuffer, 'application/pdf', compensation.id)
+    const consolidationPdfCid = await uploadFileToIPFS(
+      consolidationPdfBuffer,
+      'application/pdf',
+      `${compensation.id}.pdf`,
+    )
 
     const compensationNftId = await algoFn.mintCompensationNft(algodclient, creator, compensation, consolidationPdfCid)
     const approveTxnId = await algoFn.approve_burn(
@@ -439,13 +445,13 @@ async function getNFTsToBurn(amount) {
 }
 
 async function uploadFilesToIPFS(compensation) {
-
   return new Promise(async (resolve, reject) => {
     try {
       const ipfsCIDs = []
       for (const nft of compensation.nfts) {
         const file = await getFileFromS3(nft.registry_certificate[0].url)
-        const result = await uploadFileToIPFS(file, nft.registry_certificate[0].mime, nft.id)
+        const fileBuffer = await file.buffer()
+        const result = await uploadFileToIPFS(fileBuffer, nft.registry_certificate[0].mime, `${nft.id}.pdf`)
         await strapi.services['nfts'].update(
           { id: nft.id },
           {
