@@ -9,6 +9,7 @@ const mailer = require(`${process.cwd()}/utils/mailer`)
 const algosdk = require('algosdk')
 const { algoClient } = require('../../../config/algorand')
 const algorandUtils = require('../../../utils/algorand')
+const { LogoStrapiBuffer } = require('../../../utils/pdf')
 
 async function rejectCompensation(compensation) {
   const algodClient = algoClient()
@@ -83,18 +84,44 @@ module.exports = {
     },
 
     afterUpdate: async function (result, params, data) {
+      const monthNames = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ]
+      var date = result.createdAt
+      var dd = String(date.getDate()).padStart(2, '0')
+      var mm = String(monthNames[date.getMonth()])
+      var yyyy = date.getFullYear()
+      var hours = date.getHours()
+      var minutes = date.getMinutes()
+
+      var time = `${hours}:${minutes}`
+      date = `${dd} ${mm} ${yyyy}`
+
       if (data.oldState !== result.state) {
         const user = result.user
         //const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${result.id}`
+        const compensationID = result.id
         const amount = result.amount
+
         const certificate = result.consolidation_certificate_ipfs_cid
         const explorerURL = 'https://testnet.algoexplorer.io/'
         const txnGroupId = encodeURIComponent(result.txn_id)
         if (result.state === 'minted') {
           const mailContent_confirmed = {
-            title: 'Compensation confirmed.',
-            claim: `You have compensated <strong>${amount}</strong> t of <strong>CO2</strong>, thank you!`,
-            text: `Thank you for clearing with us. Your transaction has been successfully completed on the blockchain network. You can view the transaction or download the certificate.`,
+            title: 'Compensation completed',
+            claim: `Your ${amount} tCo2 offset has been successfully completed. You already have the credits available.`,
+            text: `Thank you for clearing with us. Your transaction made on ${date} at ${time} with ID ${compensationID} has been confirmed by our team, your credits are now available in your wallet.`,
             button_1: {
               label: 'View transaction',
               href: `${explorerURL}tx/group/${txnGroupId}`,
@@ -107,12 +134,14 @@ module.exports = {
         } else if (result.state === 'rejected') {
           const mailContent_rejected = {
             title: 'Compensation rejected.',
-            claim: `Your compensation request has been rejected.`,
-            text: `<strong>${amount}</strong> ClimateCoins were returned to your Algorand account.`,
+            claim: `Your ${amount} tCo2 offset has not passed our verification process and has been cancelled by the system.`,
+            text: `Thank you for clearing with us. Your transaction made on ${date} at ${time} with ID ${compensationID} has not been accepted by our system, the transaction has been blocked, sorry for the inconvenience.`,
             button_1: {
               label: 'View transaction',
               href: `${explorerURL}tx/group/${txnGroupId}`,
             },
+            bgColor: '#4b0810',
+            titleColor: '#ff999f',
           }
 
           const rejectedMail = mailer.generateMailHtml(mailContent_rejected)
@@ -181,8 +210,8 @@ module.exports = {
       const txnGroupId = encodeURIComponent(result.txn_id)
 
       const mailContent_pending = {
-        title: 'Compensation pending.',
-        claim: `Your compensation is pending`,
+        title: 'Compensation created properly.',
+        claim: `Your compensation has been successfully created but is pending verification.`,
         text: `Your transaction is pending approval by the administrator. We will inform you when it is accepted.`,
         button_1: {
           label: 'View transaction',
@@ -191,7 +220,9 @@ module.exports = {
       }
 
       const creationMail = mailer.generateMailHtml(mailContent_pending)
-      await mailer.send('New compensation', creationMail, result.user.email)
+      await mailer.send('New compensation', creationMail, result.user.email, [
+        { buffer: LogoStrapiBuffer, cid: 'logo-strapi.png' },
+      ])
 
       await strapi.services.notifications.create({
         title: `Compensation status '${result.state.replace('_', ' ')}'`,

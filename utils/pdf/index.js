@@ -2,11 +2,18 @@ var fs = require('fs')
 const path = require('path')
 const puppeteer = require('puppeteer')
 
+function readPngBuffer(file) {
+  return fs.readFileSync(path.join(__dirname, file))
+}
+
 function readPng(file) {
-  return `data:image/png;base64,${fs.readFileSync(path.join(__dirname, file)).toString('base64')}`
+  return `data:image/png;base64,${readPngBuffer(file).toString('base64')}`
 }
 
 var Logo = readPng('./assets/logo-light.png')
+var LogoBuffer = readPngBuffer('./assets/logo-light.png')
+var LogoStrapiBuffer = readPngBuffer('../../admin/src/assets/images/logo-strapi.png')
+
 var Sign = readPng('./assets/sign.png')
 
 async function createPDF(html, filePath) {
@@ -205,4 +212,6 @@ module.exports = {
   createPDF,
   generateCompensationPDF,
   Logo,
+  LogoBuffer,
+  LogoStrapiBuffer,
 }

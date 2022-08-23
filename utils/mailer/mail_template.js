@@ -1,8 +1,7 @@
 var Module = require('module')
 var fs = require('fs')
-const {Logo} = require('../pdf/index')
 
-const getButton = (button, color) => {
+const getButton = (button, bgColor, textColor) => {
   if (button !== undefined) {
     return `<table
     border="0"
@@ -25,10 +24,9 @@ const getButton = (button, color) => {
                         cellspacing="0"
                         class="mcnButtonContentContainer"
                         style="
-                        background-color: #f4f5f6;
+                        background-color: ${bgColor};
                         "
-                        >
-                        <tbody>
+                        >                        <tbody>
                         <tr>
                             <td
                                 align="center"
@@ -40,7 +38,7 @@ const getButton = (button, color) => {
                                     title="View transaction"
                                     href=${button.href}
                                     target="_blank"
-                                    style="color: ${color};"
+                                    style="color: ${textColor};"
                                     >${button.label}
                                 </a>
                             </td>
@@ -141,7 +139,7 @@ function getHTMLTemplate(mailContent) {
              line-height: inherit !important;
              }
              #bodyCell {
-             padding: 10px;
+             padding: 60px;
              }
              /*
              Background Style
@@ -230,7 +228,6 @@ function getHTMLTemplate(mailContent) {
              .mcnButtonContentContainer {
              border-collapse: separate !important;
              border-radius: 50px;
-             background-color: #364237;
              width: 330px;
              font-size: 25px;
              padding: 18px;
@@ -265,8 +262,20 @@ function getHTMLTemplate(mailContent) {
              text-align: left;
              font-size: 26px
              }
-             .mcnLogo{
-                width:220px;
+             .mcnBodyLogo{
+                width:150px;
+                padding-left: 72px;
+                padding-top: 37px;
+             }
+             .mcnFooterLogo{
+               width:150px;              
+            }
+             .mcnDivider{
+               margin-left: 72px;
+               margin-top: 37px;
+               height: 1px; 
+               background-color: #ededed; 
+               width:100%;
              }
              .mcnFooterText{
              text-align: right;
@@ -298,8 +307,17 @@ function getHTMLTemplate(mailContent) {
              padding: 0px 150px 100px 60px;
              font-size: 22px;
              }
-             .mcnLogo{
-                width:200px;
+             .mcnBodyLogo{
+                width:125px;
+                padding-left: 60px;
+                padding-top: 32px;
+             }
+             .mcnFooterLogo{
+               width:125px;              
+            }
+             .mcnDivider{
+               margin-left: 60px;
+               margin-top: 32px;
              }
              }
              @media only screen and (max-width:768px) {
@@ -326,8 +344,17 @@ function getHTMLTemplate(mailContent) {
              .mcnButtonBlockInner{
              padding-bottom: 10px;
              }
-             .mcnLogo{
-                width:150px;
+             .mcnBodyLogo{
+                width:112px;
+                padding-left: 50px;
+                padding-top: 28px;
+             }
+             .mcnFooterLogo{
+               width:112px;
+            }
+             .mcnDivider{
+               margin-left: 50px;
+               margin-top: 28px;
              }
              .mcnFooterText{
              font-size:14px;
@@ -367,8 +394,17 @@ function getHTMLTemplate(mailContent) {
              padding: 0px 80px 60px 50px;
              font-size: 18px;
              }
-             .mcnLogo{
-                width:100px;
+             .mcnBodyLogo{
+                width:90px;
+                padding-left: 40px;
+                padding-top: 24px;
+             }
+             .mcnFooterLogo{
+               width:90px;
+            }
+             .mcnDivider{
+               margin-left: 40px;
+               margin-top: 24px;
              }
              .mcnFooterText{
              font-size:10px;
@@ -519,6 +555,45 @@ function getHTMLTemplate(mailContent) {
                                               class="mcnBoxedTextContentContainer"
                                               >
                                               <tbody>
+                                              <tr>
+                                                 <td>
+                                                    <table
+                                                       border="0"
+                                                       cellspacing="0"
+                                                       class="mcnTextContentContainer"
+                                                       width="100%"
+                                                       style="min-width: 100% !important; background-color: ${
+                                                         mailContent.bgColor ? mailContent.bgColor : '#364237'
+                                                       }; border-collapse: collapse;"
+                                                       >
+                                                       <tbody>
+                                                       <tr>
+                                                          <td
+                                                             valign="top"
+                                                             class="mcnTextContent"
+                                                             style="text-align: left"
+                                                             >
+                                                              <img class="mcnBodyLogo" src="cid:logo.png" alt="Climatecoin Logo"/>
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                    <tbody>
+                                                    <tr>
+                                                       <td
+                                                          valign="top"
+                                                          class="mcnTextContent"
+                                                          style="text-align: left"
+                                                          class=
+                                                          >
+                                                          <div class="mcnDivider"/> 
+                                                      </td>
+                                                    </tr>
+                                                 </tbody>
+                                                    </table>
+                                                 </td>
+                                              </tr>
+                                           </tbody>
+                                              <tbody>
                                                  <tr>
                                                     <td>
                                                        <table
@@ -526,13 +601,17 @@ function getHTMLTemplate(mailContent) {
                                                           cellspacing="0"
                                                           class="mcnTextContentContainer"
                                                           width="100%"
-                                                          style="min-width: 100% !important; background-color: #404040; border-collapse: collapse;"
+                                                          style="min-width: 100% !important; background-color: ${
+                                                            mailContent.bgColor ? mailContent.bgColor : '#364237'
+                                                          }; border-collapse: collapse;"
                                                           >
                                                           <tbody>
                                                              <tr>
                                                                 <td
                                                                    valign="top"
                                                                    class="mcnTextTitle"
+                                                                   style="
+                                                                   color: ${mailContent.titleColor}"
                                                                    >
                                                                    <span>${mailContent.title}</span>
                                                                 </td>
@@ -550,7 +629,9 @@ function getHTMLTemplate(mailContent) {
                                                           cellspacing="0"
                                                           class="mcnTextContentContainer"
                                                           width="100%"
-                                                          style="min-width: 100% !important; background-color: #404040; border-collapse: collapse;"
+                                                          style="min-width: 100% !important; background-color: ${
+                                                            mailContent.bgColor ? mailContent.bgColor : '#364237'
+                                                          } ; border-collapse: collapse;"
                                                           >
                                                           <tbody>
                                                              <tr>
@@ -623,8 +704,8 @@ function getHTMLTemplate(mailContent) {
                                   </tr>
                                </tbody>
                             </table>
-                            ${getButton(mailContent.button_1, '#777E90')}
-                            ${getButton(mailContent.button_2, '#FCFCFD')}
+                            ${getButton(mailContent.button_1, (bgColor = '#f4f5f6'), (textColor = '#777E90'))}
+                            ${getButton(mailContent.button_2, (bgColor = '#364237'), (textColor = '#FCFCFD'))}
                             </td>
                       </tr>
                       <tr>
@@ -639,7 +720,7 @@ function getHTMLTemplate(mailContent) {
                                >
                                <tbody class="mcnTextBlockOuter">
                                   <tr>
-                                     <td valign="top" class="mcnTextBlockInner" style="padding-top: 36px">
+                                     <td valign="top" class="mcnTextBlockInner" style="display:flex; padding-top: 36px; align-items:center">
                                         <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                                            <tr>
                                               <td valign="top">
@@ -659,7 +740,7 @@ function getHTMLTemplate(mailContent) {
                                                              class="mcnTextContent"
                                                              style="text-align: left"
                                                              >
-                                                              <img class="mcnLogo" src="${Logo}" alt="Climatecoin Logo"/>
+                                                              <img class="mcnFooterLogo" src="cid:logo.png" alt="Climatecoin Logo"/>
                                                           </td>
                                                        </tr>
                                                     </tbody>
@@ -681,14 +762,14 @@ function getHTMLTemplate(mailContent) {
                                                              valign="top"
                                                              class="mcnTextContent"
                                                              >
-                                                             <div class="mcnFooterText" >
-                                                                ClimateCoin © 2022. All rights reserved.</br>
-                                                                <a
-                                                                href="https://climatetrade.com/es/inicio/?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLV2SgJulDrvx7HqpdYvE3jOWqpbPmw3uC5w_I6hiscEHInEOe1s00IaAtlkEALw_wcB"
-                                                                target="_blank">
-                                                                I don't want to receive these emails anymore
-                                                                </a>
-                                                             </div>
+                                                               <div class="mcnFooterText" >
+                                                               ClimateCoin © 2022. All rights reserved.</br>
+                                                                  <a
+                                                                  href="https://climatetrade.com/es/inicio/?gclid=Cj0KCQjwlemWBhDUARIsAFp1rLV2SgJulDrvx7HqpdYvE3jOWqpbPmw3uC5w_I6hiscEHInEOe1s00IaAtlkEALw_wcB"
+                                                                  target="_blank">
+                                                                  I don't want to receive these emails anymore
+                                                                  </a>
+                                                               </div>
                                                           </td>
                                                        </tr>
                                                     </tbody>
