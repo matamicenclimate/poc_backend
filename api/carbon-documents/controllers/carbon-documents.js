@@ -90,7 +90,7 @@ async function create(ctx) {
   }
   const pendingMail = mailer.generateMailHtml(mailContent_pending)
 
-  await mailer.send('Credits received', pendingMail, createdDocument.user.email)
+  await mailer.send('Credits received', pendingMail, createdDocument.user)
   return createdDocument
 }
 

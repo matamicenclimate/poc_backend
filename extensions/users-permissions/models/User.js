@@ -1,5 +1,6 @@
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require('../../../config/algorand')
+const mailer = require('../../../utils/mailer')
 
 async function fundUser(user, amount) {
   const algodClient = algoClient()
@@ -20,7 +21,7 @@ async function fundUser(user, amount) {
   await algosdk.waitForConfirmation(algodClient, txId, 3)
 }
 
-async function fundUserIfNew(user, amount=process.env.ALGOS_TO_NEW_USER) {
+async function fundUserIfNew(user, amount = process.env.ALGOS_TO_NEW_USER) {
   const indexerClient = algoIndexer()
   try {
     const userAddress = await indexerClient.lookupAccountByID(user.publicAddress).do()
@@ -35,6 +36,7 @@ module.exports = {
   lifecycles: {
     beforeCreate: async function (user) {
       if (user.publicAddress) await fundUserIfNew(user, process.env.ALGOS_TO_NEW_USER)
+      if (user.issuer === 'magic-link') user.confirmed = true
     },
     beforeUpdate: async function (params, newUser) {
       const { _id } = params
@@ -45,12 +47,22 @@ module.exports = {
       for (const key of changeListKeys) {
         const isPublicAddressChange = key === 'publicAddress'
         const isUsernameChange = key === 'username'
+        const isIssuerChange = key === 'issuer'
+        const isEmailChange = key === 'email'
+        const isDifferent = newUser[key] !== oldUser[key]
+        const wasPreviouslyUndefined = !oldUser[key]
 
-        if (isPublicAddressChange && newUser.publicAddress && oldUser.publicAddress !== newUser.publicAddress) {
+        if (isPublicAddressChange && isDifferent) {
           await fundUserIfNew(newUser, process.env.ALGOS_TO_NEW_USER)
           continue
         }
+        if (isEmailChange && isDifferent && oldUser['issuer'] !== 'magic-link') {
+          newUser['confirmed'] = false
+          newUser['confirmationToken'] = await mailer.sendVerificationMail(newUser.email)
+        }
+        if (isEmailChange && oldUser['issuer'] === 'magic-link' && !wasPreviouslyUndefined) delete newUser[key]
         if (isUsernameChange) delete newUser[key]
+        if (isIssuerChange && !wasPreviouslyUndefined) delete newUser[key]
       }
     },
   },

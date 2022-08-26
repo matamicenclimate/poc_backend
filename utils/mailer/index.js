@@ -3,19 +3,20 @@
 const { getHTMLTemplate } = require('./mail_template')
 const { LogoBuffer } = require('../pdf/index')
 const mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN })
+const crypto = require('crypto')
 
 const MAIL_ACTIONS = {
   SENT: 'sent',
   SENDING: 'sending',
 }
 
-async function sendMail(subject, content, mailTo, images = []) {
+async function sendMail(email, subject, content, images = []) {
   // TODO: REMOVE THIS WHEN MAILGUN IN PRODUCTION
   let recipients = [process.env.MAILGUN_EMAIL_TO]
-  if (mailTo === 'alex.casas@climatetrade.com') recipients.push(mailTo)
+  if (email === 'alex.casas@climatetrade.com') recipients.push(email)
   try {
     await strapi.plugins['email'].services.email.send({
-      //to: mailTo ?? process.env.MAILGUN_EMAIL_TO,
+      //to: email ?? process.env.MAILGUN_EMAIL_TO,
       // TODO: CUENTA DE CORREOS ES DE TIPO SANDBOX, SOLO SE PUEDE ENVIAR A CUENTAS DETERMINADAS
       to: recipients.join(','),
       from: process.env.MAILGUN_EMAIL,
@@ -35,6 +36,31 @@ async function sendMail(subject, content, mailTo, images = []) {
   }
 }
 
+async function sendTemplateMail(subject, content, user, images = []) {
+  const { email, confirmed } = user
+  if (!confirmed) return
+  await sendMail(email, subject, content, images)
+}
+
+async function sendVerificationMail(email) {
+  const confirmationToken = crypto.randomBytes(20).toString('hex')
+
+  const verificationMailData = {
+    title: 'Email verification',
+    claim: `Click the button below to verify your email.`,
+    text: `Please verify your email to be able to receive email notifications about the status of your compensations and carbon documents.`,
+    button_2: {
+      label: 'Verify email',
+      href: `${process.env.FRONTEND_BASE_URL}/verify-email?token=${confirmationToken}`,
+    },
+  }
+
+  const confirmedMail = generateMailHtml(verificationMailData)
+  await sendMail(email, 'Email verification', confirmedMail)
+
+  return confirmationToken
+}
+
 function logMailAction(collection, status, action, user) {
   strapi.log.info(`[ ${collection} status ${status} ] mail ${action} to ${user}`)
 }
@@ -44,8 +70,9 @@ function generateMailHtml(mailContent) {
 }
 
 module.exports = {
-  send: sendMail,
+  send: sendTemplateMail,
   MAIL_ACTIONS,
   logMailAction,
   generateMailHtml,
+  sendVerificationMail,
 }

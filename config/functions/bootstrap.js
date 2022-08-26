@@ -13,6 +13,9 @@ const publicPermissions = {
   'web3-auth': {
     auth: ['preparechallenge', 'login'],
   },
+  'users-permissions': {
+    user: ['emailverification'],
+  },
 }
 
 const authenticatedPermissions = {
@@ -20,7 +23,7 @@ const authenticatedPermissions = {
     auth: ['preparechallenge', 'login'],
   },
   'users-permissions': {
-    user: ['me', 'findone', 'update'],
+    user: ['me', 'profileupdate', 'emailverification'],
     auth: ['connect'],
   },
   application: {

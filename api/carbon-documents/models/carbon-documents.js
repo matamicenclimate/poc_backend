@@ -88,7 +88,7 @@ module.exports = {
             },
           }
           const acceptedMail = mailer.generateMailHtml(mailContent_accepted)
-          await mailer.send('Document accepted', acceptedMail, userEmail)
+          await mailer.send('Document accepted', acceptedMail, result.user)
           mailer.logMailAction('carbon-documents', statuses.ACCEPTED, mailer.MAIL_ACTIONS.SENT, userEmail)
           await strapi.services['carbon-documents'].update({ id: result._id }, { status: statuses.WAITING_FOR_CREDITS })
         } else if (result.status === statuses.COMPLETED) {
@@ -103,7 +103,7 @@ module.exports = {
             },
           }
           const completedMail = mailer.generateMailHtml(mailContent_completed)
-          await mailer.send('Credits received', completedMail, userEmail)
+          await mailer.send('Credits received', completedMail, result.user)
           mailer.logMailAction('carbon-documents', statuses.COMPLETED, mailer.MAIL_ACTIONS.SENT, userEmail)
         }
 

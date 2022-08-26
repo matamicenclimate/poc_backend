@@ -1,0 +1,34 @@
+{
+  "routes": [
+    {
+      "method": "PUT",
+      "path": "/users/profile",
+      "handler": "User.profileUpdate",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "Update user's profile",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User",
+          "actionType": "update"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/users/verify",
+      "handler": "User.emailVerification",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "Verify user email",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User",
+          "actionType": "update"
+        }
+      }
+    }
+  ]
+}

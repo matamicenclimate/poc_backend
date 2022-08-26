@@ -1,6 +1,3 @@
-var Module = require('module')
-var fs = require('fs')
-
 const getButton = (button, bgColor, textColor) => {
   if (button !== undefined) {
     return `<table
@@ -268,13 +265,13 @@ function getHTMLTemplate(mailContent) {
                 padding-top: 37px;
              }
              .mcnFooterLogo{
-               width:150px;              
+               width:150px;
             }
              .mcnDivider{
                margin-left: 72px;
                margin-top: 37px;
-               height: 1px; 
-               background-color: #ededed; 
+               height: 1px;
+               background-color: #ededed;
                width:100%;
              }
              .mcnFooterText{
@@ -313,7 +310,7 @@ function getHTMLTemplate(mailContent) {
                 padding-top: 32px;
              }
              .mcnFooterLogo{
-               width:125px;              
+               width:125px;
             }
              .mcnDivider{
                margin-left: 60px;
@@ -585,7 +582,7 @@ function getHTMLTemplate(mailContent) {
                                                           style="text-align: left"
                                                           class=
                                                           >
-                                                          <div class="mcnDivider"/> 
+                                                          <div class="mcnDivider"/>
                                                       </td>
                                                     </tr>
                                                  </tbody>

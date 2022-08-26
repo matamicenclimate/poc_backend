@@ -130,7 +130,7 @@ module.exports = {
           }
 
           const confirmedMail = mailer.generateMailHtml(mailContent_confirmed)
-          await mailer.send('Compensation confirmed', confirmedMail, user.email)
+          await mailer.send('Compensation confirmed', confirmedMail, user)
         } else if (result.state === 'rejected') {
           const mailContent_rejected = {
             title: 'Compensation rejected.',
@@ -145,7 +145,7 @@ module.exports = {
           }
 
           const rejectedMail = mailer.generateMailHtml(mailContent_rejected)
-          await mailer.send('Compensation rejected', rejectedMail, user.email)
+          await mailer.send('Compensation rejected', rejectedMail, user)
         }
 
         await strapi.services.notifications.create({
@@ -220,7 +220,7 @@ module.exports = {
       }
 
       const creationMail = mailer.generateMailHtml(mailContent_pending)
-      await mailer.send('New compensation', creationMail, result.user.email, [
+      await mailer.send('New compensation', creationMail, result.user, [
         { buffer: LogoStrapiBuffer, cid: 'logo-strapi.png' },
       ])
 
