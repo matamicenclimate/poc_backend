@@ -8,7 +8,7 @@
     "description": "Secure, simple and anonymous web3 authentication."
   },
   "dependencies": {
-    "algorand-session-wallet": "https://github.com/fernando-deka/algorand-session-wallet#magic-link",
+    "algorand-session-wallet-deka": "^1.8.6",
     "algosdk": "^1.19.0",
     "koa2-ratelimit": "^1.1.1",
     "lodash": "^4.17.21",

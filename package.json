@@ -22,7 +22,7 @@
     "@pinata/sdk": "^1.1.26",
     "@sentry/node": "^7.4.1",
     "@strapi/plugin-sentry": "4.1.11",
-    "algorand-session-wallet": "git+https://git@github.com/fernando-deka/algorand-session-wallet#magic-link",
+    "algorand-session-wallet-deka": "^1.8.6",
     "algosdk": "1.19.0",
     "axios": "^0.27.2",
     "config": "^3.3.6",

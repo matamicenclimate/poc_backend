@@ -9,7 +9,7 @@ import pluginId from '../../pluginId'
 import { request } from 'strapi-helper-plugin'
 import { Container, Block, P, AlgoWalletIMG, AlgoWalletButton } from '../../components/Styled'
 import { InputText, Button, Padded, Toggle } from '@buffetjs/core'
-import { SessionWallet, allowedWallets } from 'algorand-session-wallet'
+import { SessionWallet, allowedWallets } from 'algorand-session-wallet-deka'
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 
