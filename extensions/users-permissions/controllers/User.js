@@ -71,8 +71,27 @@ async function emailVerification(ctx) {
   })
 }
 
+async function typeUpdate(ctx) {
+  const { type } = ctx.request.body
+
+  const userService = strapi.plugins['users-permissions'].services.user
+
+  if (_.isEmpty(type)) {
+    return ctx.badRequest('Invalid type')
+  }
+
+  const user = await userService.edit({ id: ctx.state.user.id }, { type })
+
+  ctx.send(
+    sanitizeEntity(user, {
+      model: strapi.query('user', 'users-permissions').model,
+    }),
+  )
+}
+
 module.exports = {
   me,
   profileUpdate,
   emailVerification,
+  typeUpdate,
 }

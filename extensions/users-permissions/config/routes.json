@@ -29,6 +29,21 @@
           "actionType": "update"
         }
       }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/type",
+      "handler": "User.typeUpdate",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "Update user's type",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User",
+          "actionType": "update"
+        }
+      }
     }
   ]
 }
