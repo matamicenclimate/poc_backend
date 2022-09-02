@@ -109,7 +109,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
           </div>
           <hr style="width: 100%; margin-top:30px"/>
           <h1 style="max-width: 50%; height: min-content; font-size: 52px; color: #00db7d;">
-            ${title(nft)} compensation certificate
+            '${title(nft)}' compensation certificate
           </h1>
           <p style="max-width: 80%; height: min-content; font-size: 17px; color: #fcfcfd;">
             You have compensate <strong>${
@@ -121,7 +121,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
         </div>
         <div style="width: 100%; padding: 50px;">
           <div style="width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; gap: 36px;">
-            <dl style="grid-column: 1 / 4; grid-row: 1 ; border: 1px #e6e8ec solid; border-radius: 8px; padding: 16px; margin:0px; font-size:9px;   gap: 10.7px;">
+            <dl style="grid-column: 1 / 4; grid-row: 1 ; border: 1px #e6e8ec solid; border-radius: 8px; padding: 16px; margin:0px; font-size:14px; gap: 10.7px;">
               <dt style="margin-bottom: 5px; line-height: 1.71; text-align: left; color: #777e90;">
                 Project
               </dt>
@@ -172,8 +172,9 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
                   <dt style="margin-bottom:5px; line-height: 1.71; text-align: left; color: #777e90;">
                     ID Transaction
                   </dt>
-                  <dd style="margin-bottom: 5px; margin-left:0px">
-                    ${nft.asa_txn_id?.slice(0, 10)}...${nft.asa_txn_id?.slice(-10)}
+                  <dd style="margin-bottom: 5px; margin-left:0px; display:flex; flex-direction:column;">
+                  ${nft.asa_txn_id?.slice(0, 10)}...${nft.asa_txn_id?.slice(-10)}
+                    <a href="${`${process.env.ALGOEXPLORER_URL}/tx/${nft.asa_txn_id}`}" target="_blank" style="text-decoration: none; color: #00db7d;">Open transaction</a>
                   </dd>
                 </div>
                 <div>
@@ -189,7 +190,7 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
             <div>
               <img src="${Sign}" alt="Signed document" style="width: 205px;"/>
             </div>
-            <div style="text-align:right; grid-column: 4/6; font-size:10px ;">
+            <div style="text-align:right; grid-column: 4/6; font-size:12px;">
               <p style="color:#777e90">If you have any questions or suggestions about this certificate, please write to us at:</p>
               <p style="color:#00db7d">certificates@climatecoin.io</p>
             </div>
