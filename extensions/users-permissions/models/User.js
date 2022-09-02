@@ -58,7 +58,7 @@ module.exports = {
         }
         if (isEmailChange && isDifferent && oldUser['issuer'] !== 'magic-link') {
           newUser['confirmed'] = false
-          newUser['confirmationToken'] = await mailer.sendVerificationMail(newUser.email)
+          newUser['confirmationToken'] = await mailer.sendVerificationMail(newUser.email, newUser.language)
         }
         if (isEmailChange && oldUser['issuer'] === 'magic-link' && !wasPreviouslyUndefined) delete newUser[key]
         if (isUsernameChange) delete newUser[key]

@@ -587,7 +587,8 @@
             "required": [
               "id",
               "username",
-              "type"
+              "type",
+              "language"
             ],
             "properties": {
               "id": {
@@ -628,6 +629,15 @@
                 "enum": [
                   "buyer",
                   "developer"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "es",
+                  "fr",
+                  "ko"
                 ]
               },
               "publicAddress": {

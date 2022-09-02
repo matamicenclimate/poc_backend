@@ -23,7 +23,7 @@ const authenticatedPermissions = {
     auth: ['preparechallenge', 'login'],
   },
   'users-permissions': {
-    user: ['me', 'profileupdate', 'emailverification', 'typeupdate'],
+    user: ['me', 'profileupdate', 'emailverification', 'typeupdate', 'langupdate'],
     auth: ['connect'],
   },
   application: {

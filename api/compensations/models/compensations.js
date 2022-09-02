@@ -10,6 +10,7 @@ const algosdk = require('algosdk')
 const { algoClient } = require('../../../config/algorand')
 const algorandUtils = require('../../../utils/algorand')
 const { LogoStrapiBuffer } = require('../../../utils/pdf')
+const t = require('../../../utils/locales')
 
 async function rejectCompensation(compensation) {
   const algodClient = algoClient()
@@ -119,25 +120,28 @@ module.exports = {
         const txnGroupId = encodeURIComponent(result.txn_id)
         if (result.state === 'minted') {
           const mailContent_confirmed = {
-            title: 'Compensation completed',
-            claim: `Your ${amount} tCo2 offset has been successfully completed. You already have the credits available.`,
-            text: `Thank you for clearing with us. Your transaction made on ${date} at ${time} with ID ${compensationID} has been confirmed by our team, your credits are now available in your wallet.`,
+            title: t(user.language, 'Email.Compensation.minted.title'),
+            claim: t(user.language, 'Email.Compensation.minted.claim').format(amount),
+            text: t(user.language, 'Email.Compensation.minted.text').format(date, time, compensationID),
             button_1: {
-              label: 'View transaction',
+              label: t(user.language, 'Email.Compensation.minted.button_1'),
               href: `${explorerURL}tx/group/${txnGroupId}`,
             },
-            button_2: { label: 'Download certificate', href: `${process.env.IPFS_BASE_URL}${certificate}` },
+            button_2: {
+              label: t(user.language, 'Email.Compensation.minted.button_2'),
+              href: `${process.env.IPFS_BASE_URL}${certificate}`,
+            },
           }
 
           const confirmedMail = mailer.generateMailHtml(mailContent_confirmed)
-          await mailer.send('Compensation confirmed', confirmedMail, user)
+          await mailer.send(t(user.language, 'Email.Compensation.minted.subject'), confirmedMail, user)
         } else if (result.state === 'rejected') {
           const mailContent_rejected = {
-            title: 'Compensation rejected.',
-            claim: `Your ${amount} tCo2 offset has not passed our verification process and has been cancelled by the system.`,
-            text: `Thank you for clearing with us. Your transaction made on ${date} at ${time} with ID ${compensationID} has not been accepted by our system, the transaction has been blocked, sorry for the inconvenience.`,
+            title: t(user.language, 'Email.Compensation.rejected.title'),
+            claim: t(user.language, 'Email.Compensation.rejected.claim').format(amount),
+            text: t(user.language, 'Email.Compensation.rejected.claim').format(date, time, compensationID),
             button_1: {
-              label: 'View transaction',
+              label: t(user.language, 'Email.Compensation.rejected.button_1'),
               href: `${explorerURL}tx/group/${txnGroupId}`,
             },
             bgColor: '#4b0810',
@@ -145,7 +149,7 @@ module.exports = {
           }
 
           const rejectedMail = mailer.generateMailHtml(mailContent_rejected)
-          await mailer.send('Compensation rejected', rejectedMail, user)
+          await mailer.send(t(user.language, 'Email.Compensation.rejected.subject'), rejectedMail, user)
         }
 
         await strapi.services.notifications.create({
@@ -196,7 +200,8 @@ module.exports = {
           const applicationUid = strapi.api[collectionName].models[collectionName].uid
           const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${result.id}`
           const mailContent = `Compensation cannot be finished(${url}). Nft ${nft.id} not found`
-          await mailer.send('Compensation Failed', mailContent)
+          // TODO: SEND EMAIL PROPERLY TO ADMINS
+          //await mailer.send('Compensation Failed', mailContent)
           throw new Error(`Nft with id ${nft.id} Not Found`)
         }
       }
@@ -208,19 +213,20 @@ module.exports = {
        */
       const explorerURL = 'https://testnet.algoexplorer.io/'
       const txnGroupId = encodeURIComponent(result.txn_id)
+      const user = result.user
 
       const mailContent_pending = {
-        title: 'Compensation created properly.',
-        claim: `Your compensation has been successfully created but is pending verification.`,
-        text: `Your transaction is pending approval by the administrator. We will inform you when it is accepted.`,
+        title: t(user.language, 'Email.Compensation.created.title'),
+        claim: t(user.language, 'Email.Compensation.created.claim'),
+        text: t(user.language, 'Email.Compensation.created.text'),
         button_1: {
-          label: 'View transaction',
+          label: t(user.language, 'Email.Compensation.created.button_1'),
           href: `${explorerURL}tx/group/${txnGroupId}`,
         },
       }
 
       const creationMail = mailer.generateMailHtml(mailContent_pending)
-      await mailer.send('New compensation', creationMail, result.user, [
+      await mailer.send(t(user.language, 'Email.Compensation.created.subject'), creationMail, user, [
         { buffer: LogoStrapiBuffer, cid: 'logo-strapi.png' },
       ])
 
