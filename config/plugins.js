@@ -27,8 +27,11 @@ module.exports = ({ env }) => {
         endPoint: process.env.MINIO_ENDPOINT,
         port: parseInt(process.env.MINIO_PORT),
         useSSL: process.env.MINIO_USE_SSL === 'true',
-        folder: 'upload',
+        folder: process.env.NODE_ENV || 'upload',
         host: process.env.MINIO_HOST,
+        overridePath: `${process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http'}://${process.env.MINIO_HOST}/${
+          process.env.MINIO_BUCKET
+        }/${process.env.NODE_ENV || 'upload'}`,
       },
     },
     sentry: {
@@ -36,7 +39,6 @@ module.exports = ({ env }) => {
       config: {
         dsn: process.env.SENTRY_DSN,
         sendMetadata: true,
-
       },
     },
   }
