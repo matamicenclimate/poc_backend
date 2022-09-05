@@ -9,6 +9,7 @@ const utils = require(`${process.cwd()}/utils`)
 const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
+const t = require('../../../utils/locales')
 
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
@@ -57,6 +58,7 @@ async function paginated(ctx) {
 
 async function create(ctx) {
   if (!ctx.state.user) return ctx.unauthorized()
+  const user = ctx.state.user
 
   const collectionName = ctx.originalUrl.substring(1)
   const applicationUid = strapi.api[collectionName].models[collectionName].uid
@@ -80,17 +82,17 @@ async function create(ctx) {
   const credits = `${createdDocument.credits}`
 
   const mailContent_pending = {
-    title: 'Your project is pending',
-    claim: `The document is pending.`,
-    text: `The project details are waiting to be verified by an administrator.`,
+    title: t(user.language, 'Email.CarbonDocument.pending.title'),
+    claim: t(user.language, 'Email.CarbonDocument.pending.claim'),
+    text: t(user.language, 'Email.CarbonDocument.pending.text'),
     button_1: {
-      label: 'View project',
+      label: t(user.language, 'Email.CarbonDocument.pending.button_1'),
       href: `${process.env.FRONTEND_BASE_URL}/documents/${createdDocument.id}`,
     },
   }
   const pendingMail = mailer.generateMailHtml(mailContent_pending)
 
-  await mailer.send('Credits received', pendingMail, createdDocument.user)
+  await mailer.send(t(user.language, 'Email.CarbonDocument.pending.subject'), pendingMail, user)
   return createdDocument
 }
 

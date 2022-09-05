@@ -4,6 +4,7 @@ const { getHTMLTemplate } = require('./mail_template')
 const { LogoBuffer } = require('../pdf/index')
 const mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN })
 const crypto = require('crypto')
+const t = require('../locales')
 
 const MAIL_ACTIONS = {
   SENT: 'sent',
@@ -42,21 +43,21 @@ async function sendTemplateMail(subject, content, user, images = []) {
   await sendMail(email, subject, content, images)
 }
 
-async function sendVerificationMail(email) {
+async function sendVerificationMail(email, language = 'en') {
   const confirmationToken = crypto.randomBytes(20).toString('hex')
 
   const verificationMailData = {
-    title: 'Email verification',
-    claim: `Click the button below to verify your email.`,
-    text: `Please verify your email to be able to receive email notifications about the status of your compensations and carbon documents.`,
+    title: t(language, 'Email.Verification.title'),
+    claim: t(language, 'Email.Verification.claim'),
+    text: t(language, 'Email.Verification.text'),
     button_2: {
-      label: 'Verify email',
+      label: t(language, 'Email.Verification.button_2'),
       href: `${process.env.FRONTEND_BASE_URL}/verify-email?token=${confirmationToken}`,
     },
   }
 
   const confirmedMail = generateMailHtml(verificationMailData)
-  await sendMail(email, 'Email verification', confirmedMail)
+  await sendMail(email, t(language, 'Email.Verification.subject'), confirmedMail)
 
   return confirmationToken
 }

@@ -1,0 +1,58 @@
+{
+  "Email": {
+    "Verification": {
+      "subject": "Verificación del correo electrónico",
+      "title": "Verificación del correo electrónico",
+      "claim": "Haga clic en el botón siguiente para verificar su correo electrónico.",
+      "text": "Verifique su correo electrónico para poder recibir notificaciones por correo electrónico sobre el estado de sus compensaciones y documentos de carbono.",
+      "button_2": "Verificar el correo electrónico"
+    },
+    "CarbonDocument": {
+      "pending": {
+        "subject": "Proyecto pendiente",
+        "title": "Su proyecto está pendiente",
+        "claim": "El documento está pendiente.",
+        "text": "Los detalles del proyecto están a la espera de ser verificados por un administrador.",
+        "button_1": "Ver proyecto"
+      },
+      "completed": {
+        "subject": "Créditos recibidos",
+        "title": "Créditos recibidos.",
+        "claim": "Hemos recibido los créditos.",
+        "text": "Hemos recibido tus créditos. Recibirás tus fichas en un plazo de 48 horas.",
+        "button_1": "Ver proyecto"
+      },
+      "accepted": {
+        "subject": "Documento aceptado",
+        "title": "Su proyecto ha sido confirmado.",
+        "claim": "Su proyecto <strong>'{0}'</strong> para compensar <strong>{1} t</strong> de CO2 ha sido confirmado por Climatecoin.",
+        "text": "Enhorabuena. Tu proyecto <strong>'{0}'</strong> ha sido aprobado para su inclusión en Climatecoin ahora puedes compartirlo con tus amigos para que puedan empezar a compensar su huella de carbono.",
+        "button_1": "Ver proyecto"
+      }
+    },
+    "Compensation": {
+      "created": {
+        "subject": "Nueva compensación",
+        "title": "Compensación creada adecuadamente.",
+        "claim": "Su compensación ha sido creada con éxito pero está pendiente de verificación.",
+        "text": "Su transacción está pendiente de ser aprobada por el administrador. Le informaremos cuando sea aceptada.",
+        "button_1": "Ver transacción"
+      },
+      "rejected": {
+        "subject": "Compensación rechazada",
+        "title": "Compensación rechazada.",
+        "claim": "Su compensación de {0} tCo2 no ha pasado nuestro proceso de verificación y ha sido cancelada por el sistema.",
+        "text": "Gracias por hacer la compensación con nosotros. Su transacción realizada el {0} en {1} con ID {2} no ha sido aceptada por nuestro sistema, la transacción ha sido bloqueada, disculpe las molestias.",
+        "button_1": "Ver transacción"
+      },
+      "minted": {
+        "subject": "Compensación completada",
+        "title": "Compensación completada.",
+        "claim": "Su compensación de {0} tCo2 se ha completado con éxito. Ya tiene los créditos disponibles.",
+        "text": "Gracias por compensar con nosotros. Su transacción realizada el {0} en {1} con el ID {2} ha sido confirmada por nuestro equipo, sus créditos ya están disponibles en su cartera.",
+        "button_1": "Ver transacción",
+        "button_2": "Descargar certificado"
+      }
+    }
+  }
+}

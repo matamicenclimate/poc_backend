@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "09/05/2022 3:35:45 PM"
+    "x-generation-date": "08/26/2022 1:03:53 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -12199,7 +12199,8 @@
             "required": [
               "id",
               "username",
-              "type"
+              "type",
+              "language"
             ],
             "properties": {
               "id": {
@@ -12240,6 +12241,15 @@
                 "enum": [
                   "buyer",
                   "developer"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "es",
+                  "fr",
+                  "ko"
                 ]
               },
               "publicAddress": {
@@ -13266,7 +13276,8 @@
             "required": [
               "id",
               "username",
-              "type"
+              "type",
+              "language"
             ],
             "properties": {
               "id": {
@@ -13307,6 +13318,15 @@
                 "enum": [
                   "buyer",
                   "developer"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "es",
+                  "fr",
+                  "ko"
                 ]
               },
               "publicAddress": {
@@ -13559,7 +13579,8 @@
             "required": [
               "id",
               "username",
-              "type"
+              "type",
+              "language"
             ],
             "properties": {
               "id": {
@@ -13600,6 +13621,15 @@
                 "enum": [
                   "buyer",
                   "developer"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "es",
+                  "fr",
+                  "ko"
                 ]
               },
               "publicAddress": {
@@ -14245,7 +14275,8 @@
             "required": [
               "id",
               "username",
-              "type"
+              "type",
+              "language"
             ],
             "properties": {
               "id": {
@@ -14286,6 +14317,15 @@
                 "enum": [
                   "buyer",
                   "developer"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "es",
+                  "fr",
+                  "ko"
                 ]
               },
               "publicAddress": {
@@ -14689,7 +14729,8 @@
               "required": [
                 "id",
                 "username",
-                "type"
+                "type",
+                "language"
               ],
               "properties": {
                 "id": {
@@ -14730,6 +14771,15 @@
                   "enum": [
                     "buyer",
                     "developer"
+                  ]
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "es",
+                    "fr",
+                    "ko"
                   ]
                 },
                 "publicAddress": {
@@ -14809,7 +14859,8 @@
         "required": [
           "id",
           "username",
-          "type"
+          "type",
+          "language"
         ],
         "properties": {
           "id": {
@@ -14881,6 +14932,16 @@
             "enum": [
               "buyer",
               "developer"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "default": "en",
+            "enum": [
+              "en",
+              "es",
+              "fr",
+              "ko"
             ]
           },
           "publicAddress": {
@@ -15000,7 +15061,8 @@
       "NewUsersPermissionsUser": {
         "required": [
           "username",
-          "type"
+          "type",
+          "language"
         ],
         "properties": {
           "username": {
@@ -15045,6 +15107,16 @@
             "enum": [
               "buyer",
               "developer"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "default": "en",
+            "enum": [
+              "en",
+              "es",
+              "fr",
+              "ko"
             ]
           },
           "publicAddress": {

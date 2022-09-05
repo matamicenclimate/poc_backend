@@ -1,0 +1,58 @@
+{
+  "Email": {
+    "Verification": {
+      "subject": "Email verification",
+      "title": "Email verification",
+      "claim": "Click the button below to verify your email.",
+      "text": "Please verify your email to be able to receive email notifications about the status of your compensations and carbon documents.",
+      "button_2": "Verify email"
+    },
+    "CarbonDocument": {
+      "pending": {
+        "subject": "Pending project",
+        "title": "Your project is pending",
+        "claim": "The document is pending.",
+        "text": "The project details are waiting to be verified by an administrator.",
+        "button_1": "View project"
+      },
+      "completed": {
+        "subject": "Credits received",
+        "title": "Credits received.",
+        "claim": "We have received the credits.",
+        "text": "We have received your credits. You will receive your tokens in a cooldown of 48 hours.",
+        "button_1": "View project"
+      },
+      "accepted": {
+        "subject": "Document accepted",
+        "title": "Your project has been confirmed.",
+        "claim": "Your project <strong>'{0}'</strong> to offset <strong>{1} t</strong> of CO2 has been confirmed by Climatecoin.",
+        "text": "Congratulations. Your project <strong>'{0}'</strong> has been approved for listing on Climatecoin now you can share it with your friends so they can start offsetting their carbon footprint.",
+        "button_1": "View project"
+      }
+    },
+    "Compensation": {
+      "created": {
+        "subject": "New compensation",
+        "title": "Compensation created properly.",
+        "claim": "Your compensation has been successfully created but is pending verification.",
+        "text": "Your transaction is pending approval by the administrator. We will inform you when it is accepted.",
+        "button_1": "View transaction"
+      },
+      "rejected": {
+        "subject": "Compensation rejected",
+        "title": "Compensation rejected.",
+        "claim": "Your {0} tCo2 offset has not passed our verification process and has been cancelled by the system.",
+        "text": "Thank you for clearing with us. Your transaction made on {0} at {1} with ID {2} has not been accepted by our system, the transaction has been blocked, sorry for the inconvenience.",
+        "button_1": "View transaction"
+      },
+      "minted": {
+        "subject": "Compensation completed",
+        "title": "Compensation completed.",
+        "claim": "Your {0} tCo2 offset has been successfully completed. You already have the credits available.",
+        "text": "Thank you for clearing with us. Your transaction made on {0} at {1} with ID {2} has been confirmed by our team, your credits are now available in your wallet.",
+        "button_1": "View transaction",
+        "button_2": "Download certificate"
+      }
+    }
+  }
+}

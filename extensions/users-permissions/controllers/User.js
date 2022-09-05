@@ -89,9 +89,28 @@ async function typeUpdate(ctx) {
   )
 }
 
+async function langUpdate(ctx) {
+  const { language } = ctx.request.body
+
+  const userService = strapi.plugins['users-permissions'].services.user
+
+  if (_.isEmpty(language)) {
+    return ctx.badRequest('Invalid lang')
+  }
+
+  const user = await userService.edit({ id: ctx.state.user.id }, { language })
+
+  ctx.send(
+    sanitizeEntity(user, {
+      model: strapi.query('user', 'users-permissions').model,
+    }),
+  )
+}
+
 module.exports = {
   me,
   profileUpdate,
   emailVerification,
   typeUpdate,
+  langUpdate,
 }

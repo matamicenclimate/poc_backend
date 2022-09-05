@@ -44,6 +44,21 @@
           "actionType": "update"
         }
       }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/language",
+      "handler": "User.langUpdate",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "Update user's language settings",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User",
+          "actionType": "update"
+        }
+      }
     }
   ]
 }

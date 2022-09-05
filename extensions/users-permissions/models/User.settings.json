@@ -72,6 +72,17 @@
       "required": true,
       "default": "buyer"
     },
+    "language": {
+      "type": "enumeration",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "ko"
+      ],
+      "required": true,
+      "default": "en"
+    },
     "publicAddress": {
       "type": "string",
       "private": false

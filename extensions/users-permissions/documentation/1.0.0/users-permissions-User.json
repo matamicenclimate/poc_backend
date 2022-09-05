@@ -181,6 +181,70 @@
         }
       }
     },
+    "/users/language": {
+      "put": {
+        "deprecated": false,
+        "description": "Update user's language settings",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersPermissionsUser"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "UsersPermissions - User"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUsersPermissionsUser"
+              }
+            }
+          }
+        }
+      }
+    },
     "/users-permissions/search/{id}": {
       "get": {
         "deprecated": false,
@@ -1369,7 +1433,8 @@
         "required": [
           "id",
           "username",
-          "type"
+          "type",
+          "language"
         ],
         "properties": {
           "id": {
@@ -1441,6 +1506,16 @@
             "enum": [
               "buyer",
               "developer"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "default": "en",
+            "enum": [
+              "en",
+              "es",
+              "fr",
+              "ko"
             ]
           },
           "publicAddress": {
@@ -1560,7 +1635,8 @@
       "NewUsersPermissionsUser": {
         "required": [
           "username",
-          "type"
+          "type",
+          "language"
         ],
         "properties": {
           "username": {
@@ -1605,6 +1681,16 @@
             "enum": [
               "buyer",
               "developer"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "default": "en",
+            "enum": [
+              "en",
+              "es",
+              "fr",
+              "ko"
             ]
           },
           "publicAddress": {
