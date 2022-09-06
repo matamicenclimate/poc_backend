@@ -10,6 +10,8 @@ const algosdk = require('algosdk')
 const { algoClient, algoIndexer } = require(`${process.cwd()}/config/algorand`)
 const { getEscrowFromApp } = require('../../../utils/algorand')
 const t = require('../../../utils/locales')
+const { getFileFromS3 } = require('../../../utils/upload')
+const { uploadFileToIPFS } = require('../../../utils/ipfs')
 
 function formatBodyArrays(collectionTypeAtts, requestBody) {
   for (const key of collectionTypeAtts) {
@@ -190,6 +192,10 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   const suggestedParams = await algodclient.getTransactionParams().do()
   const assetMetadata = getBaseMetadata(carbonDocument, { txType: ALGORAND_ENUMS.NFT_TYPES.DEVELOPER })
 
+  const file = await getFileFromS3(carbonDocument.thumbnail.url)
+  const fileBuffer = await file.buffer()
+  const ipfs_id = await uploadFileToIPFS(fileBuffer, carbonDocument.thumbnail.mime, carbonDocument.thumbnail.name)
+
   atc.addMethodCall({
     appID: Number(process.env.APP_ID),
     method: algorandUtils.getMethodByName('mint_developer_nft'),
@@ -201,6 +207,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
       Number(carbonDocument.credits),
       Number(process.env.DUMP_APP_ID),
       getEscrowFromApp(Number(process.env.DUMP_APP_ID)),
+      String(`ipfs://${ipfs_id}`),
     ],
   })
 

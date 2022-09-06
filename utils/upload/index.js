@@ -16,7 +16,7 @@ async function pushFile(ctx) {
       files: {
         path: element.path,
         name: element.name,
-        type: mime.lookup(element.path),
+        type: element.type,
         size: element.size,
       },
     })
