@@ -18,7 +18,7 @@ RUN apk upgrade -U \
   && apk add curl \
   && rm -rf /var/cache/*
 
-RUN apk add --no-cache  chromium
+RUN apk add --no-cache "chromium<103.0.5059.0"
 
 WORKDIR /opt
 
