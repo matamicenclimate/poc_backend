@@ -65,6 +65,10 @@
     },
     "claim_group_id": {
       "type": "string"
+    },
+    "registry_certificates": {
+      "via": "compensation",
+      "collection": "registry-certificates"
     }
   }
 }

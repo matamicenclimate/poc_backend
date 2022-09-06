@@ -179,6 +179,11 @@ module.exports = {
       for (const nft of result.nfts) {
         const nftFound = await strapi.services.nfts.findOne({ id: nft.id })
         if (nftFound.id === nft.id) {
+          await strapi.services['registry-certificates'].create({
+            nft: nftFound.id,
+            compensation: result.id,
+          })
+
           if (amountToBurn.greaterThanOrEqual(nftFound.supply_remaining)) {
             burnReceipt[nftFound.asa_id.toInt()] = nftFound.supply_remaining.toInt()
             amountToBurn = amountToBurn.subtract(nftFound.supply_remaining)

@@ -54,12 +54,11 @@ async function createPDF(html, filePath) {
 
 /***
  *
- * @param ipfsCids
  * @param compensation
  * @returns {string}
  */
 
-const generateCompensationPDF = (ipfsCids, compensation) => {
+const generateCompensationPDF = (compensation) => {
   const monthNames = [
     'January',
     'February',
@@ -92,6 +91,11 @@ const generateCompensationPDF = (ipfsCids, compensation) => {
       return amount + ' climatecoin'
     }
     return amount + ' climatecoins'
+  }
+
+  for (const nft of compensation.nfts) {
+    const registry_certificate = compensation['registry_certificates'].find((certificate) => certificate.nft === nft.id)
+    nft['registry_certificate_ipfs_cid'] = registry_certificate['ipfs_cid']
   }
 
   function renderBurnedNft() {

@@ -932,15 +932,6 @@
                     "compensation"
                   ]
                 },
-                "registry_certificate": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "registry_certificate_ipfs_cid": {
-                  "type": "string"
-                },
                 "asa_id": {
                   "type": "integer"
                 },
@@ -964,6 +955,12 @@
                 },
                 "supply_remaining": {
                   "type": "integer"
+                },
+                "registry_certificates": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "created_by": {
                   "type": "string"
@@ -1181,15 +1178,6 @@
                   "compensation"
                 ]
               },
-              "registry_certificate": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "registry_certificate_ipfs_cid": {
-                "type": "string"
-              },
               "asa_id": {
                 "type": "integer"
               },
@@ -1214,6 +1202,12 @@
               "supply_remaining": {
                 "type": "integer"
               },
+              "registry_certificates": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
               "created_by": {
                 "type": "string"
               },
@@ -1236,6 +1230,37 @@
           },
           "claim_group_id": {
             "type": "string"
+          },
+          "registry_certificates": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "Registry_Certificate": {
+                  "type": "string"
+                },
+                "compensation": {
+                  "type": "string"
+                },
+                "nft": {
+                  "type": "string"
+                },
+                "ipfs_cid": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -1286,6 +1311,12 @@
           },
           "claim_group_id": {
             "type": "string"
+          },
+          "registry_certificates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_by": {
             "type": "string"

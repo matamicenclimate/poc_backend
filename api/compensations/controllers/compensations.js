@@ -287,7 +287,7 @@ async function mint(ctx) {
   if (!['received_certificates'].includes(compensation.state)) {
     return ctx.badRequest("Compensation hasn't been reviewed")
   }
-  const ipfsCIDs = await uploadFilesToIPFS(compensation)
+  await uploadFilesToIPFS(compensation)
   compensation = await strapi.services['compensations'].findOne({ id })
 
   const algodclient = algoClient()
@@ -296,7 +296,7 @@ async function mint(ctx) {
 
   try {
     const filePath = `${compensation.id}.pdf`
-    const html = generateCompensationPDF(ipfsCIDs, compensation)
+    const html = generateCompensationPDF(compensation)
     const consolidationPdfBuffer = await createPDF(html, filePath)
 
     // const pdfBuffer = await readFileFromUploads(filePath)
@@ -448,14 +448,18 @@ async function uploadFilesToIPFS(compensation) {
   return new Promise(async (resolve, reject) => {
     try {
       const ipfsCIDs = []
-      for (const nft of compensation.nfts) {
-        const file = await getFileFromS3(nft.registry_certificate[0].url)
+      for (const certificate of compensation['registry_certificates']) {
+        const file = await getFileFromS3(certificate['Registry_Certificate'].url)
         const fileBuffer = await file.buffer()
-        const result = await uploadFileToIPFS(fileBuffer, nft.registry_certificate[0].mime, `${nft.id}.pdf`)
-        await strapi.services['nfts'].update(
-          { id: nft.id },
+        const result = await uploadFileToIPFS(
+          fileBuffer,
+          certificate['Registry_Certificate'].mime,
+          `${certificate.id}.pdf`,
+        )
+        await strapi.services['registry-certificates'].update(
+          { id: certificate.id },
           {
-            registry_certificate_ipfs_cid: result,
+            ipfs_cid: result,
           },
         )
         ipfsCIDs.push(result)
