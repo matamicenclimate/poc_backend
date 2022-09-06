@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/registry-certificates",
+      "handler": "registry-certificates.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/registry-certificates/count",
+      "handler": "registry-certificates.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/registry-certificates/:id",
+      "handler": "registry-certificates.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/registry-certificates",
+      "handler": "registry-certificates.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/registry-certificates/:id",
+      "handler": "registry-certificates.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/registry-certificates/:id",
+      "handler": "registry-certificates.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "registry_certificates",
+  "info": {
+    "name": "registry-certificates",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Registry_Certificate": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files",
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "compensation": {
+      "model": "compensations",
+      "via": "registry_certificates"
+    },
+    "nft": {
+      "via": "registry_certificates",
+      "model": "nfts"
+    },
+    "ipfs_cid": {
+      "type": "string"
+    }
+  }
+}
