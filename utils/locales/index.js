@@ -7,7 +7,7 @@ const _ = require('lodash')
 const locales = { en, es, ko, fr }
 
 function getLocalized(languageKey, path) {
-  return _.get(locales, `${languageKey}.${path}`)
+  return _.get(locales, `${languageKey || 'en'}.${path}`)
 }
 
 module.exports = getLocalized
