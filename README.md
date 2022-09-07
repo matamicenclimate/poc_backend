@@ -5,11 +5,11 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
 # How to install
 
 * First, create MongoDB container executing:
-  
+
   ```docker-compose up -d```
 
 * Next, you must create your .env file copying .env.example file and make sure you use correct data in the following variables (data used when you created previous database):
-  
+
   ```
   DATABASE_PORT=270127
   DATABASE_NAME=project
@@ -18,11 +18,11 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
   ```
 
 * Then you can install project requirements:
-  
+
   ```yarn```
 
 * And finally, execute this command to start strapi:
-  
+
   ```yarn develop```
 
 * If all it is correct, you could navigate to http://localhost:1337/admin/ to see your strapi in action!
@@ -34,6 +34,10 @@ We use Strapi (https://strapi.io/) as CMS for ClimateCoin.
 # Volumes
 
 Create the volume on the server and mount it in `/opt/public/uploads`
+
+# Generating pdfs
+
+If you change puppeteer version has this chromium support considerations `https://github.com/puppeteer/puppeteer/blob/b5064b7b8bd3bd9eb481b6807c65d9d06d23b9dd/docs/chromium-support.md`
 
 # User authentication
 >The authentication process for the users is handled by making them sign a challenge transaction and verifying it later.
@@ -56,12 +60,12 @@ autonumber
     activate Back
     note right of Back: A 16 byte Token is generated for the request<br>The token is put in a 0 Algos transaction note<br>The txn needs to be signed by the user
     Back->>+Front: Send unsigned challenge txn
-    deactivate Back 
-    
+    deactivate Back
+
     activate Front
     Front->>+Usr: Request txn sign
     deactivate Front
-    
+
     activate Usr
     note left of Usr: Wait for user to sign
     Usr->>+Front: Sign txn
@@ -75,7 +79,7 @@ autonumber
     note right of Back: The transaction is decoded<br>The signature of the transaction is verified<br>The Token on the note is verified
     note right of Back: A user is created if it does not exist already
     Back->>+Front: Send JWT
-    deactivate Back 
+    deactivate Back
 ```
 
 # User wallet creation
@@ -104,7 +108,7 @@ autonumber
 
     activate Back
     note right of Back: Create carbon-document request on Strapi
-    deactivate Back 
+    deactivate Back
 ```
 
 ## Credits received
@@ -117,19 +121,19 @@ sequenceDiagram
     participant Back as Backend <br> (Strapi)
     participant BC as Algorand <br> Block Chain
     autonumber
-    
+
     activate CL
     note left of CL: Complete vertification
     CL->>+Back: Set state `completed`
     CL->>+Back: Mint NFT
     deactivate CL
-    
+
     activate Back
     Back->>+BC: Mint NFT
     note right of BC: Part of the NFT is kept by climate as a<br>commision, configured by method<br>`set_fee` of the vault contract
     deactivate Back
 
-    activate User 
+    activate User
     User->>+Front: Claim Project NFT
     deactivate User
 
@@ -140,9 +144,9 @@ sequenceDiagram
     activate Back
     note left of Back: Create Group of Txns <br> Sign Creator Txns
     Back->>+Front: Send Unsigned Txns
-    deactivate Back 
+    deactivate Back
 
-    activate Front 
+    activate Front
     note right of Front: Sign User Txns
     Front->>+Back: Send Signed Txns
     deactivate Front
@@ -166,7 +170,7 @@ sequenceDiagram
     participant BC as Algorand <br> Block Chain
     autonumber
 
-    activate User 
+    activate User
     User->>+Front: Swap NFT
     deactivate User
 
@@ -177,9 +181,9 @@ sequenceDiagram
     activate Back
     note left of Back: Create Group of Txns <br> Sign Creator Txns
     Back->>+Front: Send Unsigned Txns
-    deactivate Back 
+    deactivate Back
 
-    activate Front 
+    activate Front
     note right of Front: Sign User Txns
     Front->>+Back: Send Signed Txns
     deactivate Front
@@ -199,7 +203,7 @@ sequenceDiagram
 >At the moment of the creation of the group transactions (steps 2->3) the backend decides which carbon document NFTs will get burned if the transaction gets approved by climate. <br>
 >>- The NFTs that get burned are selected by getting the oldest ones first, based on the field `credit_start` of the NFT.<br>
 >>- A maximum of 5 NFTs can be burned at the same time due to Algorand limitations.<br>
->>- The moment the NFTs are selected, they get locked by the backend for (by default) 10 minutes. This prevents multiple users getting the same NFTs to burn. 
+>>- The moment the NFTs are selected, they get locked by the backend for (by default) 10 minutes. This prevents multiple users getting the same NFTs to burn.
 >>- The amount of minutes can be configured using an environment variable `MAX_MINUTES_TO_BURN=10`
 ```mermaid
 sequenceDiagram
@@ -208,7 +212,7 @@ sequenceDiagram
     participant Back as Backend <br> (Strapi)
     participant BC as Algorand <br> Block Chain
     autonumber
-    
+
     activate Usr
     note left of Usr: Start compensation
     Usr->>+Front: Set CC amount to burn
@@ -221,9 +225,9 @@ sequenceDiagram
     activate Back
     note right of Back: Create Group of Txns <br> Save the group id
     Back->>+Front: Send Unsigned Txns
-    deactivate Back 
+    deactivate Back
 
-    activate Front 
+    activate Front
     note left of Front: Sign User Txns
     Front->>+Back: Send Signed Txns
     deactivate Front
@@ -257,7 +261,7 @@ sequenceDiagram
     participant Front as Frontend <br> (WebApp)
     participant BC as Algorand <br> Block Chain
     autonumber
-    
+
     activate CL
     note left of CL: Approve compensation
     CL->>+Back: Set state `received_certificates`
@@ -270,7 +274,7 @@ sequenceDiagram
     note right of Back: Certificate is uploaded to IPFS
     deactivate Back
 
-    activate User 
+    activate User
     User->>+Front: Claim certificate NFT
     deactivate User
 
@@ -281,9 +285,9 @@ sequenceDiagram
     activate Back
     note left of Back: Create Group of Txns <br> Sign Creator Txns
     Back->>+Front: Send Unsigned Txns
-    deactivate Back 
+    deactivate Back
 
-    activate Front 
+    activate Front
     note right of Front: Sign User Txns
     Front->>+Back: Send Signed Txns
     deactivate Front
@@ -309,7 +313,7 @@ sequenceDiagram
     participant Back as Backend <br> (Strapi)
     participant BC as Algorand <br> Block Chain
     autonumber
-    
+
     activate CL
     note left of CL: Reject compensation
     CL->>+Back: Set state `rejected`
