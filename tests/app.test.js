@@ -1,5 +1,6 @@
 const fs = require('fs');
-const { setupStrapi, deleteDbUploadFiles } = require('./helpers/strapi');
+const { setupStrapi } = require('./helpers/strapi');
+const algosdk = require('algosdk')
 
 jest.setTimeout(10000);
 
@@ -7,9 +8,6 @@ beforeAll(async () => {
   await setupStrapi();
 });
 
-afterAll(async () => {
-  await deleteDbUploadFiles()
-  await strapi.destroy();
-});
-
-require('./integration');
+//require('./integration');
+require('./features');
+require('./delete-strapi');
