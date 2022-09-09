@@ -25,7 +25,7 @@ const createAuthenticatedUser = async () => {
     user = await strapi.query('user', 'users-permissions').create({
       username,
       email: 'pepa@test.com',
-      type: 'developer',
+      type: 'buyer',
       role: authenticatedRole,
       confirmed: false,
       language: 'en',
