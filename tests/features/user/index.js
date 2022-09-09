@@ -1,14 +1,12 @@
 const { createAuthenticatedUser, deleteUser } = require('../helpers')
-let user, jwt
-beforeAll(async () => {
+describe('User', () => {
+  beforeAll(async () => {
     const result = await createAuthenticatedUser()
     user = result.user
     jwt = result.jwt
-})
-afterAll(async () => {
+  })
+  afterAll(async () => {
     await deleteUser(user.id)
-})
-
-test('can be created', () => {
-
+  })
+  require('./email')
 })

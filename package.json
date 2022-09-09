@@ -66,7 +66,11 @@
       ".tmp",
       ".cache"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globals": {
+      "user": true,
+      "jwt": true
+    }
   },
   "engines": {
     "node": ">=10.16.0 <=14.x.x",

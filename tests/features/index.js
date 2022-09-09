@@ -1,1 +1,2 @@
-require('./compensations');
+require('./compensations')
+require('./user')
