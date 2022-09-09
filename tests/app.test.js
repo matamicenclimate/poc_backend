@@ -1,13 +1,16 @@
-const fs = require('fs');
-const { setupStrapi } = require('./helpers/strapi');
+const fs = require('fs')
+const { setupStrapi, deleteDbUploadFiles } = require('./helpers/strapi')
 const algosdk = require('algosdk')
 
-jest.setTimeout(10000);
+jest.setTimeout(10000)
 
 beforeAll(async () => {
-  await setupStrapi();
-});
+  await setupStrapi()
+})
 
-//require('./integration');
-require('./features');
-require('./delete-strapi');
+afterAll(async () => {
+  await deleteDbUploadFiles()
+  await strapi.destroy()
+})
+
+require('./features')
