@@ -1,5 +1,6 @@
 const request = require('supertest')
 const path = require('path')
+const fs = require('fs')
 
 describe('Sumbit', () => {
   let dataStub = {
@@ -20,7 +21,7 @@ describe('Sumbit', () => {
   }
   let createdDocument
 
-  test('Email modification', async () => {
+  test('Create Carbon Document', async () => {
     await request(strapi.server)
       .post(`/carbon-documents`)
       .field('title', dataStub.title)
@@ -44,6 +45,20 @@ describe('Sumbit', () => {
         expect(response.body).toBeDefined()
         expect(response.body.title).toBe(dataStub.title)
         createdDocument = response.body
+      })
+  })
+  test('Carbon Document Upload Integrity', async () => {
+    console.log(createdDocument.thumbnail.url)
+    await request(createdDocument.thumbnail.url)
+      .get('')
+      .expect(200)
+      .expect('Content-Type', /image/)
+      .then(async (response) => {
+        expect(response.body).toBeDefined()
+        await fs.readFile(path.resolve(__dirname, '../media/thumbnail.jpg'), (err, data) => {
+          const fileData = data.toString('base64')
+          expect(response.body.toString('base64')).toBe(fileData)
+        })
       })
   })
 })
