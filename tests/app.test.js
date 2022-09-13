@@ -2,7 +2,7 @@ const { setupStrapi, deleteDbUploadFiles } = require('./helpers/strapi')
 const algosdk = require('algosdk')
 const { createAuthenticatedUser, deleteUser } = require('./features/helpers')
 
-jest.setTimeout(60000)
+jest.setTimeout(60 * 1000 * 5)
 
 beforeAll(async () => {
   await setupStrapi()

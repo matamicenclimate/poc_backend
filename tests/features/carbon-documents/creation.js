@@ -18,8 +18,12 @@ describe('Sumbit', () => {
     registry_url: 'https://climatetrade.com/es/inicio/',
     pdd: {},
     verification_report: {},
+    registry: '',
   }
-  let createdDocument
+  beforeAll(async () => {
+    const registries = await strapi.services.registries.find({})
+    dataStub.registry = registries[0].id
+  })
 
   test('Create Carbon Document', async () => {
     await request(strapi.server)
@@ -34,6 +38,7 @@ describe('Sumbit', () => {
       .field('serial_number', dataStub.serial_number)
       .field('status', dataStub.status)
       .field('registry_url', dataStub.registry_url)
+      .field('registry', dataStub.registry)
       .attach('pdd', path.resolve(__dirname, '../media/registry.pdf'))
       .attach('verification_report', path.resolve(__dirname, '../media/registry.pdf'))
       .attach('thumbnail', path.resolve(__dirname, '../media/thumbnail.jpg'))
@@ -48,7 +53,6 @@ describe('Sumbit', () => {
       })
   })
   test('Carbon Document Upload Integrity', async () => {
-    console.log(createdDocument.thumbnail.url)
     await request(createdDocument.thumbnail.url)
       .get('')
       .expect(200)

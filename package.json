@@ -69,7 +69,8 @@
     "testEnvironment": "node",
     "globals": {
       "user": true,
-      "jwt": true
+      "jwt": true,
+      "createdDocument": true
     }
   },
   "engines": {
