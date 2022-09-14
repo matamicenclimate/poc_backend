@@ -75,9 +75,9 @@ async function create(ctx) {
   ctx.request.body = formatBodyArrays(collectionTypeAtts, ctx.request.body)
   ctx.request.body.user = ctx.state.user.id
   const createdDocument = await strapi.services[collectionName].create(ctx.request.body)
-  if (process.env.NODE_ENV === 'test') {
-    return createdDocument
-  }
+  // if (process.env.NODE_ENV === 'test') {
+  //   return createdDocument
+  // }
 
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
   const title = `${createdDocument.title.slice(0, 10)}`

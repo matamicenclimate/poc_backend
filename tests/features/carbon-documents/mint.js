@@ -5,18 +5,7 @@ const { algoClient, algoIndexer } = require('../../../config/algorand')
 const algosdk = require('algosdk')
 
 describe('Mint', () => {
-  let adminJwt
   const indexerClient = algoIndexer()
-  beforeAll(async () => {
-    const role = await strapi.query('role', 'admin').findOne({ code: 'strapi-super-admin' })
-    let superAdmin = await strapi.query('user', 'admin').findOne({ email: 'admintest@admin.com', roles: [role.id] })
-    if (superAdmin == null) {
-      superAdmin = await strapi
-        .query('user', 'admin')
-        .create({ blocked: false, email: 'admintest@admin.com', firstname: 'Admin', isActive: true, roles: [role.id] })
-    }
-    adminJwt = strapi.admin.services.token.createJwtToken(superAdmin)
-  })
   async function updateCarbonDocStatus(newStatus) {
     createdDocument = await strapi.services['carbon-documents'].update(
       { id: createdDocument.id },
@@ -32,6 +21,12 @@ describe('Mint', () => {
     expect(createdDocument.status).toBe('waiting_for_credits')
     await updateCarbonDocStatus('completed')
     expect(createdDocument.status).toBe('completed')
+  })
+  test('User Mint Denial', async () => {
+    await request(strapi.server)
+      .post(`/carbon-documents/${createdDocument.id}/mint`)
+      .set('Authorization', 'Bearer ' + jwt)
+      .expect(403)
   })
   test('Mint', async () => {
     await request(strapi.server)

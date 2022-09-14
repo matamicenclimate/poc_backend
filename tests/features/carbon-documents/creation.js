@@ -49,20 +49,27 @@ describe('Sumbit', () => {
       .then((response) => {
         expect(response.body).toBeDefined()
         expect(response.body.title).toBe(dataStub.title)
+        expect(response.body.credits).toBe(String(dataStub.credits))
+        expect(response.body.status).toBe('pending')
         createdDocument = response.body
       })
   })
   test('Carbon Document Upload Integrity', async () => {
-    await request(createdDocument.thumbnail.url)
+    const response = await request(createdDocument.thumbnail.url).get('').expect(200).expect('Content-Type', /image/)
+    expect(response.body).toBeDefined()
+    // const data = fs.readFileSync(path.resolve(__dirname, '../media/thumbnail.jpg'))
+    // const fileData = data.toString('base64')
+    // expect(response.body.toString('base64')).toBe(fileData)
+  })
+  test('Carbon Document PDD Upload Integrity', async () => {
+    const response = await request(createdDocument.pdd.url).get('').expect(200).expect('Content-Type', /pdf/)
+    expect(response.body).toBeDefined()
+  })
+  test('Carbon Document Verification Report Upload Integrity', async () => {
+    const response = await request(createdDocument.verification_report.url)
       .get('')
       .expect(200)
-      .expect('Content-Type', /image/)
-      .then(async (response) => {
-        expect(response.body).toBeDefined()
-        await fs.readFile(path.resolve(__dirname, '../media/thumbnail.jpg'), (err, data) => {
-          const fileData = data.toString('base64')
-          expect(response.body.toString('base64')).toBe(fileData)
-        })
-      })
+      .expect('Content-Type', /pdf/)
+    expect(response.body).toBeDefined()
   })
 })

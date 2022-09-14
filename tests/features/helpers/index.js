@@ -41,6 +41,17 @@ const createAuthenticatedUser = async () => {
   }
 }
 
+const createAdminUser = async () => {
+  const role = await strapi.query('role', 'admin').findOne({ code: 'strapi-super-admin' })
+  let superAdmin = await strapi.query('user', 'admin').findOne({ email: 'admintest@admin.com', roles: [role.id] })
+  if (superAdmin == null) {
+    superAdmin = await strapi
+      .query('user', 'admin')
+      .create({ blocked: false, email: 'admintest@admin.com', firstname: 'Admin', isActive: true, roles: [role.id] })
+  }
+  return strapi.admin.services.token.createJwtToken(superAdmin)
+}
+
 const deleteUser = async (userId) => {
   await strapi.query('user', 'users-permissions').delete({ id: userId })
 }
@@ -52,6 +63,7 @@ const fetchUser = async (userId) => {
 module.exports = {
   createPublicUser,
   createAuthenticatedUser,
+  createAdminUser,
   deleteUser,
   fetchUser,
 }
