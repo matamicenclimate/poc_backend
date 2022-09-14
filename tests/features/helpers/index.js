@@ -60,10 +60,23 @@ const fetchUser = async (userId) => {
   return await strapi.plugins['users-permissions'].services.user.fetch({ id: userId })
 }
 
+function parseEntries(params) {
+  return params.reduce((prev, curr) => {
+    const key = Buffer.from(curr.key, 'base64').toString()
+    if (curr.value.type === 1) {
+      prev[key] = Buffer.from(curr.value.bytes, 'base64')
+    } else if (curr.value.type === 2) {
+      prev[key] = curr.value.uint
+    }
+    return prev
+  }, {})
+}
+
 module.exports = {
   createPublicUser,
   createAuthenticatedUser,
   createAdminUser,
   deleteUser,
   fetchUser,
+  parseEntries,
 }

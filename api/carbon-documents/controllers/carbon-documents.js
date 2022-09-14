@@ -212,7 +212,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   })
 
   try {
-    const result = await atc.execute(algodclient, 2)
+    const result = await atc.execute(algodclient, 4)
     const transactionId = result.txIDs[0]
     const transactionInfo = await indexerClient.searchForTransactions().address(creator.addr).txid(transactionId).do()
     const txnsCfg = transactionInfo.transactions[0]['inner-txns'].filter(
