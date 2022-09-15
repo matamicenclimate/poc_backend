@@ -1,5 +1,6 @@
 const wallets = require('./wallet')
 const algosdk = require('algosdk')
+const { Buffer } = require('buffer')
 const createPublicUser = async () => {
   let user = (await strapi.query('user', 'users-permissions').find({ username: 'pepe' }))[0]
   if (!user) {
@@ -72,6 +73,26 @@ function parseEntries(params) {
   }, {})
 }
 
+function signEncodedTransactions(txnsFromAPI) {
+  const userPKB64 = Buffer.from(algosdk.decodeAddress(wallets.user.wallet).publicKey).toString('base64')
+  const userSigner = algosdk.mnemonicToSecretKey(wallets.user.nemonic)
+  const unsignedTxns = txnsFromAPI.map((txn) => algosdk.decodeUnsignedTransaction(Buffer.from(Object.values(txn))))
+  const result = []
+  for (const txnid in unsignedTxns) {
+    if (!unsignedTxns[txnid]) continue
+    const txn = unsignedTxns[txnid]
+    if (Buffer.from(txn.from.publicKey).toString('base64') !== userPKB64)
+      result.push({ txID: txn.txID(), blob: txn.toByte() })
+    else
+      result.push({
+        txID: txn.txID(),
+        blob: txn.signTxn(userSigner.sk),
+      })
+  }
+
+  return result.map((txn) => txn.blob)
+}
+
 module.exports = {
   createPublicUser,
   createAuthenticatedUser,
@@ -79,4 +100,5 @@ module.exports = {
   deleteUser,
   fetchUser,
   parseEntries,
+  signEncodedTransactions,
 }
