@@ -75,4 +75,19 @@ describe('Mint', () => {
     checkIfFeeNftIsOnMainContract()
     checkIfDeveloperNftIsOnMainContract()
   })
+  test('Minted NFT IPFS image integrity', async () => {
+    const nftMetadata = await indexerClient.lookupAssetByID(createdDocument.developer_nft.asa_id).do()
+    const ipfsUrl = nftMetadata.asset.params.url
+    const ipfsUrlID = ipfsUrl.replace('ipfs://', '')
+
+    const s3Thumbnail = await request(createdDocument.thumbnail.url).get('').expect(200).expect('Content-Type', /image/)
+    expect(s3Thumbnail.body).toBeDefined()
+    const ipfsThumbnail = await request('https://cloudflare-ipfs.com')
+      .get(`/ipfs/${ipfsUrlID}`)
+      .expect(200)
+      .expect('Content-Type', /image/)
+    expect(ipfsThumbnail.body).toBeDefined()
+
+    expect(s3Thumbnail.body.toString('base64')).toBe(ipfsThumbnail.body.toString('base64'))
+  })
 })
