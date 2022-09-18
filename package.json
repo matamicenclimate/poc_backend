@@ -71,7 +71,8 @@
       "user": true,
       "jwt": true,
       "createdDocument": true,
-      "adminJwt": true
+      "adminJwt": true,
+      "createdCompensation": true
     }
   },
   "engines": {

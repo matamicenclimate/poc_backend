@@ -1,3 +1,3 @@
 describe('Compensations', () => {
-  require('./registry-certificates')
+  require('./creation')
 })
