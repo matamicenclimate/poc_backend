@@ -3,7 +3,7 @@ const { fetchUser } = require('../helpers')
 
 describe('Email', () => {
   let emailVerificationToken
-  test.skip('Email modification', async () => {
+  test('Email modification', async () => {
     await request(strapi.server)
       .put(`/users/profile`)
       .set('Authorization', 'Bearer ' + jwt)
@@ -21,7 +21,7 @@ describe('Email', () => {
       })
   })
 
-  test.skip('Email verification', async () => {
+  test('Email verification', async () => {
     await request(strapi.server)
       .get(`/users/verify?token=${emailVerificationToken}`)
       .expect(200)
