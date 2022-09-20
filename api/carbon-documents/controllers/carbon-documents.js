@@ -75,9 +75,9 @@ async function create(ctx) {
   ctx.request.body = formatBodyArrays(collectionTypeAtts, ctx.request.body)
   ctx.request.body.user = ctx.state.user.id
   const createdDocument = await strapi.services[collectionName].create(ctx.request.body)
-  if (process.env.NODE_ENV === 'test') {
-    return createdDocument
-  }
+  // if (process.env.NODE_ENV === 'test') {
+  //   return createdDocument
+  // }
 
   const url = `${process.env.BASE_URL}${process.env.CONTENT_MANAGER_URL}/${applicationUid}/${createdDocument.id}`
   const title = `${createdDocument.title.slice(0, 10)}`
@@ -212,7 +212,7 @@ const mintCarbonNft = async (algodclient, creator, carbonDocument) => {
   })
 
   try {
-    const result = await atc.execute(algodclient, 2)
+    const result = await atc.execute(algodclient, 4)
     const transactionId = result.txIDs[0]
     const transactionInfo = await indexerClient.searchForTransactions().address(creator.addr).txid(transactionId).do()
     const txnsCfg = transactionInfo.transactions[0]['inner-txns'].filter(

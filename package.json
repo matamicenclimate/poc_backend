@@ -8,7 +8,7 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "test": "jest --forceExit --silent=false",
+    "test": "jest --forceExit --silent=false --runInBand",
     "release": "standard-version",
     "algo-create-accounts": "node scripts/algorand-create-accounts.js",
     "postinstall": "echo \"module.exports = require('./cjs/lib/treewalk')\" > node_modules/carbites/treewalk.js"
@@ -66,7 +66,14 @@
       ".tmp",
       ".cache"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globals": {
+      "user": true,
+      "jwt": true,
+      "createdDocument": true,
+      "adminJwt": true,
+      "createdCompensation": true
+    }
   },
   "engines": {
     "node": ">=10.16.0 <=14.x.x",

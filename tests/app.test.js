@@ -1,15 +1,21 @@
-const fs = require('fs');
-const { setupStrapi, deleteDbUploadFiles } = require('./helpers/strapi');
+const { setupStrapi, deleteDbUploadFiles } = require('./helpers/strapi')
+const { createAuthenticatedUser, deleteUser, createAdminUser } = require('./features/helpers')
 
-jest.setTimeout(10000);
+jest.setTimeout(60 * 1000 * 5)
 
 beforeAll(async () => {
-  await setupStrapi();
-});
+  await setupStrapi()
+  const authUser = await createAuthenticatedUser()
+  user = authUser.user
+  jwt = authUser.jwt
+  const adminUser = await createAdminUser()
+  adminJwt = adminUser
+})
 
 afterAll(async () => {
+  await deleteUser(user.id)
   await deleteDbUploadFiles()
-  await strapi.destroy();
-});
+  await strapi.destroy()
+})
 
-require('./integration');
+require('./features')
