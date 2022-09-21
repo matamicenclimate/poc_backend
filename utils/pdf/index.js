@@ -33,7 +33,7 @@ async function createPDF(html, filePath) {
     // launch a new chrome instance
     const puppeteerParams = { args: ['--no-sandbox'], headless: true, timeout: 50000 }
     // TODO: Detectar aqui si estamos en producción...
-    if (process.env.BASE_URL.includes('staging')) {
+    if (process.env.BASE_URL.includes('climatecoin')) {
       puppeteerParams.executablePath = '/usr/bin/chromium-browser'
     }
 

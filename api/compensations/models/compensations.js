@@ -167,8 +167,8 @@ module.exports = {
     afterCreate: async function (result) {
       await strapi.services.activities.create({
         type: 'burn',
-        group_id: result.txnId,
-        txn_id: result.txnId,
+        group_id: result.txn_id,
+        txn_id: result.txn_id,
         is_group: true,
         supply: result.amount,
         user: result.user.id,
