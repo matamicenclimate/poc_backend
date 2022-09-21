@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer')
 function readPngBuffer(file) {
   try {
     return fs.readFileSync(path.join(__dirname, file))
-  } catch(error) {
+  } catch (error) {
     error.message = `Error in 'readPngBuffer' generating pdf, ${error.message}`
     console.log(error.message)
     throw error
@@ -113,7 +113,9 @@ const generateCompensationPDF = (compensation) => {
     }
 
     for (const nft of compensation.nfts) {
-      const registry_certificate = compensation['registry_certificates'].find((certificate) => certificate.nft === nft.id)
+      const registry_certificate = compensation['registry_certificates'].find(
+        (certificate) => certificate.nft === nft.id,
+      )
       nft['registry_certificate_ipfs_cid'] = registry_certificate['ipfs_cid']
     }
 
@@ -231,7 +233,7 @@ const generateCompensationPDF = (compensation) => {
     </body>
     </html>
     `
-  } catch(error) {
+  } catch (error) {
     error.message = `Error in 'generateCompensationPDF' generating pdf, ${error.message}`
     console.log(error.message)
     throw error
